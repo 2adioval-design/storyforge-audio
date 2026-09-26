@@ -4,8 +4,7 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <meta name="color-scheme" content="dark" />
-<meta name="description" content="StoryForge Audio — Professional AI-powered audiobook creation studio. Create, narrate, and produce stunning audiobooks with 120+ AI voices." />
-<title>StoryForge Audio — AI Audiobook Studio</title>
+<title>StoryForge — Aurelio Dioval Audiobook Studio</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <script>
 tailwind.config = {
@@ -18,13 +17,9 @@ tailwind.config = {
           card: '#151528',
           card2: '#1a1a30',
           border: 'rgba(255,255,255,0.06)',
-          borderbright: 'rgba(255,255,255,0.12)',
           teal: '#00d4ff',
-          tealdark: '#009ec2',
           purple: '#7c3aed',
-          purpledark: '#6425d0',
           amber: '#f59e0b',
-          amberdark: '#d97706',
           green: '#10b981',
           red: '#ef4444',
           text: '#f1f5f9',
@@ -33,7 +28,7 @@ tailwind.config = {
         }
       },
       fontFamily: {
-        sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
+        sans: ['Inter', 'system-ui', 'sans-serif'],
         mono: ['ui-monospace', 'SFMono-Regular', 'Menlo', 'monospace'],
       }
     }
@@ -44,1919 +39,1044 @@ tailwind.config = {
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.min.js"></script>
+<script>if(window.pdfjsLib)pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.worker.min.js';</script>
+<script src="https://cdn.jsdelivr.net/npm/mammoth@1.6.0/mammoth.browser.min.js"></script>
 <style>
 :root {
-  --sf-deepest: #0a0a14;
-  --sf-base: #0f0f1a;
-  --sf-card: #151528;
-  --sf-card2: #1a1a30;
-  --sf-teal: #00d4ff;
-  --sf-purple: #7c3aed;
-  --sf-amber: #f59e0b;
-  --sf-green: #10b981;
-  --sf-red: #ef4444;
-  --sf-text: #f1f5f9;
-  --sf-muted: #94a3b8;
-  --sf-border: rgba(255,255,255,0.06);
-  --sf-glass-bg: rgba(255,255,255,0.04);
-  --sf-glass-border: rgba(255,255,255,0.08);
+  --sf-deepest:#0a0a14;--sf-base:#0f0f1a;--sf-card:#151528;--sf-card2:#1a1a30;
+  --sf-teal:#00d4ff;--sf-purple:#7c3aed;--sf-amber:#f59e0b;--sf-green:#10b981;
+  --sf-red:#ef4444;--sf-text:#f1f5f9;--sf-muted:#94a3b8;--sf-dimmed:#64748b;
+  --sf-border:rgba(255,255,255,0.06);--sf-glass:rgba(255,255,255,0.04);
+  --sf-glass-border:rgba(255,255,255,0.08);
 }
-* { box-sizing: border-box; margin: 0; padding: 0; }
-body {
-  background: var(--sf-deepest);
-  color: var(--sf-text);
-  font-family: 'Inter', system-ui, sans-serif;
-  min-height: 100vh;
-  overflow-x: hidden;
-}
-.glass-card {
-  background: var(--sf-glass-bg);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid var(--sf-glass-border);
-  border-radius: 16px;
-}
-.glass-card-sm {
-  background: var(--sf-glass-bg);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid var(--sf-glass-border);
-  border-radius: 12px;
-}
-.btn-primary {
-  background: linear-gradient(135deg, var(--sf-teal), var(--sf-purple));
-  color: #fff;
-  border: none;
-  border-radius: 10px;
-  padding: 10px 20px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: transform 0.15s, box-shadow 0.15s;
-}
-.btn-primary:hover { transform: scale(1.03); box-shadow: 0 4px 20px rgba(0,212,255,0.25); }
-.btn-primary:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
-.btn-secondary {
-  background: transparent;
-  color: var(--sf-text);
-  border: 1px solid var(--sf-glass-border);
-  border-radius: 10px;
-  padding: 8px 16px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: background 0.15s;
-}
-.btn-secondary:hover { background: rgba(255,255,255,0.06); }
-.btn-danger {
-  background: linear-gradient(135deg, #ef4444, #dc2626);
-  color: #fff;
-  border: none;
-  border-radius: 10px;
-  padding: 8px 16px;
-  font-weight: 600;
-  cursor: pointer;
-}
-.btn-ghost {
-  background: transparent;
-  color: var(--sf-muted);
-  border: none;
-  padding: 6px 10px;
-  cursor: pointer;
-  border-radius: 8px;
-  transition: color 0.15s, background 0.15s;
-}
-.btn-ghost:hover { color: var(--sf-text); background: rgba(255,255,255,0.06); }
-.input-field {
-  background: rgba(255,255,255,0.05);
-  border: 1px solid rgba(255,255,255,0.1);
-  border-radius: 10px;
-  padding: 10px 14px;
-  color: var(--sf-text);
-  font-size: 14px;
-  width: 100%;
-  transition: border-color 0.2s;
-  outline: none;
-}
-.input-field:focus { border-color: var(--sf-teal); }
-.input-field::placeholder { color: var(--sf-muted); }
-textarea.input-field { resize: vertical; min-height: 80px; }
-select.input-field { cursor: pointer; appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%2394a3b8' viewBox='0 0 24 24'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 10px center; padding-right: 36px; }
-.tab-btn {
-  padding: 10px 18px;
-  font-size: 13px;
-  font-weight: 500;
-  border: none;
-  background: transparent;
-  color: var(--sf-muted);
-  cursor: pointer;
-  border-bottom: 2px solid transparent;
-  transition: color 0.2s, border-color 0.2s;
-  white-space: nowrap;
-}
-.tab-btn:hover { color: var(--sf-text); }
-.tab-btn.active { color: var(--sf-teal); border-bottom-color: var(--sf-teal); }
-.tab-content { display: none; }
-.tab-content.active { display: block; }
-.badge {
-  display: inline-flex;
-  align-items: center;
-  padding: 2px 8px;
-  border-radius: 20px;
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.02em;
-}
-.badge-teal { background: rgba(0,212,255,0.15); color: var(--sf-teal); }
-.badge-purple { background: rgba(124,58,237,0.15); color: #a78bfa; }
-.badge-amber { background: rgba(245,158,11,0.15); color: var(--sf-amber); }
-.badge-green { background: rgba(16,185,129,0.15); color: var(--sf-green); }
-.badge-red { background: rgba(239,68,68,0.15); color: var(--sf-red); }
-.badge-dimmed { background: rgba(148,163,184,0.1); color: var(--sf-muted); }
-.status-dot {
-  width: 8px; height: 8px;
-  border-radius: 50%;
-  display: inline-block;
-}
-.status-idle { background: var(--sf-muted); }
-.status-running { background: var(--sf-green); animation: pulse-dot 1.5s infinite; }
-.status-done { background: var(--sf-teal); }
-.status-error { background: var(--sf-red); }
-@keyframes pulse-dot { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
-.slider-track {
-  -webkit-appearance: none;
-  appearance: none;
-  width: 100%;
-  height: 6px;
-  border-radius: 3px;
-  background: rgba(255,255,255,0.1);
-  outline: none;
-}
-.slider-track::-webkit-slider-thumb {
-  -webkit-appearance: none;
-  width: 16px; height: 16px;
-  border-radius: 50%;
-  background: var(--sf-teal);
-  cursor: pointer;
-}
-.slider-track::-moz-range-thumb {
-  width: 16px; height: 16px;
-  border-radius: 50%;
-  background: var(--sf-teal);
-  cursor: pointer;
-  border: none;
-}
-.modal-overlay {
-  position: fixed; inset: 0;
-  background: rgba(0,0,0,0.7);
-  backdrop-filter: blur(4px);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 100;
-}
-.modal-content {
-  background: #151528;
-  border: 1px solid rgba(255,255,255,0.1);
-  border-radius: 16px;
-  padding: 28px;
-  width: 90%;
-  max-width: 540px;
-  max-height: 85vh;
-  overflow-y: auto;
-}
-.toast-container { position: fixed; bottom: 24px; right: 24px; z-index: 200; display: flex; flex-direction: column; gap: 8px; }
-.toast {
-  padding: 12px 20px;
-  border-radius: 12px;
-  font-size: 13px;
-  font-weight: 500;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  animation: toast-in 0.3s ease;
-  min-width: 250px;
-}
-.toast-success { background: rgba(16,185,129,0.15); border: 1px solid rgba(16,185,129,0.3); color: #6ee7b7; }
-.toast-error { background: rgba(239,68,68,0.15); border: 1px solid rgba(239,68,68,0.3); color: #fca5a5; }
-.toast-info { background: rgba(0,212,255,0.12); border: 1px solid rgba(0,212,255,0.25); color: #67e8f9; }
-@keyframes toast-in { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-.chapter-item {
-  padding: 12px 14px;
-  border-radius: 10px;
-  cursor: pointer;
-  transition: background 0.15s;
-  border: 1px solid transparent;
-}
-.chapter-item:hover { background: rgba(255,255,255,0.04); }
-.chapter-item.selected { background: rgba(0,212,255,0.08); border-color: rgba(0,212,255,0.2); }
-.filter-chip {
-  padding: 5px 14px;
-  border-radius: 20px;
-  font-size: 12px;
-  font-weight: 500;
-  border: 1px solid rgba(255,255,255,0.1);
-  background: transparent;
-  color: var(--sf-muted);
-  cursor: pointer;
-  transition: all 0.15s;
-  white-space: nowrap;
-}
-.filter-chip:hover { border-color: rgba(0,212,255,0.3); color: var(--sf-text); }
-.filter-chip.active { background: rgba(0,212,255,0.15); border-color: var(--sf-teal); color: var(--sf-teal); }
-.voice-card {
-  padding: 16px;
-  border-radius: 14px;
-  background: rgba(255,255,255,0.03);
-  border: 1px solid rgba(255,255,255,0.06);
-  transition: border-color 0.2s, background 0.2s;
-}
-.voice-card:hover { border-color: rgba(0,212,255,0.2); background: rgba(255,255,255,0.05); }
-.agent-card {
-  padding: 20px;
-  border-radius: 14px;
-  background: rgba(255,255,255,0.03);
-  border: 1px solid rgba(255,255,255,0.06);
-  transition: border-color 0.2s;
-}
-.agent-card:hover { border-color: rgba(0,212,255,0.15); }
-.progress-bar {
-  height: 4px;
-  border-radius: 2px;
-  background: rgba(255,255,255,0.08);
-  overflow: hidden;
-}
-.progress-fill {
-  height: 100%;
-  border-radius: 2px;
-  background: linear-gradient(90deg, var(--sf-teal), var(--sf-purple));
-  transition: width 0.3s;
-}
-.waveform-bar {
-  background: linear-gradient(to top, var(--sf-teal), var(--sf-purple));
-  border-radius: 2px;
-  transition: height 0.1s;
-}
-.context-menu {
-  position: fixed;
-  background: #1a1a30;
-  border: 1px solid rgba(255,255,255,0.1);
-  border-radius: 10px;
-  padding: 6px;
-  min-width: 160px;
-  z-index: 150;
-  box-shadow: 0 8px 32px rgba(0,0,0,0.5);
-}
-.context-menu button {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  width: 100%;
-  padding: 8px 12px;
-  border: none;
-  background: transparent;
-  color: var(--sf-text);
-  font-size: 13px;
-  border-radius: 6px;
-  cursor: pointer;
-  text-align: left;
-}
-.context-menu button:hover { background: rgba(255,255,255,0.06); }
-.context-menu button.danger-item { color: var(--sf-red); }
-.api-key-row { display: flex; align-items: center; gap: 8px; }
-.api-key-row input { flex: 1; }
-@keyframes spin { to { transform: rotate(360deg); } }
-.spinner { animation: spin 1s linear infinite; }
-.fade-in { animation: fadeIn 0.25s ease; }
-@keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
-::-webkit-scrollbar { width: 6px; height: 6px; }
-::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 3px; }
-::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.18); }
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--sf-deepest);color:var(--sf-text);font-family:'Inter',system-ui,sans-serif;min-height:100vh;display:flex;flex-direction:column;}
+main{flex:1;}
+
+.glass{background:var(--sf-glass);backdrop-filter:blur(20px);border:1px solid var(--sf-glass-border);border-radius:16px;}
+.glass-sm{background:var(--sf-glass);backdrop-filter:blur(12px);border:1px solid var(--sf-glass-border);border-radius:12px;}
+
+.btn-p{background:linear-gradient(135deg,var(--sf-teal),var(--sf-purple));color:#fff;border:none;border-radius:10px;padding:10px 20px;font-weight:600;cursor:pointer;transition:transform .15s,box-shadow .15s;font-size:14px;}
+.btn-p:hover{transform:scale(1.03);box-shadow:0 4px 20px rgba(0,212,255,.25);}
+.btn-p:disabled{opacity:.5;cursor:not-allowed;transform:none;}
+.btn-s{background:transparent;color:var(--sf-text);border:1px solid var(--sf-glass-border);border-radius:10px;padding:8px 16px;font-weight:500;cursor:pointer;transition:background .15s;font-size:13px;}
+.btn-s:hover{background:rgba(255,255,255,.06);}
+.btn-g{background:transparent;color:var(--sf-muted);border:none;padding:6px 10px;cursor:pointer;border-radius:8px;transition:color .15s,background .15s;font-size:13px;}
+.btn-g:hover{color:var(--sf-text);background:rgba(255,255,255,.06);}
+.btn-d{background:linear-gradient(135deg,#ef4444,#dc2626);color:#fff;border:none;border-radius:10px;padding:8px 16px;font-weight:600;cursor:pointer;font-size:13px;}
+
+.inp{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:10px;padding:10px 14px;color:var(--sf-text);font-size:14px;width:100%;transition:border-color .2s;outline:none;font-family:inherit;}
+.inp:focus{border-color:var(--sf-teal);}
+.inp::placeholder{color:var(--sf-muted);}
+select.inp{cursor:pointer;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%2394a3b8' viewBox='0 0 24 24'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center;padding-right:36px;}
+textarea.inp{resize:vertical;min-height:80px;}
+
+.tab-pill{padding:8px 18px;font-size:13px;font-weight:500;border:none;background:transparent;color:var(--sf-muted);cursor:pointer;border-radius:20px;transition:all .2s;white-space:nowrap;}
+.tab-pill:hover{color:var(--sf-text);background:rgba(255,255,255,.06);}
+.tab-pill.active{color:#fff;background:linear-gradient(135deg,var(--sf-teal),var(--sf-purple));}
+
+.tab-c{display:none;}.tab-c.active{display:block;}
+
+.badge{display:inline-flex;align-items:center;padding:2px 8px;border-radius:20px;font-size:11px;font-weight:600;}
+.badge-t{background:rgba(0,212,255,.15);color:var(--sf-teal);}
+.badge-p{background:rgba(124,58,237,.15);color:#a78bfa;}
+.badge-a{background:rgba(245,158,11,.15);color:var(--sf-amber);}
+.badge-g{background:rgba(16,185,129,.15);color:var(--sf-green);}
+.badge-r{background:rgba(239,68,68,.15);color:var(--sf-red);}
+.badge-m{background:rgba(148,163,184,.1);color:var(--sf-muted);}
+
+.slider-t{-webkit-appearance:none;appearance:none;width:100%;height:6px;border-radius:3px;background:rgba(255,255,255,.1);outline:none;}
+.slider-t::-webkit-slider-thumb{-webkit-appearance:none;width:16px;height:16px;border-radius:50%;background:var(--sf-teal);cursor:pointer;}
+.slider-t::-moz-range-thumb{width:16px;height:16px;border-radius:50%;background:var(--sf-teal);cursor:pointer;border:none;}
+
+.progress-bar{height:6px;border-radius:3px;background:rgba(255,255,255,.08);overflow:hidden;}
+.progress-fill{height:100%;border-radius:3px;background:linear-gradient(90deg,var(--sf-teal),var(--sf-purple));transition:width .3s;}
+.brand-g{background:linear-gradient(135deg,var(--sf-teal),var(--sf-purple));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+
+.toast-c{position:fixed;bottom:24px;right:24px;z-index:200;display:flex;flex-direction:column;gap:8px;}
+.toast{padding:12px 20px;border-radius:12px;font-size:13px;font-weight:500;display:flex;align-items:center;gap:8px;animation:tin .3s ease;min-width:250px;}
+.toast-ok{background:rgba(16,185,129,.15);border:1px solid rgba(16,185,129,.3);color:#6ee7b7;}
+.toast-err{background:rgba(239,68,68,.15);border:1px solid rgba(239,68,68,.3);color:#fca5a5;}
+.toast-info{background:rgba(0,212,255,.12);border:1px solid rgba(0,212,255,.25);color:#67e8f9;}
+@keyframes tin{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+@keyframes spin{to{transform:rotate(360deg)}}.spinner{animation:spin 1s linear infinite;}
+.fade-in{animation:fi .3s ease;}@keyframes fi{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+.dropzone{border:2px dashed rgba(255,255,255,.12);border-radius:16px;padding:40px;text-align:center;cursor:pointer;transition:all .2s;}
+.dropzone:hover,.dropzone.active{border-color:var(--sf-teal);background:rgba(0,212,255,.04);}
+
+.voice-card{padding:16px;border-radius:14px;background:rgba(255,255,255,.03);border:2px solid rgba(255,255,255,.06);transition:all .2s;cursor:pointer;}
+.voice-card:hover{border-color:rgba(0,212,255,.2);background:rgba(255,255,255,.05);}
+.voice-card.selected{border-color:var(--sf-teal);background:rgba(0,212,255,.08);}
+.voice-card.fav{box-shadow:0 0 0 1px rgba(245,158,11,.3);}
+
+.agent-card{padding:20px;border-radius:14px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);transition:border-color .2s;}
+.agent-card:hover{border-color:rgba(0,212,255,.15);}
+
+.ch-item{padding:12px 14px;border-radius:10px;cursor:pointer;transition:background .15s;border:2px solid transparent;}
+.ch-item:hover{background:rgba(255,255,255,.04);}
+.ch-item.sel{background:rgba(0,212,255,.08);border-color:rgba(0,212,255,.3);}
+
+.chip{padding:5px 14px;border-radius:20px;font-size:12px;font-weight:500;border:1px solid rgba(255,255,255,.1);background:transparent;color:var(--sf-muted);cursor:pointer;transition:all .15s;white-space:nowrap;}
+.chip:hover{border-color:rgba(0,212,255,.3);color:var(--sf-text);}
+.chip.active{background:rgba(0,212,255,.15);border-color:var(--sf-teal);color:var(--sf-teal);}
+
+.status-dot{width:8px;height:8px;border-radius:50%;display:inline-block;}
+.s-idle{background:var(--sf-muted);}.s-run{background:var(--sf-green);animation:pd 1.5s infinite;}.s-done{background:var(--sf-teal);}.s-err{background:var(--sf-red);}
+@keyframes pd{0%,100%{opacity:1}50%{opacity:.3}}
+
+.modal-ov{position:fixed;inset:0;background:rgba(0,0,0,.7);backdrop-filter:blur(4px);display:flex;align-items:center;justify-content:center;z-index:100;}
+.modal-c{background:#151528;border:1px solid rgba(255,255,255,.1);border-radius:16px;padding:28px;width:90%;max-width:540px;max-height:85vh;overflow-y:auto;}
+
+::-webkit-scrollbar{width:6px;height:6px;}::-webkit-scrollbar-track{background:transparent;}::-webkit-scrollbar-thumb{background:rgba(255,255,255,.1);border-radius:3px;}::-webkit-scrollbar-thumb:hover{background:rgba(255,255,255,.18);}
+
+canvas.waveform-canvas{width:100%;height:100%;display:block;}
 </style>
 </head>
 <body data-id="0" class="bg-sf-deepest">
 <app-icon data-id="1" hidden data-icon="audio-lines" data-palette="Dark"></app-icon>
 
-<!-- TOAST CONTAINER -->
-<div data-id="2" id="toast-container-a1b2" class="toast-container"></div>
+<div data-id="2" id="toast-box-z9k1" class="toast-c"></div>
 
-<!-- CONTEXT MENU -->
-<div data-id="3" id="ctx-menu-x9z8" class="context-menu hidden"></div>
-
-<!-- TOP NAV -->
-<header data-id="4" class="sticky top-0 z-50 border-b" style="background:rgba(15,15,26,0.85);backdrop-filter:blur(16px);border-color:rgba(255,255,255,0.06);">
-  <div data-id="5" class="max-w-[1440px] mx-auto px-4 md:px-6 flex items-center justify-between h-14">
-    <div data-id="6" class="flex items-center gap-2.5">
-      <span data-id="7" class="text-xl">🎙</span>
-      <span data-id="8" class="font-bold text-base text-sf-text tracking-tight">StoryForge Audio</span>
+<!-- HEADER -->
+<header data-id="3" id="header-nav-h7x2" class="sticky top-0 z-50 border-b" style="background:rgba(15,15,26,.88);backdrop-filter:blur(16px);border-color:rgba(255,255,255,.06);">
+  <div data-id="4" class="max-w-[1440px] mx-auto px-4 md:px-6 flex items-center justify-between h-14">
+    <div data-id="5" class="flex items-center gap-2.5">
+      <div data-id="6" id="logo-icon-a1b2" class="w-8 h-8 rounded-lg flex items-center justify-center font-extrabold text-xs text-white" style="background:linear-gradient(135deg,var(--sf-teal),var(--sf-purple));">SF</div>
+      <div data-id="7" class="flex flex-col leading-tight">
+        <span data-id="8" class="font-bold text-base brand-g tracking-tight">StoryForge</span>
+        <span data-id="9" class="text-[10px] text-sf-muted leading-none hidden sm:block">Aurelio Dioval Audiobook Studio</span>
+      </div>
     </div>
-    <nav data-id="9" class="hidden md:flex items-center gap-1" id="desktop-nav-t5r3">
-      <button data-id="10" class="tab-btn active" data-tab="library">
-        <span data-id="11" class="flex items-center gap-1.5"><i data-id="12" data-lucide="library" class="w-4 h-4"></i> Library</span>
-      </button>
-      <button data-id="13" class="tab-btn" data-tab="studio">
-        <span data-id="14" class="flex items-center gap-1.5"><i data-id="15" data-lucide="audio-lines" class="w-4 h-4"></i> Studio</span>
-      </button>
-      <button data-id="16" class="tab-btn" data-tab="voicelab">
-        <span data-id="17" class="flex items-center gap-1.5"><i data-id="18" data-lucide="mic" class="w-4 h-4"></i> Voice Lab</span>
-      </button>
-      <button data-id="19" class="tab-btn" data-tab="agents">
-        <span data-id="20" class="flex items-center gap-1.5"><i data-id="21" data-lucide="bot" class="w-4 h-4"></i> AI Agents</span>
-      </button>
-      <button data-id="22" class="tab-btn" data-tab="settings">
-        <span data-id="23" class="flex items-center gap-1.5"><i data-id="24" data-lucide="settings" class="w-4 h-4"></i> Settings</span>
-      </button>
+    <nav data-id="10" id="desktop-nav-d3f4" class="hidden md:flex items-center gap-1 bg-sf-card rounded-full p-1">
+      <button data-id="11" class="tab-pill active" data-tab="library"><span data-id="12" class="flex items-center gap-1.5"><i data-id="13" data-lucide="library" class="w-4 h-4"></i> Library</span></button>
+      <button data-id="14" class="tab-pill" data-tab="studio"><span data-id="15" class="flex items-center gap-1.5"><i data-id="16" data-lucide="audio-lines" class="w-4 h-4"></i> Studio</span></button>
+      <button data-id="17" class="tab-pill" data-tab="voicelab"><span data-id="18" class="flex items-center gap-1.5"><i data-id="19" data-lucide="mic" class="w-4 h-4"></i> Voice Lab</span></button>
+      <button data-id="20" class="tab-pill" data-tab="agents"><span data-id="21" class="flex items-center gap-1.5"><i data-id="22" data-lucide="bot" class="w-4 h-4"></i> AI Agents</span></button>
+      <button data-id="23" class="tab-pill" data-tab="settings"><span data-id="24" class="flex items-center gap-1.5"><i data-id="25" data-lucide="settings" class="w-4 h-4"></i> Settings</span></button>
     </nav>
-    <button data-id="25" id="mobile-menu-btn-m4n3" class="md:hidden p-2 btn-ghost">
-      <i data-id="26" data-lucide="menu" class="w-5 h-5"></i>
-    </button>
+    <button data-id="26" id="mob-btn-m9k1" class="md:hidden p-2 btn-g"><i data-id="27" data-lucide="menu" class="w-5 h-5"></i></button>
   </div>
 </header>
 
 <!-- MOBILE NAV -->
-<nav data-id="27" id="mobile-menu-q7w8" class="hidden fixed inset-0 z-[60] flex flex-col" style="background:rgba(10,10,20,0.97);backdrop-filter:blur(20px);">
-  <div data-id="28" class="flex items-center justify-between p-4 border-b" style="border-color:rgba(255,255,255,0.06);">
-    <span data-id="29" class="font-bold text-sf-text">🎙 StoryForge Audio</span>
-    <button data-id="30" id="mobile-close-btn-k2j1" class="btn-ghost p-2"><i data-id="31" data-lucide="x" class="w-5 h-5"></i></button>
+<nav data-id="28" id="mob-menu-n3k2" class="hidden fixed inset-0 z-[60] flex flex-col" style="background:rgba(10,10,20,.97);backdrop-filter:blur(20px);">
+  <div data-id="29" class="flex items-center justify-between p-4 border-b" style="border-color:rgba(255,255,255,.06);">
+    <span data-id="30" class="font-bold text-sm brand-g">StoryForge</span>
+    <button data-id="31" id="mob-close-c4k3" class="btn-g p-2"><i data-id="32" data-lucide="x" class="w-5 h-5"></i></button>
   </div>
-  <div data-id="32" class="flex flex-col gap-1 p-4">
-    <button data-id="33" class="mobile-tab-btn tab-btn active text-left" data-tab="library"><span data-id="34" class="flex items-center gap-2"><i data-id="35" data-lucide="library" class="w-5 h-5"></i> Library</span></button>
-    <button data-id="36" class="mobile-tab-btn tab-btn text-left" data-tab="studio"><span data-id="37" class="flex items-center gap-2"><i data-id="38" data-lucide="audio-lines" class="w-5 h-5"></i> Studio</span></button>
-    <button data-id="39" class="mobile-tab-btn tab-btn text-left" data-tab="voicelab"><span data-id="40" class="flex items-center gap-2"><i data-id="41" data-lucide="mic" class="w-5 h-5"></i> Voice Lab</span></button>
-    <button data-id="42" class="mobile-tab-btn tab-btn text-left" data-tab="agents"><span data-id="43" class="flex items-center gap-2"><i data-id="44" data-lucide="bot" class="w-5 h-5"></i> AI Agents</span></button>
-    <button data-id="45" class="mobile-tab-btn tab-btn text-left" data-tab="settings"><span data-id="46" class="flex items-center gap-2"><i data-id="47" data-lucide="settings" class="w-5 h-5"></i> Settings</span></button>
+  <div data-id="33" class="flex flex-col gap-1 p-4">
+    <button data-id="34" class="mtab tab-pill active text-left w-full" data-tab="library"><span data-id="35" class="flex items-center gap-2"><i data-id="36" data-lucide="library" class="w-5 h-5"></i> Library</span></button>
+    <button data-id="37" class="mtab tab-pill text-left w-full" data-tab="studio"><span data-id="38" class="flex items-center gap-2"><i data-id="39" data-lucide="audio-lines" class="w-5 h-5"></i> Studio</span></button>
+    <button data-id="40" class="mtab tab-pill text-left w-full" data-tab="voicelab"><span data-id="41" class="flex items-center gap-2"><i data-id="42" data-lucide="mic" class="w-5 h-5"></i> Voice Lab</span></button>
+    <button data-id="43" class="mtab tab-pill text-left w-full" data-tab="agents"><span data-id="44" class="flex items-center gap-2"><i data-id="45" data-lucide="bot" class="w-5 h-5"></i> AI Agents</span></button>
+    <button data-id="46" class="mtab tab-pill text-left w-full" data-tab="settings"><span data-id="47" class="flex items-center gap-2"><i data-id="48" data-lucide="settings" class="w-5 h-5"></i> Settings</span></button>
   </div>
 </nav>
 
-<!-- MODALS -->
-<div data-id="48" id="modal-overlay-p6q5" class="modal-overlay hidden">
-  <div data-id="49" class="modal-content" id="modal-body-r3s2"></div>
-</div>
+<!-- MODAL -->
+<div data-id="49" id="modal-ov-p5k4" class="modal-ov hidden"><div data-id="50" class="modal-c" id="modal-bd-r6k5"></div></div>
 
-<!-- MAIN CONTENT -->
-<main data-id="50" class="max-w-[1440px] mx-auto px-4 md:px-6 py-6">
+<!-- MAIN -->
+<main data-id="51" class="max-w-[1440px] mx-auto px-4 md:px-6 py-6 flex-1">
 
-<!-- TAB 1: LIBRARY -->
-<section data-id="51" id="tab-library" class="tab-content active fade-in">
-  <!-- Stats Bar -->
-  <div data-id="52" class="grid grid-cols-3 gap-3 mb-6">
-    <div data-id="53" class="glass-card-sm p-4 text-center">
-      <div data-id="54" class="text-2xl font-bold text-sf-text font-mono" id="stat-projects-a1">0</div>
-      <div data-id="55" class="text-xs text-sf-muted mt-1">Total Projects</div>
+<!-- TAB: LIBRARY -->
+<section data-id="52" id="tab-library" class="tab-c active fade-in">
+  <div data-id="53" class="flex items-center justify-between mb-6 flex-wrap gap-3">
+    <div data-id="54">
+      <h2 data-id="55" id="lib-heading-h1a1" class="text-xl md:text-2xl font-bold">Your Audiobook Library</h2>
+      <p data-id="56" class="text-sm text-sf-muted mt-1">Upload a book or create a new project to get started.</p>
     </div>
-    <div data-id="56" class="glass-card-sm p-4 text-center">
-      <div data-id="57" class="text-2xl font-bold text-sf-text font-mono" id="stat-chapters-b2">0</div>
-      <div data-id="58" class="text-xs text-sf-muted mt-1">Total Chapters</div>
-    </div>
-    <div data-id="59" class="glass-card-sm p-4 text-center">
-      <div data-id="60" class="text-2xl font-bold text-sf-text font-mono" id="stat-duration-c3">0:00</div>
-      <div data-id="61" class="text-xs text-sf-muted mt-1">Total Duration</div>
-    </div>
+    <button data-id="57" id="new-proj-btn-b2c3" class="btn-p flex items-center gap-2 text-sm"><i data-id="58" data-lucide="plus" class="w-4 h-4"></i> New Project</button>
   </div>
-  <div data-id="62" class="flex items-center justify-between mb-5 flex-wrap gap-3">
-    <h2 data-id="63" class="text-xl font-bold text-sf-text">Your Projects</h2>
-    <button data-id="64" id="new-project-btn-d4" class="btn-primary flex items-center gap-2 text-sm">
-      <i data-id="65" data-lucide="plus" class="w-4 h-4"></i> New Project
-    </button>
-  </div>
-  <div data-id="66" id="library-grid-e5" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"></div>
-  <div data-id="67" id="library-empty-f6" class="hidden flex flex-col items-center justify-center py-20 text-center">
-    <div data-id="68" class="w-20 h-20 rounded-full flex items-center justify-center mb-5" style="background:rgba(0,212,255,0.08);">
-      <i data-id="69" data-lucide="book-open" class="w-10 h-10 text-sf-teal"></i>
+
+  <!-- Upload Zone -->
+  <div data-id="59" id="upload-zone-u3d4" class="dropzone mb-6">
+    <div data-id="60" class="flex flex-col items-center gap-3">
+      <div data-id="61" class="w-16 h-16 rounded-full flex items-center justify-center" style="background:rgba(0,212,255,.08);">
+        <i data-id="62" data-lucide="upload" class="w-8 h-8 text-sf-teal"></i>
+      </div>
+      <div data-id="63">
+        <p data-id="64" class="text-base font-semibold">Drop your book file here</p>
+        <p data-id="65" class="text-sm text-sf-muted mt-1">Supports PDF, DOCX, and TXT files</p>
+      </div>
+      <button data-id="66" id="browse-btn-b4e5" class="btn-s text-sm">Browse Files</button>
     </div>
-    <h3 data-id="70" class="text-lg font-semibold text-sf-text mb-2">No projects yet</h3>
-    <p data-id="71" class="text-sm text-sf-muted mb-5 max-w-xs">Create your first audiobook project to begin crafting immersive audio experiences.</p>
-    <button data-id="72" id="empty-new-btn-g7" class="btn-primary text-sm flex items-center gap-2"><i data-id="73" data-lucide="plus" class="w-4 h-4"></i> Create First Project</button>
+    <input data-id="67" type="file" id="upload-inp-i5f6" class="hidden" accept=".pdf,.docx,.doc,.txt,.md" />
+  </div>
+
+  <!-- Stats -->
+  <div data-id="68" class="grid grid-cols-3 gap-3 mb-6">
+    <div data-id="69" class="glass-sm p-4 text-center"><div data-id="70" class="text-2xl font-bold font-mono" id="st-proj-s1g7">0</div><div data-id="71" class="text-xs text-sf-muted mt-1">Projects</div></div>
+    <div data-id="72" class="glass-sm p-4 text-center"><div data-id="73" class="text-2xl font-bold font-mono" id="st-chap-s2h8">0</div><div data-id="74" class="text-xs text-sf-muted mt-1">Chapters</div></div>
+    <div data-id="75" class="glass-sm p-4 text-center"><div data-id="76" class="text-2xl font-bold font-mono" id="st-gen-s3i9">0</div><div data-id="77" class="text-xs text-sf-muted mt-1">Generated</div></div>
+  </div>
+
+  <!-- Project Grid -->
+  <div data-id="78" id="lib-grid-g4j1" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+  <div data-id="79" id="lib-empty-e5k2" class="hidden flex flex-col items-center justify-center py-16 text-center">
+    <div data-id="80" class="w-20 h-20 rounded-full flex items-center justify-center mb-5" style="background:rgba(0,212,255,.08);"><i data-id="81" data-lucide="book-open" class="w-10 h-10 text-sf-teal"></i></div>
+    <h3 data-id="82" class="text-lg font-semibold mb-2">No projects yet</h3>
+    <p data-id="83" class="text-sm text-sf-muted mb-5 max-w-xs">Upload a PDF, DOCX, or TXT file to create your first audiobook project.</p>
   </div>
 </section>
 
-<!-- TAB 2: STUDIO -->
-<section data-id="74" id="tab-studio" class="tab-content fade-in">
-  <div data-id="75" id="studio-no-project-h8" class="flex flex-col items-center justify-center py-20 text-center">
-    <div data-id="76" class="w-16 h-16 rounded-full flex items-center justify-center mb-4" style="background:rgba(124,58,237,0.1);">
-      <i data-id="77" data-lucide="folder-open" class="w-8 h-8 text-purple-400"></i>
-    </div>
-    <h3 data-id="78" class="text-lg font-semibold text-sf-text mb-2">No project open</h3>
-    <p data-id="79" class="text-sm text-sf-muted mb-4">Open a project from the Library to start editing.</p>
-    <button data-id="80" id="go-library-btn-i9" class="btn-secondary text-sm">Go to Library</button>
+<!-- TAB: STUDIO -->
+<section data-id="84" id="tab-studio" class="tab-c fade-in">
+  <div data-id="85" id="studio-empty-s6l3" class="flex flex-col items-center justify-center py-20 text-center">
+    <div data-id="86" class="w-16 h-16 rounded-full flex items-center justify-center mb-4" style="background:rgba(124,58,237,.1);"><i data-id="87" data-lucide="folder-open" class="w-8 h-8 text-purple-400"></i></div>
+    <h3 data-id="88" class="text-lg font-semibold mb-2">No project open</h3>
+    <p data-id="89" class="text-sm text-sf-muted mb-4">Open a project from the Library to start producing your audiobook.</p>
+    <button data-id="90" id="go-lib-btn-b7m4" class="btn-s text-sm">Go to Library</button>
   </div>
-  <div data-id="81" id="studio-workspace-j0" class="hidden">
-    <div data-id="82" class="flex items-center justify-between mb-4 flex-wrap gap-3">
-      <div data-id="83" class="flex items-center gap-3">
-        <button data-id="84" id="back-to-lib-btn-k1" class="btn-ghost"><i data-id="85" data-lucide="arrow-left" class="w-4 h-4"></i></button>
-        <h2 data-id="86" class="text-lg font-bold text-sf-text" id="studio-project-title-l2"></h2>
-        <span data-id="87" class="badge badge-purple text-xs" id="studio-project-genre-m3"></span>
+  <div data-id="91" id="studio-ws-w8n5" class="hidden">
+    <div data-id="92" class="flex items-center justify-between mb-4 flex-wrap gap-3">
+      <div data-id="93" class="flex items-center gap-3">
+        <button data-id="94" id="back-lib-btn-b9o6" class="btn-g"><i data-id="95" data-lucide="arrow-left" class="w-4 h-4"></i></button>
+        <h2 data-id="96" class="text-lg font-bold truncate max-w-[300px]" id="ws-title-t1p7"></h2>
+      </div>
+      <div data-id="97" class="flex gap-2">
+        <button data-id="98" id="gen-all-btn-g2q8" class="btn-p text-sm flex items-center gap-2"><i data-id="99" data-lucide="sparkles" class="w-4 h-4"></i> Generate All</button>
       </div>
     </div>
-    <div data-id="88" class="flex flex-col md:flex-row gap-4" style="min-height:calc(100vh - 200px);">
-      <!-- Left: chapters -->
-      <div data-id="89" class="w-full md:w-[30%] glass-card p-4 flex flex-col" style="max-height:calc(100vh - 180px);overflow-y:auto;">
-        <div data-id="90" class="flex items-center justify-between mb-3">
-          <span data-id="91" class="text-sm font-semibold text-sf-text">Chapters</span>
-          <div data-id="92" class="flex gap-1">
-            <button data-id="93" id="import-ms-btn-n4" class="btn-ghost text-xs flex items-center gap-1"><i data-id="94" data-lucide="upload" class="w-3 h-3"></i> Import</button>
-            <button data-id="95" id="add-ch-btn-o5" class="btn-ghost text-xs flex items-center gap-1 text-sf-teal"><i data-id="96" data-lucide="plus" class="w-3 h-3"></i> Add</button>
-          </div>
+    <div data-id="100" class="flex flex-col lg:flex-row gap-4" style="min-height:calc(100vh - 240px);">
+      <!-- LEFT: chapters -->
+      <div data-id="101" class="w-full lg:w-[280px] glass p-4 flex flex-col shrink-0" style="max-height:calc(100vh - 200px);overflow-y:auto;">
+        <div data-id="102" class="flex items-center justify-between mb-3">
+          <span data-id="103" class="text-sm font-semibold">Chapters</span>
+          <button data-id="104" id="add-ch-btn-a3r9" class="btn-g text-xs flex items-center gap-1 text-sf-teal"><i data-id="105" data-lucide="plus" class="w-3 h-3"></i> Add</button>
         </div>
-        <div data-id="97" id="chapter-list-p6" class="flex flex-col gap-1 flex-1"></div>
+        <div data-id="106" id="ch-list-l4s1" class="flex flex-col gap-1 flex-1"></div>
       </div>
-      <!-- Right: editor -->
-      <div data-id="98" class="w-full md:w-[70%] glass-card p-5 flex flex-col gap-4" style="max-height:calc(100vh - 180px);overflow-y:auto;" id="editor-panel-q7">
-        <div data-id="99" id="editor-no-chapter-r8" class="flex flex-col items-center justify-center py-16 text-center">
-          <i data-id="100" data-lucide="file-text" class="w-10 h-10 text-sf-muted mb-3"></i>
-          <p data-id="101" class="text-sm text-sf-muted">Select a chapter to edit</p>
+      <!-- CENTER: audio player -->
+      <div data-id="107" class="flex-1 flex flex-col gap-4">
+        <!-- Generation controls -->
+        <div data-id="108" class="glass p-4">
+          <div data-id="109" class="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-3">
+            <div data-id="110"><label data-id="111" class="text-xs text-sf-muted mb-1 block">Voice</label><select data-id="112" id="ed-voice-v5t2" class="inp text-sm"></select></div>
+            <div data-id="113"><label data-id="114" class="text-xs text-sf-muted mb-1 block">Provider</label>
+              <select data-id="115" id="ed-prov-p6u3" class="inp text-sm"><option data-id="116" value="appsdk">StoryForge TTS</option></select>
+            </div>
+            <div data-id="117"><label data-id="118" class="text-xs text-sf-muted mb-1 flex justify-between"><span data-id="119">Speed</span><span data-id="120" class="font-mono" id="sl-spd-v-v7v4">1.00×</span></label><input data-id="121" type="range" id="sl-spd-s8w5" class="slider-t" min="50" max="200" value="100" /></div>
+          </div>
+          <button data-id="122" id="gen-btn-g9x6" class="btn-p w-full py-3 flex items-center justify-center gap-2 text-base" style="box-shadow:0 4px 24px rgba(0,212,255,.2);"><i data-id="123" data-lucide="sparkles" class="w-5 h-5"></i> Generate Chapter Audio</button>
         </div>
-        <div data-id="102" id="editor-active-s9" class="hidden flex flex-col gap-4">
-          <!-- Chapter title -->
-          <input data-id="103" type="text" id="ch-title-input-t0" class="input-field text-lg font-semibold" placeholder="Chapter title" />
-          <!-- Text editor -->
-          <textarea data-id="104" id="ch-text-area-u1" class="input-field font-sans text-sm leading-relaxed" style="min-height:180px;" placeholder="Enter or paste your chapter text here…"></textarea>
-          <!-- Controls row -->
-          <div data-id="105" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-            <div data-id="106">
-              <label data-id="107" class="text-xs text-sf-muted mb-1 block">Voice</label>
-              <select data-id="108" id="ch-voice-select-v2" class="input-field text-sm"></select>
-            </div>
-            <div data-id="109">
-              <label data-id="110" class="text-xs text-sf-muted mb-1 block">Narration Direction</label>
-              <select data-id="111" id="ch-narration-select-w3" class="input-field text-sm">
-                <option data-id="112" value="Warm Storyteller">Warm Storyteller</option>
-                <option data-id="113" value="Clear Documentary">Clear Documentary</option>
-                <option data-id="114" value="Bright Companion">Bright Companion</option>
-                <option data-id="115" value="Quiet Noir">Quiet Noir</option>
-                <option data-id="116" value="Dramatic Epic">Dramatic Epic</option>
-                <option data-id="117" value="Children Playful">Children Playful</option>
-                <option data-id="118" value="Meditation Calm">Meditation Calm</option>
-                <option data-id="119" value="Horror Suspense">Horror Suspense</option>
-                <option data-id="120" value="Romance Intimate">Romance Intimate</option>
-                <option data-id="121" value="News Authoritative">News Authoritative</option>
-              </select>
-            </div>
-            <div data-id="122">
-              <label data-id="123" class="text-xs text-sf-muted mb-1 block">Provider</label>
-              <select data-id="124" id="ch-provider-select-x4" class="input-field text-sm">
-                <option data-id="125">ElevenLabs</option><option data-id="126">OpenAI</option><option data-id="127">Google</option><option data-id="128">Azure</option><option data-id="129">AWS Polly</option><option data-id="130">PlayHT</option><option data-id="131">Murf</option><option data-id="132">Browser TTS</option>
-              </select>
-            </div>
+        <!-- Progress -->
+        <div data-id="124" id="gen-prog-p1y7" class="hidden glass p-5">
+          <div data-id="125" class="flex items-center gap-3 mb-3">
+            <span data-id="126" class="spinner inline-block w-5 h-5 border-2 border-sf-teal/30 border-t-sf-teal rounded-full"></span>
+            <span data-id="127" class="text-sm font-medium" id="gen-status-s2z8">Preparing…</span>
           </div>
-          <!-- Sliders -->
-          <div data-id="133" class="grid grid-cols-2 sm:grid-cols-4 gap-3">
-            <div data-id="134">
-              <label data-id="135" class="text-xs text-sf-muted mb-1 flex justify-between"><span data-id="136">Speed</span><span data-id="137" id="speed-val-y5" class="font-mono">1.0×</span></label>
-              <input data-id="138" type="range" id="speed-slider-z6" class="slider-track" min="75" max="200" value="100" />
-            </div>
-            <div data-id="139">
-              <label data-id="140" class="text-xs text-sf-muted mb-1 flex justify-between"><span data-id="141">Stability</span><span data-id="142" id="stab-val-a7" class="font-mono">50</span></label>
-              <input data-id="143" type="range" id="stab-slider-b8" class="slider-track" min="0" max="100" value="50" />
-            </div>
-            <div data-id="144">
-              <label data-id="145" class="text-xs text-sf-muted mb-1 flex justify-between"><span data-id="146">Clarity</span><span data-id="147" id="clar-val-c9" class="font-mono">75</span></label>
-              <input data-id="148" type="range" id="clar-slider-d0" class="slider-track" min="0" max="100" value="75" />
-            </div>
-            <div data-id="149">
-              <label data-id="150" class="text-xs text-sf-muted mb-1 flex justify-between"><span data-id="151">Style</span><span data-id="152" id="style-val-e1" class="font-mono">50</span></label>
-              <input data-id="153" type="range" id="style-slider-f2" class="slider-track" min="0" max="100" value="50" />
-            </div>
+          <div data-id="128" class="progress-bar"><div data-id="129" id="gen-fill-f3a9" class="progress-fill" style="width:0%"></div></div>
+          <p data-id="130" class="text-xs text-sf-muted mt-2" id="gen-detail-d4b1">Chunk 0 of 0</p>
+        </div>
+        <!-- Audio Player -->
+        <div data-id="131" id="audio-player-a5c2" class="hidden glass p-5">
+          <div data-id="132" class="flex items-center gap-2 mb-4">
+            <span data-id="133" class="text-sm font-semibold flex-1" id="pl-chapter-name-n6d3">Chapter</span>
+            <span data-id="134" class="badge badge-g text-xs">Ready</span>
           </div>
-          <!-- Generate button -->
-          <button data-id="154" id="generate-audio-btn-g3" class="btn-primary w-full text-base py-3 flex items-center justify-center gap-2">
-            <i data-id="155" data-lucide="sparkles" class="w-5 h-5"></i> Generate Audio
-          </button>
-          <!-- Progress bar (hidden) -->
-          <div data-id="156" id="gen-progress-bar-h4" class="hidden">
-            <div data-id="157" class="progress-bar"><div data-id="158" id="gen-progress-fill-i5" class="progress-fill" style="width:0%"></div></div>
-            <p data-id="159" class="text-xs text-sf-muted mt-1 text-center" id="gen-progress-text-j6">Generating audio…</p>
+          <!-- Waveform Canvas -->
+          <div data-id="135" class="w-full h-24 mb-4 rounded-lg overflow-hidden" style="background:rgba(255,255,255,.03);">
+            <canvas data-id="136" id="waveform-cv-c7e4" class="waveform-canvas"></canvas>
           </div>
-          <!-- Audio player -->
-          <div data-id="160" id="audio-player-k7" class="hidden glass-card-sm p-4">
-            <div data-id="161" class="flex items-center gap-3 mb-3">
-              <button data-id="162" id="play-pause-btn-l8" class="w-10 h-10 rounded-full flex items-center justify-center" style="background:linear-gradient(135deg,var(--sf-teal),var(--sf-purple));cursor:pointer;border:none;color:#fff;">
-                <i data-id="163" data-lucide="play" class="w-5 h-5" id="play-icon-m9"></i>
-              </button>
-              <div data-id="164" class="flex-1">
-                <div data-id="165" class="flex items-center gap-2">
-                  <span data-id="166" class="text-xs text-sf-muted font-mono" id="audio-time-n0">0:00</span>
-                  <div data-id="167" class="flex-1 progress-bar cursor-pointer" id="audio-seek-o1"><div data-id="168" class="progress-fill" id="audio-seek-fill-p2" style="width:0%"></div></div>
-                  <span data-id="169" class="text-xs text-sf-muted font-mono" id="audio-dur-q3">0:00</span>
-                </div>
-              </div>
-              <button data-id="170" id="audio-dl-btn-r4" class="btn-ghost text-xs"><i data-id="171" data-lucide="download" class="w-4 h-4"></i></button>
+          <!-- Controls -->
+          <div data-id="137" class="flex items-center gap-3 mb-3">
+            <button data-id="138" id="pl-prev-ch-p8f5" class="btn-g p-2" title="Previous Chapter"><i data-id="139" data-lucide="skip-back" class="w-4 h-4"></i></button>
+            <button data-id="140" id="pl-rew-r9g6" class="btn-g p-2" title="Rewind 10s"><i data-id="141" data-lucide="rotate-ccw" class="w-4 h-4"></i></button>
+            <button data-id="142" id="pl-play-p1h7" class="w-12 h-12 rounded-full flex items-center justify-center shrink-0" style="background:linear-gradient(135deg,var(--sf-teal),var(--sf-purple));cursor:pointer;border:none;color:#fff;">
+              <i data-id="143" data-lucide="play" class="w-5 h-5" id="pl-ico-i2i8"></i>
+            </button>
+            <button data-id="144" id="pl-fwd-f3j9" class="btn-g p-2" title="Forward 10s"><i data-id="145" data-lucide="rotate-cw" class="w-4 h-4"></i></button>
+            <button data-id="146" id="pl-next-ch-n4k1" class="btn-g p-2" title="Next Chapter"><i data-id="147" data-lucide="skip-forward" class="w-4 h-4"></i></button>
+          </div>
+          <div data-id="148" class="flex items-center gap-2 mb-3">
+            <span data-id="149" class="text-xs text-sf-muted font-mono w-10 text-right" id="pl-cur-c5l2">0:00</span>
+            <input data-id="150" type="range" id="pl-seek-s6m3" class="slider-t flex-1" min="0" max="1000" value="0" />
+            <span data-id="151" class="text-xs text-sf-muted font-mono w-10" id="pl-dur-d7n4">0:00</span>
+          </div>
+          <div data-id="152" class="flex items-center gap-3 flex-wrap">
+            <div data-id="153" class="flex items-center gap-2">
+              <i data-id="154" data-lucide="volume-2" class="w-4 h-4 text-sf-muted"></i>
+              <input data-id="155" type="range" id="pl-vol-v8o5" class="slider-t w-20" min="0" max="100" value="100" />
             </div>
-            <!-- Waveform -->
-            <div data-id="172" id="waveform-container-s5" class="flex items-end gap-[2px] h-12 justify-center"></div>
+            <select data-id="156" id="pl-speed-s9p6" class="inp text-xs py-1 px-2 w-20">
+              <option data-id="157" value="0.5">0.5×</option><option data-id="158" value="0.75">0.75×</option><option data-id="159" value="1" selected>1×</option><option data-id="160" value="1.25">1.25×</option><option data-id="161" value="1.5">1.5×</option><option data-id="162" value="2">2×</option>
+            </select>
+            <div data-id="163" class="flex-1"></div>
+            <button data-id="164" id="pl-dl-d1q7" class="btn-s text-xs flex items-center gap-1"><i data-id="165" data-lucide="download" class="w-3.5 h-3.5"></i> Download MP3</button>
+            <button data-id="166" id="pl-dl-all-a2r8" class="btn-g text-xs flex items-center gap-1"><i data-id="167" data-lucide="package" class="w-3.5 h-3.5"></i> All Chapters</button>
           </div>
-          <!-- Characters panel -->
-          <div data-id="173" class="glass-card-sm p-4">
-            <div data-id="174" class="flex items-center justify-between mb-2">
-              <span data-id="175" class="text-xs font-semibold text-sf-muted uppercase tracking-wider">Detected Characters</span>
-              <button data-id="176" id="detect-chars-btn-t6" class="btn-ghost text-xs text-sf-teal">Detect</button>
-            </div>
-            <div data-id="177" id="chars-list-u7" class="text-xs text-sf-muted italic">Click "Detect" to find speaking characters</div>
-          </div>
+        </div>
+      </div>
+      <!-- RIGHT: text -->
+      <div data-id="168" class="w-full lg:w-[340px] glass p-4 flex flex-col shrink-0" style="max-height:calc(100vh - 200px);overflow-y:auto;" id="text-pnl-t3s9">
+        <div data-id="169" id="ed-empty-e4t1" class="flex flex-col items-center justify-center py-16 text-center">
+          <i data-id="170" data-lucide="file-text" class="w-10 h-10 text-sf-muted mb-3"></i>
+          <p data-id="171" class="text-sm text-sf-muted">Select a chapter to view</p>
+        </div>
+        <div data-id="172" id="ed-active-a5u2" class="hidden flex flex-col gap-3">
+          <input data-id="173" type="text" id="ed-title-t6v3" class="inp text-base font-semibold" placeholder="Chapter title" />
+          <div data-id="174" class="flex gap-3 text-xs text-sf-muted"><span data-id="175" id="ed-wc-w7w4">0 words</span><span data-id="176" id="ed-cc-c8x5">0 chars</span><span data-id="177" id="ed-est-e9y6">~0 min</span></div>
+          <textarea data-id="178" id="ed-text-t1z7" class="inp font-sans text-sm leading-relaxed flex-1" style="min-height:300px;" placeholder="Chapter text…"></textarea>
         </div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- TAB 3: VOICE LAB -->
-<section data-id="178" id="tab-voicelab" class="tab-content fade-in">
-  <h2 data-id="179" class="text-xl font-bold text-sf-text mb-4">Voice Lab</h2>
-  <!-- Search & Filters -->
-  <div data-id="180" class="flex flex-col gap-3 mb-5">
-    <div data-id="181" class="flex flex-col sm:flex-row gap-3">
-      <div data-id="182" class="flex-1 relative">
-        <i data-id="183" data-lucide="search" class="w-4 h-4 text-sf-muted absolute left-3 top-1/2 -translate-y-1/2"></i>
-        <input data-id="184" type="text" id="voice-search-v8" class="input-field pl-10 text-sm" placeholder="Search voices by name, accent, language…" />
-      </div>
-      <select data-id="185" id="voice-provider-filter-w9" class="input-field text-sm w-full sm:w-44">
-        <option data-id="186" value="">All Providers</option>
-        <option data-id="187">ElevenLabs</option><option data-id="188">OpenAI</option><option data-id="189">Google</option><option data-id="190">Azure</option><option data-id="191">AWS Polly</option><option data-id="192">PlayHT</option><option data-id="193">Murf</option>
-      </select>
-      <select data-id="194" id="voice-gender-filter-x0" class="input-field text-sm w-full sm:w-36">
-        <option data-id="195" value="">All Genders</option><option data-id="196">Female</option><option data-id="197">Male</option><option data-id="198">Neutral</option>
-      </select>
+<!-- TAB: VOICE LAB -->
+<section data-id="179" id="tab-voicelab" class="tab-c fade-in">
+  <h2 data-id="180" id="vl-heading-h2a8" class="text-xl md:text-2xl font-bold mb-1">Voice Lab</h2>
+  <p data-id="181" class="text-sm text-sf-muted mb-5">Browse and preview voices for your audiobook narration.</p>
+  <div data-id="182" class="flex flex-col gap-3 mb-5">
+    <div data-id="183" class="flex flex-col sm:flex-row gap-3">
+      <div data-id="184" class="flex-1 relative"><i data-id="185" data-lucide="search" class="w-4 h-4 text-sf-muted absolute left-3 top-1/2 -translate-y-1/2"></i><input data-id="186" type="text" id="vl-search-s3b9" class="inp pl-10 text-sm" placeholder="Search voices…" /></div>
+      <select data-id="187" id="vl-prov-p4c1" class="inp text-sm w-full sm:w-44"><option data-id="188" value="">All Providers</option><option data-id="189" value="StoryForge TTS">StoryForge TTS</option></select>
+      <select data-id="190" id="vl-gen-g5d2" class="inp text-sm w-full sm:w-36"><option data-id="191" value="">All Types</option><option data-id="192" value="Male">Male</option><option data-id="193" value="Female">Female</option><option data-id="194" value="Neutral">Neutral</option></select>
     </div>
-    <div data-id="199" class="flex gap-2 flex-wrap" id="voice-category-chips-y1">
-      <button data-id="200" class="filter-chip active" data-cat="all">All</button>
-      <button data-id="201" class="filter-chip" data-cat="narrator">Narrator</button>
-      <button data-id="202" class="filter-chip" data-cat="romance">Romance</button>
-      <button data-id="203" class="filter-chip" data-cat="horror">Horror</button>
-      <button data-id="204" class="filter-chip" data-cat="meditation">Meditation</button>
-      <button data-id="205" class="filter-chip" data-cat="children">Children</button>
-      <button data-id="206" class="filter-chip" data-cat="news">News</button>
-      <button data-id="207" class="filter-chip" data-cat="documentary">Documentary</button>
-      <button data-id="208" class="filter-chip" data-cat="character-male">Character (M)</button>
-      <button data-id="209" class="filter-chip" data-cat="character-female">Character (F)</button>
-      <button data-id="210" class="filter-chip" data-cat="comedy">Comedy</button>
-      <button data-id="211" class="filter-chip" data-cat="cloned">Cloned</button>
+    <div data-id="195" class="flex gap-2 flex-wrap" id="vl-chips-c6e3">
+      <button data-id="196" class="chip active" data-cat="all">All</button>
+      <button data-id="197" class="chip" data-cat="narrator">Narrator</button>
+      <button data-id="198" class="chip" data-cat="storytelling">Storytelling</button>
+      <button data-id="199" class="chip" data-cat="calm">Calm</button>
+      <button data-id="200" class="chip" data-cat="expressive">Expressive</button>
+      <button data-id="201" class="chip" data-cat="professional">Professional</button>
+      <button data-id="202" class="chip" data-cat="warm">Warm</button>
     </div>
   </div>
-  <!-- Voice Grid -->
-  <div data-id="212" id="voice-grid-z2" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 mb-10"></div>
-  <div data-id="213" id="voice-grid-count-a3" class="text-xs text-sf-muted mb-8"></div>
+  <div data-id="203" id="vl-count-c7f4" class="text-xs text-sf-muted mb-3"></div>
+  <div data-id="204" id="vl-grid-g8g5" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3"></div>
+</section>
 
-  <!-- Voice Cloning -->
-  <div data-id="214" class="glass-card p-6">
-    <h3 data-id="215" class="text-base font-semibold text-sf-text mb-4 flex items-center gap-2"><i data-id="216" data-lucide="copy" class="w-4 h-4 text-sf-amber"></i> Voice Cloning</h3>
-    <div data-id="217" class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
-      <div data-id="218">
-        <label data-id="219" class="text-xs text-sf-muted mb-1 block">Clone Name</label>
-        <input data-id="220" type="text" id="clone-name-b4" class="input-field text-sm" placeholder="My Custom Voice" />
-      </div>
-      <div data-id="221">
-        <label data-id="222" class="text-xs text-sf-muted mb-1 block">Description</label>
-        <input data-id="223" type="text" id="clone-desc-c5" class="input-field text-sm" placeholder="Warm, friendly voice for narration" />
-      </div>
+<!-- TAB: AI AGENTS -->
+<section data-id="205" id="tab-agents" class="tab-c fade-in">
+  <div data-id="206" class="flex items-center justify-between mb-5 flex-wrap gap-3">
+    <div data-id="207">
+      <h2 data-id="208" id="ag-heading-h9h6" class="text-xl md:text-2xl font-bold">AI Agents</h2>
+      <p data-id="209" class="text-sm text-sf-muted mt-1">Intelligent helpers that optimize your audiobook workflow.</p>
     </div>
-    <div data-id="224" class="border-2 border-dashed rounded-xl p-8 text-center mb-4 cursor-pointer" style="border-color:rgba(255,255,255,0.1);" id="clone-dropzone-d6">
-      <i data-id="225" data-lucide="upload-cloud" class="w-8 h-8 text-sf-muted mx-auto mb-2"></i>
-      <p data-id="226" class="text-sm text-sf-muted">Drag & drop audio file or <span data-id="227" class="text-sf-teal">click to browse</span></p>
-      <p data-id="228" class="text-xs text-sf-dimmed mt-1">WAV, MP3, FLAC — min 30 seconds</p>
-      <input data-id="229" type="file" id="clone-file-input-e7" class="hidden" accept="audio/*" />
-    </div>
-    <div data-id="230" id="clone-file-name-f8" class="text-xs text-sf-muted mb-3 hidden"></div>
-    <button data-id="231" id="clone-voice-btn-g9" class="btn-primary text-sm flex items-center gap-2">
-      <i data-id="232" data-lucide="copy" class="w-4 h-4"></i> Clone Voice (ElevenLabs API)
-    </button>
+    <button data-id="210" id="run-all-btn-r1i7" class="btn-p text-sm flex items-center gap-2"><i data-id="211" data-lucide="play" class="w-4 h-4"></i> Run All Agents</button>
+  </div>
+  <div data-id="212" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 mb-6" id="agents-grid-g2j8"></div>
+  <div data-id="213" class="glass p-5">
+    <h3 data-id="214" class="text-sm font-semibold mb-3 flex items-center gap-2"><i data-id="215" data-lucide="scroll-text" class="w-4 h-4 text-sf-muted"></i> Activity Log</h3>
+    <div data-id="216" id="ag-log-l3k9" class="flex flex-col gap-1 max-h-64 overflow-y-auto text-xs font-mono"></div>
   </div>
 </section>
 
-<!-- TAB 4: AI AGENTS -->
-<section data-id="233" id="tab-agents" class="tab-content fade-in">
-  <div data-id="234" class="flex items-center justify-between mb-5 flex-wrap gap-3">
-    <h2 data-id="235" class="text-xl font-bold text-sf-text">AI Agents</h2>
-    <button data-id="236" id="run-all-agents-btn-h0" class="btn-primary text-sm flex items-center gap-2"><i data-id="237" data-lucide="play" class="w-4 h-4"></i> Run All Agents</button>
-  </div>
-  <div data-id="238" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 mb-6" id="agents-grid-i1">
-    <!-- Director -->
-    <div data-id="239" class="agent-card" data-agent="director">
-      <div data-id="240" class="flex items-center justify-between mb-3">
-        <div data-id="241" class="flex items-center gap-2">
-          <span data-id="242" class="text-xl">🎬</span>
-          <span data-id="243" class="text-sm font-semibold text-sf-text">Director Agent</span>
-        </div>
-        <div data-id="244" class="flex items-center gap-2">
-          <span data-id="245" class="status-dot status-idle" id="agent-status-director"></span>
-          <span data-id="246" class="text-xs text-sf-muted" id="agent-time-director">idle</span>
-        </div>
-      </div>
-      <p data-id="247" class="text-xs text-sf-muted mb-3">Analyzes genre & tone, suggests narration direction per chapter.</p>
-      <div data-id="248" class="mb-3">
-        <label data-id="249" class="text-xs text-sf-muted mb-1 block">Genre Focus</label>
-        <select data-id="250" class="input-field text-xs" id="agent-cfg-director"><option data-id="251">Fantasy</option><option data-id="252">Romance</option><option data-id="253">Thriller</option><option data-id="254">Horror</option><option data-id="255">Non-Fiction</option><option data-id="256">Children</option><option data-id="257">Self-Help</option><option data-id="258">Biography</option></select>
-      </div>
-      <button data-id="259" class="btn-secondary text-xs w-full agent-run-btn" data-agent="director">Run Agent</button>
-      <div data-id="260" class="mt-3 text-xs text-sf-muted hidden" id="agent-output-director"></div>
-    </div>
-    <!-- Character -->
-    <div data-id="261" class="agent-card" data-agent="character">
-      <div data-id="262" class="flex items-center justify-between mb-3">
-        <div data-id="263" class="flex items-center gap-2">
-          <span data-id="264" class="text-xl">👥</span>
-          <span data-id="265" class="text-sm font-semibold text-sf-text">Character Agent</span>
-        </div>
-        <div data-id="266" class="flex items-center gap-2">
-          <span data-id="267" class="status-dot status-idle" id="agent-status-character"></span>
-          <span data-id="268" class="text-xs text-sf-muted" id="agent-time-character">idle</span>
-        </div>
-      </div>
-      <p data-id="269" class="text-xs text-sf-muted mb-3">Identifies speaking characters in text, auto-assigns voices.</p>
-      <div data-id="270" class="mb-3">
-        <label data-id="271" class="text-xs text-sf-muted mb-1 block">Detection Sensitivity</label>
-        <input data-id="272" type="range" class="slider-track" min="1" max="10" value="5" id="agent-cfg-character" />
-      </div>
-      <button data-id="273" class="btn-secondary text-xs w-full agent-run-btn" data-agent="character">Run Agent</button>
-      <div data-id="274" class="mt-3 text-xs text-sf-muted hidden" id="agent-output-character"></div>
-    </div>
-    <!-- Editor -->
-    <div data-id="275" class="agent-card" data-agent="editor">
-      <div data-id="276" class="flex items-center justify-between mb-3">
-        <div data-id="277" class="flex items-center gap-2">
-          <span data-id="278" class="text-xl">✏️</span>
-          <span data-id="279" class="text-sm font-semibold text-sf-text">Editor Agent</span>
-        </div>
-        <div data-id="280" class="flex items-center gap-2">
-          <span data-id="281" class="status-dot status-idle" id="agent-status-editor"></span>
-          <span data-id="282" class="text-xs text-sf-muted" id="agent-time-editor">idle</span>
-        </div>
-      </div>
-      <p data-id="283" class="text-xs text-sf-muted mb-3">Cleans text for TTS: removes markdown, expands abbreviations, fixes numbers.</p>
-      <div data-id="284" class="mb-3">
-        <label data-id="285" class="text-xs text-sf-muted mb-1 block">Language</label>
-        <select data-id="286" class="input-field text-xs" id="agent-cfg-editor"><option data-id="287">English</option><option data-id="288">Spanish</option><option data-id="289">French</option><option data-id="290">German</option><option data-id="291">Italian</option><option data-id="292">Portuguese</option><option data-id="293">Japanese</option></select>
-      </div>
-      <button data-id="294" class="btn-secondary text-xs w-full agent-run-btn" data-agent="editor">Run Agent</button>
-      <div data-id="295" class="mt-3 text-xs text-sf-muted hidden" id="agent-output-editor"></div>
-    </div>
-    <!-- Pacing -->
-    <div data-id="296" class="agent-card" data-agent="pacing">
-      <div data-id="297" class="flex items-center justify-between mb-3">
-        <div data-id="298" class="flex items-center gap-2">
-          <span data-id="299" class="text-xl">🎭</span>
-          <span data-id="300" class="text-sm font-semibold text-sf-text">Pacing Agent</span>
-        </div>
-        <div data-id="301" class="flex items-center gap-2">
-          <span data-id="302" class="status-dot status-idle" id="agent-status-pacing"></span>
-          <span data-id="303" class="text-xs text-sf-muted" id="agent-time-pacing">idle</span>
-        </div>
-      </div>
-      <p data-id="304" class="text-xs text-sf-muted mb-3">Inserts dramatic pauses at scene breaks, adds breath marks.</p>
-      <div data-id="305" class="mb-3">
-        <label data-id="306" class="text-xs text-sf-muted mb-1 block">Intensity</label>
-        <input data-id="307" type="range" class="slider-track" min="1" max="10" value="5" id="agent-cfg-pacing" />
-      </div>
-      <button data-id="308" class="btn-secondary text-xs w-full agent-run-btn" data-agent="pacing">Run Agent</button>
-      <div data-id="309" class="mt-3 text-xs text-sf-muted hidden" id="agent-output-pacing"></div>
-    </div>
-    <!-- QA -->
-    <div data-id="310" class="agent-card" data-agent="qa">
-      <div data-id="311" class="flex items-center justify-between mb-3">
-        <div data-id="312" class="flex items-center gap-2">
-          <span data-id="313" class="text-xl">🔍</span>
-          <span data-id="314" class="text-sm font-semibold text-sf-text">QA Agent</span>
-        </div>
-        <div data-id="315" class="flex items-center gap-2">
-          <span data-id="316" class="status-dot status-idle" id="agent-status-qa"></span>
-          <span data-id="317" class="text-xs text-sf-muted" id="agent-time-qa">idle</span>
-        </div>
-      </div>
-      <p data-id="318" class="text-xs text-sf-muted mb-3">Scores generated audio quality, flags chapters with issues.</p>
-      <div data-id="319" class="mb-3">
-        <label data-id="320" class="text-xs text-sf-muted mb-1 block">Quality Threshold</label>
-        <input data-id="321" type="range" class="slider-track" min="1" max="10" value="7" id="agent-cfg-qa" />
-      </div>
-      <button data-id="322" class="btn-secondary text-xs w-full agent-run-btn" data-agent="qa">Run Agent</button>
-      <div data-id="323" class="mt-3 text-xs text-sf-muted hidden" id="agent-output-qa"></div>
-    </div>
-    <!-- Translator -->
-    <div data-id="324" class="agent-card" data-agent="translator">
-      <div data-id="325" class="flex items-center justify-between mb-3">
-        <div data-id="326" class="flex items-center gap-2">
-          <span data-id="327" class="text-xl">🌐</span>
-          <span data-id="328" class="text-sm font-semibold text-sf-text">Translator Agent</span>
-        </div>
-        <div data-id="329" class="flex items-center gap-2">
-          <span data-id="330" class="status-dot status-idle" id="agent-status-translator"></span>
-          <span data-id="331" class="text-xs text-sf-muted" id="agent-time-translator">idle</span>
-        </div>
-      </div>
-      <p data-id="332" class="text-xs text-sf-muted mb-3">Translates chapters to target language preserving literary style.</p>
-      <div data-id="333" class="mb-3">
-        <label data-id="334" class="text-xs text-sf-muted mb-1 block">Target Language</label>
-        <select data-id="335" class="input-field text-xs" id="agent-cfg-translator">
-          <option data-id="336">Spanish</option><option data-id="337">French</option><option data-id="338">German</option><option data-id="339">Italian</option><option data-id="340">Portuguese</option><option data-id="341">Japanese</option><option data-id="342">Korean</option><option data-id="343">Mandarin</option><option data-id="344">Cantonese</option><option data-id="345">Hindi</option><option data-id="346">Arabic</option><option data-id="347">Russian</option><option data-id="348">Turkish</option><option data-id="349">Dutch</option><option data-id="350">Swedish</option><option data-id="351">Norwegian</option><option data-id="352">Danish</option><option data-id="353">Finnish</option><option data-id="354">Polish</option><option data-id="355">Czech</option><option data-id="356">Greek</option><option data-id="357">Hebrew</option><option data-id="358">Thai</option><option data-id="359">Vietnamese</option><option data-id="360">Indonesian</option><option data-id="361">Malay</option>
-        </select>
-      </div>
-      <button data-id="362" class="btn-secondary text-xs w-full agent-run-btn" data-agent="translator">Run Agent</button>
-      <div data-id="363" class="mt-3 text-xs text-sf-muted hidden" id="agent-output-translator"></div>
-    </div>
-  </div>
-  <!-- Activity Log -->
-  <div data-id="364" class="glass-card p-5">
-    <h3 data-id="365" class="text-sm font-semibold text-sf-text mb-3 flex items-center gap-2"><i data-id="366" data-lucide="scroll-text" class="w-4 h-4 text-sf-muted"></i> Activity Log</h3>
-    <div data-id="367" id="agent-log-j2" class="flex flex-col gap-1 max-h-64 overflow-y-auto text-xs font-mono"></div>
-  </div>
-</section>
+<!-- TAB: SETTINGS -->
+<section data-id="217" id="tab-settings" class="tab-c fade-in">
+  <h2 data-id="218" id="set-heading-h4l1" class="text-xl md:text-2xl font-bold mb-5">Settings</h2>
 
-<!-- TAB 5: SETTINGS -->
-<section data-id="368" id="tab-settings" class="tab-content fade-in">
-  <h2 data-id="369" class="text-xl font-bold text-sf-text mb-5">Settings</h2>
-  <!-- API Keys -->
-  <div data-id="370" class="glass-card p-5 mb-5">
-    <h3 data-id="371" class="text-sm font-semibold text-sf-text mb-4 flex items-center gap-2"><i data-id="372" data-lucide="key-round" class="w-4 h-4 text-sf-amber"></i> API Keys</h3>
-    <div data-id="373" class="flex flex-col gap-3" id="api-keys-container-k3"></div>
-  </div>
-  <!-- Generation Prefs -->
-  <div data-id="374" class="glass-card p-5 mb-5">
-    <h3 data-id="375" class="text-sm font-semibold text-sf-text mb-4 flex items-center gap-2"><i data-id="376" data-lucide="sliders-horizontal" class="w-4 h-4 text-sf-teal"></i> Generation Preferences</h3>
-    <div data-id="377" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-      <div data-id="378"><label data-id="379" class="text-xs text-sf-muted mb-1 block">Default Provider</label><select data-id="380" id="pref-provider-l4" class="input-field text-sm"><option data-id="381">ElevenLabs</option><option data-id="382">OpenAI</option><option data-id="383">Google</option><option data-id="384">Azure</option><option data-id="385">AWS Polly</option><option data-id="386">PlayHT</option><option data-id="387">Murf</option><option data-id="388">Browser TTS</option></select></div>
-      <div data-id="389"><label data-id="390" class="text-xs text-sf-muted mb-1 block">Default Voice</label><select data-id="391" id="pref-voice-m5" class="input-field text-sm"><option data-id="392">Rachel</option><option data-id="393">Alloy</option><option data-id="394">Jenny</option><option data-id="395">Joanna</option></select></div>
-      <div data-id="396"><label data-id="397" class="text-xs text-sf-muted mb-1 flex justify-between"><span data-id="398">Concurrent Generations</span><span data-id="399" class="font-mono" id="pref-conc-val-n6">2</span></label><input data-id="400" type="range" class="slider-track" min="1" max="5" value="2" id="pref-conc-slider-o7" /></div>
-      <div data-id="401"><label data-id="402" class="text-xs text-sf-muted mb-1 block">Auto-save Interval</label><select data-id="403" id="pref-autosave-p8" class="input-field text-sm"><option data-id="404">1 min</option><option data-id="405">5 min</option><option data-id="406" selected>10 min</option><option data-id="407">30 min</option></select></div>
-      <div data-id="408"><label data-id="409" class="text-xs text-sf-muted mb-1 block">Audio Format</label><select data-id="410" id="pref-format-q9" class="input-field text-sm"><option data-id="411">MP3</option><option data-id="412">WAV</option><option data-id="413">OGG</option></select></div>
-      <div data-id="414"><label data-id="415" class="text-xs text-sf-muted mb-1 block">Sample Rate</label><select data-id="416" id="pref-samplerate-r0" class="input-field text-sm"><option data-id="417">22050 Hz</option><option data-id="418" selected>44100 Hz</option></select></div>
+  <div data-id="219" class="glass p-5 mb-5">
+    <h3 data-id="220" class="text-sm font-semibold mb-4 flex items-center gap-2"><i data-id="221" data-lucide="key-round" class="w-4 h-4 text-sf-amber"></i> API Keys</h3>
+    <p data-id="222" class="text-xs text-sf-muted mb-4">StoryForge uses built-in AI-powered TTS. Optionally, connect external providers for additional voices.</p>
+    <div data-id="223" class="flex flex-col gap-4">
+      <div data-id="224">
+        <label data-id="225" class="text-xs text-sf-muted mb-1 block">ElevenLabs API Key</label>
+        <div data-id="226" class="flex gap-2">
+          <input data-id="227" type="password" id="key-el-k5m2" class="inp text-sm flex-1" placeholder="Enter ElevenLabs key…" />
+          <button data-id="228" class="btn-g text-xs" id="key-el-tog-t6n3"><i data-id="229" data-lucide="eye" class="w-4 h-4"></i></button>
+          <button data-id="230" class="btn-s text-xs py-2 px-3" id="key-el-test-t7o4">Test</button>
+        </div>
+      </div>
+      <div data-id="231">
+        <label data-id="232" class="text-xs text-sf-muted mb-1 block">OpenAI API Key</label>
+        <div data-id="233" class="flex gap-2">
+          <input data-id="234" type="password" id="key-oai-k8p5" class="inp text-sm flex-1" placeholder="Enter OpenAI key…" />
+          <button data-id="235" class="btn-g text-xs" id="key-oai-tog-t9q6"><i data-id="236" data-lucide="eye" class="w-4 h-4"></i></button>
+          <button data-id="237" class="btn-s text-xs py-2 px-3" id="key-oai-test-t1r7">Test</button>
+        </div>
+      </div>
     </div>
   </div>
-  <!-- Export Settings -->
-  <div data-id="419" class="glass-card p-5 mb-5">
-    <h3 data-id="420" class="text-sm font-semibold text-sf-text mb-4 flex items-center gap-2"><i data-id="421" data-lucide="package" class="w-4 h-4 text-purple-400"></i> Export Settings</h3>
-    <div data-id="422" class="flex flex-col gap-3">
-      <label data-id="423" class="flex items-center gap-3 cursor-pointer"><input data-id="424" type="checkbox" id="exp-m3u-s1" checked class="accent-[#00d4ff] w-4 h-4" /><span data-id="425" class="text-sm text-sf-text">Include M3U playlist</span></label>
-      <label data-id="426" class="flex items-center gap-3 cursor-pointer"><input data-id="427" type="checkbox" id="exp-meta-t2" checked class="accent-[#00d4ff] w-4 h-4" /><span data-id="428" class="text-sm text-sf-text">Include chapter metadata JSON</span></label>
-      <div data-id="429"><label data-id="430" class="text-xs text-sf-muted mb-1 flex justify-between"><span data-id="431">ZIP Compression Level</span><span data-id="432" class="font-mono" id="exp-zip-val-u3">6</span></label><input data-id="433" type="range" class="slider-track" min="1" max="9" value="6" id="exp-zip-slider-v4" /></div>
+
+  <div data-id="238" class="glass p-5 mb-5">
+    <h3 data-id="239" class="text-sm font-semibold mb-4 flex items-center gap-2"><i data-id="240" data-lucide="sliders-horizontal" class="w-4 h-4 text-sf-teal"></i> Generation Preferences</h3>
+    <div data-id="241" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div data-id="242"><label data-id="243" class="text-xs text-sf-muted mb-1 block">Default TTS Provider</label>
+        <select data-id="244" id="pf-prov-p2s8" class="inp text-sm"><option data-id="245" value="appsdk">StoryForge TTS (Built-in)</option><option data-id="246" value="elevenlabs">ElevenLabs</option><option data-id="247" value="openai">OpenAI</option></select>
+      </div>
+      <div data-id="248"><label data-id="249" class="text-xs text-sf-muted mb-1 block">Default Voice</label>
+        <select data-id="250" id="pf-voice-v3t9" class="inp text-sm"></select>
+      </div>
+      <div data-id="251"><label data-id="252" class="text-xs text-sf-muted mb-1 block">Audio Quality</label>
+        <select data-id="253" id="pf-qual-q4u1" class="inp text-sm"><option data-id="254" value="standard">Standard</option><option data-id="255" value="hd" selected>High Definition</option></select>
+      </div>
+      <div data-id="256"><label data-id="257" class="text-xs text-sf-muted mb-1 block">Chapter Detection</label>
+        <select data-id="258" id="pf-detect-d5v2" class="inp text-sm"><option data-id="259" value="auto" selected>Auto</option><option data-id="260" value="strict">Strict</option><option data-id="261" value="loose">Loose</option></select>
+      </div>
+      <div data-id="262"><label data-id="263" class="text-xs text-sf-muted mb-1 block">Export Format</label>
+        <select data-id="264" id="pf-format-f6w3" class="inp text-sm"><option data-id="265" value="mp3" selected>MP3</option><option data-id="266" value="wav">WAV</option></select>
+      </div>
+      <div data-id="267"><label data-id="268" class="flex items-center gap-3 cursor-pointer mt-5"><input data-id="269" type="checkbox" id="pf-autoplay-a7x4" checked class="accent-[#00d4ff] w-4 h-4" /><span data-id="270" class="text-sm">Auto-play next chapter</span></label></div>
     </div>
   </div>
-  <!-- Appearance -->
-  <div data-id="434" class="glass-card p-5 mb-5">
-    <h3 data-id="435" class="text-sm font-semibold text-sf-text mb-4 flex items-center gap-2"><i data-id="436" data-lucide="palette" class="w-4 h-4 text-sf-green"></i> Appearance</h3>
-    <div data-id="437" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-      <div data-id="438"><label data-id="439" class="text-xs text-sf-muted mb-1 block">Theme</label><select data-id="440" id="pref-theme-w5" class="input-field text-sm"><option data-id="441" selected>Dark</option><option data-id="442">Light</option><option data-id="443">System</option></select></div>
-      <div data-id="444"><label data-id="445" class="text-xs text-sf-muted mb-1 block">Font Size</label><select data-id="446" id="pref-fontsize-x6" class="input-field text-sm"><option data-id="447">Small</option><option data-id="448" selected>Medium</option><option data-id="449">Large</option></select></div>
-    </div>
+
+  <div data-id="271" class="glass p-5 mb-5">
+    <h3 data-id="272" class="text-sm font-semibold mb-4 flex items-center gap-2"><i data-id="273" data-lucide="database" class="w-4 h-4 text-sf-red"></i> Storage</h3>
+    <p data-id="274" class="text-sm text-sf-muted mb-3">All project data is stored locally in your browser.</p>
+    <button data-id="275" id="clear-all-btn-c8y5" class="btn-d text-sm flex items-center gap-2"><i data-id="276" data-lucide="trash-2" class="w-4 h-4"></i> Clear All Projects</button>
   </div>
-  <button data-id="450" id="save-settings-btn-y7" class="btn-primary text-sm flex items-center gap-2"><i data-id="451" data-lucide="save" class="w-4 h-4"></i> Save Settings</button>
+  <button data-id="277" id="save-set-btn-s9z6" class="btn-p text-sm flex items-center gap-2"><i data-id="278" data-lucide="save" class="w-4 h-4"></i> Save Settings</button>
 </section>
 
 </main>
 
-<footer data-id="452" class="py-8 mt-auto text-center border-t" style="border-color:rgba(255,255,255,0.04);">
-  <p data-id="453" class="text-xs text-sf-muted">Made by Copilot</p>
+<footer data-id="279" id="app-footer-f1a7" style="background:#0a0a14;border-top:1px solid rgba(255,255,255,0.06);padding:16px;text-align:center;color:#64748b;font-size:13px;">
+  &copy; 2026 StoryForge — Aurelio Dioval Audiobook Studio. All rights reserved. &nbsp;·&nbsp; Made by Copilot
 </footer>
 
 <script>
-if (typeof lucide !== "undefined" && typeof lucide.createIcons === "function") {
-  lucide.createIcons();
-}
+/* ===== ICONS ===== */
+if(typeof lucide!=="undefined"&&typeof lucide.createIcons==="function"){lucide.createIcons();}
+function refreshIcons(){if(typeof lucide!=="undefined"&&typeof lucide.createIcons==="function")lucide.createIcons();}
 
-/* ========================= STATE ========================= */
-const STORAGE_KEY = 'storyforge_v2_state';
-
-const SAMPLE_TEXT_PROLOGUE = `The world had forgotten the old magic—not slowly, as one might expect of something so ancient, but all at once, as if a great hand had reached down and plucked the memory from every living mind. The elders who once spoke of shimmering wards and whispered incantations now stared blankly when questioned, their eyes clouded with a haze that felt almost deliberate.\n\nBut in the deepest chamber beneath the Obsidian Spire, where no light had touched stone for a thousand years, something stirred. A crystalline hum resonated through the darkness, growing stronger with each passing heartbeat. The Awakening had begun, and no spell of forgetting could contain what was about to rise.\n\nLyra felt it first—a vibration in her bones that made her gasp and drop the clay pitcher she'd been carrying from the well. The water splashed across the cobblestones, catching the last light of the setting sun in patterns that looked almost like runes.`;
-
-const SAMPLE_TEXT_CH1 = `The Ancient City of Veradun spread before them like a fever dream carved in obsidian and silver. Towers twisted toward the sky in impossible spirals, their surfaces etched with glyphs that pulsed with a faint, bioluminescent glow. Streets of polished black stone reflected the perpetual twilight that hung over the city—neither day nor night, but something in between.\n\n"Nobody's been here in centuries," Kael whispered, his hand instinctively reaching for the short sword at his hip. "The maps say this place doesn't exist."\n\nLyra stepped forward, her boots silent on the ancient stone. "The maps are wrong about a lot of things." She could feel the city's heartbeat now—a deep, rhythmic pulse that seemed to emanate from somewhere far beneath their feet. The crystal pendant around her neck had begun to glow the moment they'd crossed the threshold.\n\nThe air tasted of ozone and something older—something that reminded her of the stories her grandmother used to tell before the Forgetting took those memories too.`;
-
-const SAMPLE_TEXT_CH2 = `Shadows pooled in the corners of the great hall like living things, stretching and retreating with a will of their own. The light from Lyra's pendant carved a small sphere of safety around their group, but beyond its reach, the darkness seemed to breathe.\n\n"We need to find the Resonance Chamber before nightfall," Kael said, though the word 'nightfall' felt meaningless in a city trapped in eternal dusk. "If the old texts are right, that's where the First Song was composed."\n\nLyra nodded, but her attention was caught by something else entirely—a pattern in the shadows that didn't shift with the others. It held its shape: the silhouette of a figure, tall and still, watching them from the far end of the hall.`;
-
-function getDefaultState() {
-  return {
-    projects: [{
-      id: 'proj_1',
-      title: 'The Midnight Chronicles',
-      genre: 'Fantasy',
-      createdAt: '2026-09-20T14:30:00',
-      updatedAt: '2026-09-25T19:45:00',
-      chapters: [
-        { id: 'ch_1', title: 'Prologue: The Awakening', text: SAMPLE_TEXT_PROLOGUE, voice: 'Rachel', voiceProvider: 'ElevenLabs', narration: 'Warm Storyteller', speed: 100, stability: 50, clarity: 75, style: 50, status: 'idle', audioGenerated: false, duration: 0 },
-        { id: 'ch_2', title: 'Chapter 1: The Ancient City', text: SAMPLE_TEXT_CH1, voice: 'Rachel', voiceProvider: 'ElevenLabs', narration: 'Dramatic Epic', speed: 100, stability: 55, clarity: 80, style: 60, status: 'done', audioGenerated: true, duration: 48 },
-        { id: 'ch_3', title: 'Chapter 2: Shadows and Light', text: SAMPLE_TEXT_CH2, voice: 'Onyx', voiceProvider: 'OpenAI', narration: 'Quiet Noir', speed: 95, stability: 60, clarity: 70, style: 45, status: 'idle', audioGenerated: false, duration: 0 }
-      ]
-    }],
-    favoriteVoices: [],
-    clonedVoices: [],
-    settings: {
-      apiKeys: { elevenlabs: '', openai: '', google: '', azure: '', awsKey: '', awsSecret: '', playhtKey: '', playhtUser: '', murf: '', openrouter: '' },
-      defaultProvider: 'ElevenLabs',
-      defaultVoice: 'Rachel',
-      concurrent: 2,
-      autosave: '10 min',
-      format: 'MP3',
-      sampleRate: '44100 Hz',
-      exportM3U: true,
-      exportMeta: true,
-      zipLevel: 6,
-      theme: 'Dark',
-      fontSize: 'Medium'
-    },
-    agentLog: [
-      { time: '2026-09-25 19:30:12', agent: 'Director', msg: 'Analyzed "The Midnight Chronicles" — Genre: Fantasy. Recommended narration: Dramatic Epic for action sequences, Warm Storyteller for exposition.' },
-      { time: '2026-09-25 19:31:05', agent: 'Character', msg: 'Detected 3 characters: Lyra (protagonist), Kael (companion), Narrator. Assigned voices: Lyra→Charlotte, Kael→Josh, Narrator→Rachel.' },
-      { time: '2026-09-25 19:32:18', agent: 'Editor', msg: 'Processed 3 chapters. Expanded 2 abbreviations, converted 4 numbers to words, removed 1 markdown heading.' },
-      { time: '2026-09-25 19:33:44', agent: 'Pacing', msg: 'Inserted 8 dramatic pauses across 3 chapters. Added breath marks before 12 dialogue lines.' },
-      { time: '2026-09-25 19:35:01', agent: 'QA', msg: 'Quality scan complete. Chapter 1: 92/100 ✓ | Chapter 2: 88/100 ✓ | Prologue: pending audio generation.' },
-      { time: '2026-09-25 19:36:30', agent: 'Translator', msg: 'Translation ready: Spanish (es-ES). Preserved literary tone and character voice distinctions.' }
-    ]
-  };
-}
-
-let state;
-try {
-  const saved = localStorage.getItem(STORAGE_KEY);
-  state = saved ? JSON.parse(saved) : getDefaultState();
-  if (!state.projects) state = getDefaultState();
-} catch(e) {
-  state = getDefaultState();
-}
-
-function saveState() {
-  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch(e) {}
-}
-
-let currentProjectId = null;
-let currentChapterId = null;
-let currentAudio = null;
-let waveformAnimId = null;
-let isPlaying = false;
-
-/* ========================= VOICES CATALOG ========================= */
-const VOICES = [
-  // ElevenLabs
-  {name:'Rachel',provider:'ElevenLabs',cat:'narrator',gender:'Female',accent:'American',lang:'en',tags:['warm','clear','versatile'],desc:'A warm, clear voice perfect for long-form narration and storytelling.'},
-  {name:'Domi',provider:'ElevenLabs',cat:'character-female',gender:'Female',accent:'American',lang:'en',tags:['strong','confident'],desc:'Strong and confident female character voice.'},
-  {name:'Bella',provider:'ElevenLabs',cat:'romance',gender:'Female',accent:'American',lang:'en',tags:['soft','sensual'],desc:'Soft and sensual, ideal for romance audiobooks.'},
-  {name:'Antoni',provider:'ElevenLabs',cat:'narrator',gender:'Male',accent:'American',lang:'en',tags:['well-rounded','clear'],desc:'A well-rounded male narrator with natural warmth.'},
-  {name:'Thomas',provider:'ElevenLabs',cat:'documentary',gender:'Male',accent:'American',lang:'en',tags:['calm','deep'],desc:'Calm, deep voice suited for documentary narration.'},
-  {name:'Charlotte',provider:'ElevenLabs',cat:'narrator',gender:'Female',accent:'Swedish',lang:'en',tags:['seductive','elegant'],desc:'Seductive European accent with elegant phrasing.'},
-  {name:'Emily',provider:'ElevenLabs',cat:'romance',gender:'Female',accent:'British',lang:'en',tags:['warm','gentle'],desc:'Warm and gentle British voice for romance.'},
-  {name:'Elli',provider:'ElevenLabs',cat:'children',gender:'Female',accent:'American',lang:'en',tags:['bright','energetic'],desc:'Bright and energetic, perfect for children\'s stories.'},
-  {name:'Callum',provider:'ElevenLabs',cat:'horror',gender:'Male',accent:'American',lang:'en',tags:['intense','mysterious'],desc:'Intense and mysterious voice for horror and thriller.'},
-  {name:'Patrick',provider:'ElevenLabs',cat:'news',gender:'Male',accent:'American',lang:'en',tags:['authoritative','professional'],desc:'Authoritative news-style delivery.'},
-  {name:'Harry',provider:'ElevenLabs',cat:'horror',gender:'Male',accent:'American',lang:'en',tags:['anxious','whispery'],desc:'Anxious, whispery tone for suspenseful content.'},
-  {name:'Liam',provider:'ElevenLabs',cat:'documentary',gender:'Male',accent:'American',lang:'en',tags:['articulate','clear'],desc:'Articulate and clear documentary narrator.'},
-  {name:'Dorothy',provider:'ElevenLabs',cat:'meditation',gender:'Female',accent:'British',lang:'en',tags:['calm','pleasant'],desc:'Calm, pleasant voice ideal for meditation and relaxation.'},
-  {name:'Josh',provider:'ElevenLabs',cat:'narrator',gender:'Male',accent:'American',lang:'en',tags:['deep','young'],desc:'Deep, youthful voice with engaging energy.'},
-  {name:'Arnold',provider:'ElevenLabs',cat:'narrator',gender:'Male',accent:'American',lang:'en',tags:['crisp','deep'],desc:'Crisp and deep, commanding attention.'},
-  {name:'Adam',provider:'ElevenLabs',cat:'narrator',gender:'Male',accent:'American',lang:'en',tags:['deep','strong'],desc:'Deep and strong narrator with powerful delivery.'},
-  {name:'Sam',provider:'ElevenLabs',cat:'narrator',gender:'Male',accent:'American',lang:'en',tags:['raspy','middle-aged'],desc:'Raspy, experienced voice with character.'},
-  {name:'Glinda',provider:'ElevenLabs',cat:'children',gender:'Female',accent:'American',lang:'en',tags:['warm','friendly'],desc:'Warm and friendly, like a favorite storytelling aunt.'},
-  {name:'Giovanni',provider:'ElevenLabs',cat:'narrator',gender:'Male',accent:'Italian',lang:'en',tags:['charming','foreign'],desc:'Charming Italian-accented English narrator.'},
-  {name:'Freya',provider:'ElevenLabs',cat:'romance',gender:'Female',accent:'American',lang:'en',tags:['confident','expressive'],desc:'Confident and expressive, brings romance to life.'},
-  // OpenAI
-  {name:'Alloy',provider:'OpenAI',cat:'narrator',gender:'Neutral',accent:'American',lang:'en',tags:['balanced','neutral'],desc:'Neutral balanced voice for versatile narration.'},
-  {name:'Echo',provider:'OpenAI',cat:'documentary',gender:'Male',accent:'American',lang:'en',tags:['clear','precise'],desc:'Clear and precise, ideal for informational content.'},
-  {name:'Fable',provider:'OpenAI',cat:'narrator',gender:'Male',accent:'British',lang:'en',tags:['warm','expressive'],desc:'Warm, expressive British voice perfect for storytelling.'},
-  {name:'Onyx',provider:'OpenAI',cat:'news',gender:'Male',accent:'American',lang:'en',tags:['deep','authoritative'],desc:'Deep and authoritative, commands attention.'},
-  {name:'Nova',provider:'OpenAI',cat:'romance',gender:'Female',accent:'American',lang:'en',tags:['warm','bright'],desc:'Warm and bright female voice with natural charm.'},
-  {name:'Shimmer',provider:'OpenAI',cat:'meditation',gender:'Female',accent:'American',lang:'en',tags:['clear','positive'],desc:'Clear and positive, perfect for wellness content.'},
-  {name:'Ash',provider:'OpenAI',cat:'narrator',gender:'Male',accent:'American',lang:'en',tags:['clear','crisp'],desc:'Clear and crisp American narrator.'},
-  {name:'Ballad',provider:'OpenAI',cat:'romance',gender:'Male',accent:'American',lang:'en',tags:['expressive','warm'],desc:'Expressive and warm, ideal for romantic narratives.'},
-  {name:'Coral',provider:'OpenAI',cat:'children',gender:'Female',accent:'American',lang:'en',tags:['vibrant','playful'],desc:'Vibrant and playful, children love this voice.'},
-  {name:'Sage',provider:'OpenAI',cat:'meditation',gender:'Female',accent:'American',lang:'en',tags:['calm','wise'],desc:'Calm and wise, brings serenity to guided content.'},
-  {name:'Verse',provider:'OpenAI',cat:'character-male',gender:'Male',accent:'American',lang:'en',tags:['expressive','versatile'],desc:'Expressive and versatile character voice.'},
-  // Google
-  {name:'Wavenet-A',provider:'Google',cat:'narrator',gender:'Female',accent:'American',lang:'en',tags:['natural','clear'],desc:'Google\'s premium neural voice, female American.'},
-  {name:'Wavenet-B',provider:'Google',cat:'narrator',gender:'Male',accent:'American',lang:'en',tags:['natural','smooth'],desc:'Smooth male American neural voice.'},
-  {name:'Wavenet-C',provider:'Google',cat:'narrator',gender:'Female',accent:'American',lang:'en',tags:['bright','clear'],desc:'Bright and clear female American voice.'},
-  {name:'Wavenet-D',provider:'Google',cat:'narrator',gender:'Male',accent:'American',lang:'en',tags:['warm','natural'],desc:'Warm male voice with natural cadence.'},
-  {name:'Neural2-A',provider:'Google',cat:'narrator',gender:'Female',accent:'American',lang:'en',tags:['premium','natural'],desc:'Premium quality female neural voice.'},
-  {name:'Neural2-C',provider:'Google',cat:'narrator',gender:'Male',accent:'American',lang:'en',tags:['premium','deep'],desc:'Premium male voice with depth.'},
-  {name:'Journey-D',provider:'Google',cat:'documentary',gender:'Male',accent:'American',lang:'en',tags:['conversational','warm'],desc:'Conversational style for documentary narration.'},
-  {name:'Journey-F',provider:'Google',cat:'narrator',gender:'Female',accent:'American',lang:'en',tags:['expressive','natural'],desc:'Expressive female voice with natural flow.'},
-  {name:'Polyglot-1',provider:'Google',cat:'narrator',gender:'Male',accent:'International',lang:'multi',tags:['multilingual','versatile'],desc:'Multilingual voice supporting 10+ languages.'},
-  {name:'en-GB-Neural2-A',provider:'Google',cat:'narrator',gender:'Female',accent:'British',lang:'en',tags:['British','refined'],desc:'Refined British female neural voice.'},
-  {name:'en-GB-Neural2-B',provider:'Google',cat:'narrator',gender:'Male',accent:'British',lang:'en',tags:['British','warm'],desc:'Warm British male neural voice.'},
-  {name:'en-AU-Neural2-A',provider:'Google',cat:'narrator',gender:'Female',accent:'Australian',lang:'en',tags:['Australian','friendly'],desc:'Friendly Australian female voice.'},
-  {name:'fr-FR-Neural2-A',provider:'Google',cat:'narrator',gender:'Female',accent:'French',lang:'fr',tags:['French','elegant'],desc:'Elegant French female voice.'},
-  {name:'de-DE-Neural2-A',provider:'Google',cat:'narrator',gender:'Female',accent:'German',lang:'de',tags:['German','clear'],desc:'Clear German female voice.'},
-  {name:'es-ES-Neural2-A',provider:'Google',cat:'narrator',gender:'Female',accent:'Spanish',lang:'es',tags:['Spanish','warm'],desc:'Warm Spanish female voice.'},
-  {name:'it-IT-Neural2-A',provider:'Google',cat:'narrator',gender:'Female',accent:'Italian',lang:'it',tags:['Italian','expressive'],desc:'Expressive Italian female voice.'},
-  {name:'ja-JP-Neural2-B',provider:'Google',cat:'narrator',gender:'Female',accent:'Japanese',lang:'ja',tags:['Japanese','natural'],desc:'Natural Japanese female voice.'},
-  {name:'ko-KR-Neural2-A',provider:'Google',cat:'narrator',gender:'Female',accent:'Korean',lang:'ko',tags:['Korean','clear'],desc:'Clear Korean female voice.'},
-  {name:'pt-BR-Neural2-A',provider:'Google',cat:'narrator',gender:'Female',accent:'Brazilian',lang:'pt',tags:['Portuguese','vibrant'],desc:'Vibrant Brazilian Portuguese female voice.'},
-  {name:'zh-CN-Neural2-A',provider:'Google',cat:'narrator',gender:'Female',accent:'Chinese',lang:'zh',tags:['Mandarin','natural'],desc:'Natural Mandarin Chinese female voice.'},
-  // Azure
-  {name:'Jenny',provider:'Azure',cat:'narrator',gender:'Female',accent:'American',lang:'en',tags:['friendly','warm'],desc:'Friendly, warm American female voice.'},
-  {name:'Guy',provider:'Azure',cat:'narrator',gender:'Male',accent:'American',lang:'en',tags:['reliable','steady'],desc:'Reliable and steady male narrator.'},
-  {name:'Aria',provider:'Azure',cat:'narrator',gender:'Female',accent:'American',lang:'en',tags:['positive','confident'],desc:'Positive and confident female voice.'},
-  {name:'Davis',provider:'Azure',cat:'narrator',gender:'Male',accent:'American',lang:'en',tags:['mature','professional'],desc:'Mature, professional male voice.'},
-  {name:'Jane',provider:'Azure',cat:'narrator',gender:'Female',accent:'American',lang:'en',tags:['graceful','clear'],desc:'Graceful and clear American female.'},
-  {name:'Jason',provider:'Azure',cat:'narrator',gender:'Male',accent:'American',lang:'en',tags:['upbeat','engaging'],desc:'Upbeat and engaging male voice.'},
-  {name:'Nancy',provider:'Azure',cat:'narrator',gender:'Female',accent:'American',lang:'en',tags:['clear','professional'],desc:'Clear and professional female narrator.'},
-  {name:'Sara',provider:'Azure',cat:'children',gender:'Female',accent:'American',lang:'en',tags:['lively','young'],desc:'Lively young voice for children\'s content.'},
-  {name:'Tony',provider:'Azure',cat:'documentary',gender:'Male',accent:'American',lang:'en',tags:['casual','natural'],desc:'Casual, natural documentary-style voice.'},
-  {name:'Emma (Azure)',provider:'Azure',cat:'narrator',gender:'Female',accent:'British',lang:'en',tags:['elegant','British'],desc:'Elegant British female narrator.'},
-  {name:'Brian (Azure)',provider:'Azure',cat:'documentary',gender:'Male',accent:'British',lang:'en',tags:['natural','British'],desc:'Natural British male for documentaries.'},
-  {name:'Amy',provider:'Azure',cat:'narrator',gender:'Female',accent:'British',lang:'en',tags:['pleasant','warm'],desc:'Pleasant, warm British female voice.'},
-  {name:'Ryan',provider:'Azure',cat:'narrator',gender:'Male',accent:'British',lang:'en',tags:['deep','calm'],desc:'Deep, calm British male narrator.'},
-  {name:'Sonia',provider:'Azure',cat:'narrator',gender:'Female',accent:'British',lang:'en',tags:['bright','clear'],desc:'Bright and clear British female voice.'},
-  {name:'Thomas (Azure)',provider:'Azure',cat:'narrator',gender:'Male',accent:'British',lang:'en',tags:['calm','measured'],desc:'Calm, measured British male voice.'},
-  {name:'Clara',provider:'Azure',cat:'narrator',gender:'Female',accent:'Canadian',lang:'en',tags:['Canadian','friendly'],desc:'Friendly Canadian female voice.'},
-  {name:'Neerja',provider:'Azure',cat:'narrator',gender:'Female',accent:'Indian',lang:'en',tags:['Indian','professional'],desc:'Professional Indian-English female voice.'},
-  {name:'Raveena',provider:'Azure',cat:'narrator',gender:'Female',accent:'Indian',lang:'en',tags:['Indian','assistant'],desc:'Clear Indian-English female assistant voice.'},
-  {name:'Priya',provider:'Azure',cat:'narrator',gender:'Female',accent:'Indian',lang:'en',tags:['Indian','friendly'],desc:'Friendly Indian-English female voice.'},
-  {name:'Hiroshi',provider:'Azure',cat:'narrator',gender:'Male',accent:'Japanese',lang:'ja',tags:['Japanese','professional'],desc:'Professional Japanese male narrator.'},
-  // AWS Polly
-  {name:'Joanna',provider:'AWS Polly',cat:'narrator',gender:'Female',accent:'American',lang:'en',tags:['warm','natural'],desc:'Warm, natural American female narrator.'},
-  {name:'Matthew',provider:'AWS Polly',cat:'narrator',gender:'Male',accent:'American',lang:'en',tags:['confident','clear'],desc:'Confident and clear male voice.'},
-  {name:'Salli',provider:'AWS Polly',cat:'narrator',gender:'Female',accent:'American',lang:'en',tags:['clear','friendly'],desc:'Clear, friendly American female voice.'},
-  {name:'Kendra',provider:'AWS Polly',cat:'narrator',gender:'Female',accent:'American',lang:'en',tags:['friendly','warm'],desc:'Friendly and warm female narrator.'},
-  {name:'Kimberly',provider:'AWS Polly',cat:'narrator',gender:'Female',accent:'American',lang:'en',tags:['warm','engaging'],desc:'Warm and engaging female voice.'},
-  {name:'Kevin',provider:'AWS Polly',cat:'character-male',gender:'Male',accent:'American',lang:'en',tags:['child-like','playful'],desc:'Child-like voice perfect for young characters.'},
-  {name:'Ruth',provider:'AWS Polly',cat:'narrator',gender:'Female',accent:'American',lang:'en',tags:['conversational','natural'],desc:'Conversational, natural female voice.'},
-  {name:'Stephen',provider:'AWS Polly',cat:'narrator',gender:'Male',accent:'American',lang:'en',tags:['engaging','clear'],desc:'Engaging, clear male narrator.'},
-  {name:'Amy (Polly)',provider:'AWS Polly',cat:'narrator',gender:'Female',accent:'British',lang:'en',tags:['British','refined'],desc:'Refined British female narrator.'},
-  {name:'Brian (Polly)',provider:'AWS Polly',cat:'narrator',gender:'Male',accent:'British',lang:'en',tags:['British','warm'],desc:'Warm British male narrator.'},
-  {name:'Emma (Polly)',provider:'AWS Polly',cat:'narrator',gender:'Female',accent:'British',lang:'en',tags:['British','elegant'],desc:'Elegant British female voice.'},
-  {name:'Arthur',provider:'AWS Polly',cat:'narrator',gender:'Male',accent:'British',lang:'en',tags:['conversational','British'],desc:'Conversational British male voice.'},
-  {name:'Camila',provider:'AWS Polly',cat:'narrator',gender:'Female',accent:'Brazilian',lang:'pt',tags:['Portuguese','warm'],desc:'Warm Brazilian Portuguese female voice.'},
-  {name:'Lucia',provider:'AWS Polly',cat:'narrator',gender:'Female',accent:'Spanish',lang:'es',tags:['Spanish','clear'],desc:'Clear Spanish female narrator.'},
-  {name:'Lupe',provider:'AWS Polly',cat:'narrator',gender:'Female',accent:'American-Spanish',lang:'es',tags:['bilingual','warm'],desc:'Warm bilingual American-Spanish voice.'},
-  {name:'Mia',provider:'AWS Polly',cat:'narrator',gender:'Female',accent:'Mexican',lang:'es',tags:['Mexican','friendly'],desc:'Friendly Mexican Spanish female voice.'},
-  {name:'Enrique',provider:'AWS Polly',cat:'narrator',gender:'Male',accent:'Spanish',lang:'es',tags:['Spanish','strong'],desc:'Strong Spanish male narrator.'},
-  {name:'Olivia',provider:'AWS Polly',cat:'narrator',gender:'Female',accent:'Australian',lang:'en',tags:['Australian','conversational'],desc:'Conversational Australian female voice.'},
-  {name:'Takumi',provider:'AWS Polly',cat:'narrator',gender:'Male',accent:'Japanese',lang:'ja',tags:['Japanese','clear'],desc:'Clear Japanese male voice.'},
-  {name:'Mizuki',provider:'AWS Polly',cat:'narrator',gender:'Female',accent:'Japanese',lang:'ja',tags:['Japanese','soft'],desc:'Soft Japanese female voice.'},
-  // PlayHT
-  {name:'Scarlett',provider:'PlayHT',cat:'romance',gender:'Female',accent:'American',lang:'en',tags:['sultry','warm'],desc:'Sultry and warm, perfect for romance.'},
-  {name:'Asel',provider:'PlayHT',cat:'narrator',gender:'Female',accent:'Eastern European',lang:'en',tags:['deep','clear'],desc:'Deep and clear with Eastern European elegance.'},
-  {name:'Angelo',provider:'PlayHT',cat:'narrator',gender:'Male',accent:'American',lang:'en',tags:['smooth','rich'],desc:'Smooth and rich male narrator.'},
-  {name:'Celeste',provider:'PlayHT',cat:'children',gender:'Female',accent:'American',lang:'en',tags:['bright','playful'],desc:'Bright and playful voice for children.'},
-  {name:'Daxton',provider:'PlayHT',cat:'horror',gender:'Male',accent:'American',lang:'en',tags:['dark','gritty'],desc:'Dark and gritty, chilling horror narrator.'},
-  {name:'Evelyn',provider:'PlayHT',cat:'meditation',gender:'Female',accent:'British',lang:'en',tags:['soothing','calm'],desc:'Soothing, calm voice for meditation.'},
-  {name:'Felix',provider:'PlayHT',cat:'documentary',gender:'Male',accent:'American',lang:'en',tags:['crisp','professional'],desc:'Crisp, professional documentary voice.'},
-  {name:'Giselle',provider:'PlayHT',cat:'romance',gender:'Female',accent:'French',lang:'en',tags:['charming','expressive'],desc:'Charming French-accented voice.'},
-  {name:'Harlow',provider:'PlayHT',cat:'narrator',gender:'Female',accent:'American',lang:'en',tags:['powerful','clear'],desc:'Powerful and clear female narrator.'},
-  {name:'Indigo',provider:'PlayHT',cat:'narrator',gender:'Male',accent:'American',lang:'en',tags:['smooth','confident'],desc:'Smooth, confident male voice.'},
-  // Murf
-  {name:'Terrell',provider:'Murf',cat:'narrator',gender:'Male',accent:'American',lang:'en',tags:['confident','deep'],desc:'Confident, deep male narrator.'},
-  {name:'Carolyn',provider:'Murf',cat:'narrator',gender:'Female',accent:'American',lang:'en',tags:['warm','professional'],desc:'Warm, professional female voice.'},
-  {name:'Pita',provider:'Murf',cat:'narrator',gender:'Male',accent:'American',lang:'en',tags:['clear','engaging'],desc:'Clear and engaging male voice.'},
-  {name:'Julia',provider:'Murf',cat:'meditation',gender:'Female',accent:'American',lang:'en',tags:['soothing','refined'],desc:'Soothing and refined, ideal for wellness.'},
-  {name:'Marcus',provider:'Murf',cat:'documentary',gender:'Male',accent:'American',lang:'en',tags:['authoritative','deep'],desc:'Authoritative, deep documentary voice.'},
-  {name:'Natalie',provider:'Murf',cat:'romance',gender:'Female',accent:'American',lang:'en',tags:['warm','expressive'],desc:'Warm and expressive romance narrator.'},
-  {name:'Oliver',provider:'Murf',cat:'narrator',gender:'Male',accent:'British',lang:'en',tags:['refined','deep'],desc:'Refined, deep British male voice.'},
-  {name:'Sophie',provider:'Murf',cat:'narrator',gender:'Female',accent:'British',lang:'en',tags:['clear','friendly'],desc:'Clear and friendly British female.'},
-  {name:'Ethan',provider:'Murf',cat:'news',gender:'Male',accent:'American',lang:'en',tags:['clear','confident'],desc:'Clear and confident news narrator.'},
-  {name:'Maya',provider:'Murf',cat:'children',gender:'Female',accent:'American',lang:'en',tags:['bright','energetic'],desc:'Bright and energetic children\'s voice.'},
+/* ===== VOICE CATALOG ===== */
+const VOICES=[
+  {n:'Dan',sdk:'dan',cat:'narrator',g:'Male',d:'Warm, friendly — great for general narration',p:'StoryForge TTS'},
+  {n:'Brook',sdk:'brook',cat:'storytelling',g:'Male',d:'Calm, conversational — ideal for storytelling and podcasts',p:'StoryForge TTS'},
+  {n:'Rio',sdk:'rio',cat:'professional',g:'Neutral',d:'Clear, neutral — news reading and informational content',p:'StoryForge TTS'},
+  {n:'Jazz',sdk:'jazz',cat:'expressive',g:'Neutral',d:'Expressive, curated — creative and entertaining narration',p:'StoryForge TTS'},
+  {n:'Aster',sdk:'aster',cat:'professional',g:'Neutral',d:'Professional, neutral — documentation and instructions',p:'StoryForge TTS'},
+  {n:'Marilyn',sdk:'marilyn',cat:'warm',g:'Female',d:'Natural, warm — audiobooks and personal messages',p:'StoryForge TTS'},
+  {n:'Elan',sdk:'elan',cat:'narrator',g:'Neutral',d:'Balanced delivery — versatile general use',p:'StoryForge TTS'},
+  {n:'Amuch',sdk:'amuch',cat:'narrator',g:'Neutral',d:'Versatile, everyday content narration',p:'StoryForge TTS'},
 ];
 
-const PROVIDER_COLORS = {
-  'ElevenLabs': {bg:'rgba(124,58,237,0.15)',text:'#a78bfa'},
-  'OpenAI': {bg:'rgba(16,185,129,0.15)',text:'#6ee7b7'},
-  'Google': {bg:'rgba(0,212,255,0.15)',text:'#67e8f9'},
-  'Azure': {bg:'rgba(59,130,246,0.15)',text:'#93c5fd'},
-  'AWS Polly': {bg:'rgba(245,158,11,0.15)',text:'#fcd34d'},
-  'PlayHT': {bg:'rgba(236,72,153,0.15)',text:'#f9a8d4'},
-  'Murf': {bg:'rgba(139,92,246,0.15)',text:'#c4b5fd'},
-};
+const PROV_COL={'StoryForge TTS':{bg:'rgba(0,212,255,.15)',t:'#67e8f9'}};
+const AV_COL=['#ef4444','#f59e0b','#10b981','#00d4ff','#7c3aed','#ec4899','#6366f1','#14b8a6'];
+const FAV_KEY='sf_favorites';
 
-const AVATAR_COLORS = ['#ef4444','#f59e0b','#10b981','#00d4ff','#7c3aed','#ec4899','#6366f1','#14b8a6','#f97316','#84cc16'];
-const GENDER_ICONS = { 'Female': '♀', 'Male': '♂', 'Neutral': '⊘' };
-const LANG_FLAGS = { en:'🇺🇸',fr:'🇫🇷',de:'🇩🇪',es:'🇪🇸',it:'🇮🇹',ja:'🇯🇵',ko:'🇰🇷',pt:'🇧🇷',zh:'🇨🇳',multi:'🌐' };
+/* ===== APP STATE ===== */
+let S={projects:[],activeProjectId:null,activeChapterId:null,settings:{provider:'appsdk',voice:'dan',quality:'hd',detection:'auto',format:'mp3',autoplay:true},apiKeys:{elevenlabs:'',openai:''},favorites:{},agentLog:[]};
 
-/* ========================= HELPERS ========================= */
-function $(id) { return document.getElementById(id); }
-function show(el) { if (typeof el === 'string') el = $(el); if(el) el.classList.remove('hidden'); }
-function hide(el) { if (typeof el === 'string') el = $(el); if(el) el.classList.add('hidden'); }
-function genId() { return 'id_' + Math.random().toString(36).substr(2, 9); }
-function fmtDuration(secs) { const m = Math.floor(secs/60); const s = Math.floor(secs%60); return m+':'+String(s).padStart(2,'0'); }
+let curAudio=null,isPlay=false,analyserNode=null,audioCtx=null,audioSource=null,wfAnimId=null;
 
-function toast(msg, type='success') {
-  const c = $('toast-container-a1b2');
-  const t = document.createElement('div');
-  t.className = 'toast toast-' + type;
-  const iconName = type === 'success' ? 'check-circle' : type === 'error' ? 'alert-circle' : 'info';
-  t.innerHTML = '<span>' + msg + '</span>';
-  c.appendChild(t);
-  setTimeout(() => { t.style.opacity = '0'; t.style.transition = 'opacity 0.3s'; setTimeout(() => t.remove(), 300); }, 3500);
-}
+/* ===== PERSISTENCE ===== */
+const DB_ENTITY='storyforge_projects';
+const DB_SETTINGS='storyforge_settings';
 
-function showModal(html) {
-  $('modal-body-r3s2').innerHTML = html;
-  show('modal-overlay-p6q5');
-  setTimeout(() => {
-    const closeBtn = $('modal-body-r3s2').querySelector('.modal-close-btn');
-    if (closeBtn) closeBtn.addEventListener('click', closeModal);
-    if (typeof lucide !== "undefined" && typeof lucide.createIcons === "function") lucide.createIcons();
-  }, 10);
-}
-function closeModal() { hide('modal-overlay-p6q5'); }
-
-/* ========================= TABS ========================= */
-function switchTab(tabName) {
-  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
-  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-  const tabEl = $('tab-' + tabName);
-  if (tabEl) { tabEl.classList.add('active'); tabEl.classList.add('fade-in'); }
-  document.querySelectorAll(`[data-tab="${tabName}"]`).forEach(b => b.classList.add('active'));
-  hide('mobile-menu-q7w8');
-}
-
-document.querySelectorAll('[data-tab]').forEach(btn => {
-  btn.addEventListener('click', () => switchTab(btn.dataset.tab));
-});
-
-$('mobile-menu-btn-m4n3').addEventListener('click', () => show('mobile-menu-q7w8'));
-$('mobile-close-btn-k2j1').addEventListener('click', () => hide('mobile-menu-q7w8'));
-
-/* ========================= LIBRARY ========================= */
-function renderLibrary() {
-  const grid = $('library-grid-e5');
-  const empty = $('library-empty-f6');
-  const projects = state.projects;
-  $('stat-projects-a1').textContent = projects.length;
-  let totalCh = 0, totalDur = 0;
-  projects.forEach(p => { totalCh += p.chapters.length; p.chapters.forEach(c => totalDur += (c.duration||0)); });
-  $('stat-chapters-b2').textContent = totalCh;
-  $('stat-duration-c3').textContent = fmtDuration(totalDur);
-
-  if (!projects.length) {
-    hide(grid); show(empty); return;
-  }
-  show(grid); hide(empty);
-  grid.innerHTML = projects.map(p => {
-    const dur = p.chapters.reduce((s,c) => s + (c.duration||0), 0);
-    const updated = new Date(p.updatedAt);
-    const dateStr = updated.toLocaleDateString('en-US', {month:'short',day:'numeric',year:'numeric'});
-    return `<div class="glass-card p-5 flex flex-col gap-3 project-card" data-pid="${p.id}">
-      <div class="flex items-center justify-between">
-        <h3 class="text-sm font-semibold text-sf-text truncate flex-1">${p.title}</h3>
-        <span class="badge badge-purple text-[10px] ml-2">${p.genre}</span>
-      </div>
-      <div class="flex gap-4 text-xs text-sf-muted">
-        <span>${p.chapters.length} chapters</span>
-        <span>${fmtDuration(dur)}</span>
-      </div>
-      <div class="text-[11px] text-sf-dimmed">Updated ${dateStr}</div>
-      <div class="flex gap-2 mt-auto pt-2">
-        <button class="btn-primary text-xs flex-1 py-1.5 proj-open-btn" data-pid="${p.id}">Open</button>
-        <button class="btn-secondary text-xs py-1.5 px-3 proj-dup-btn" data-pid="${p.id}" title="Duplicate"><i data-lucide="copy" class="w-3 h-3"></i></button>
-        <button class="btn-secondary text-xs py-1.5 px-3 proj-export-btn" data-pid="${p.id}" title="Export"><i data-lucide="download" class="w-3 h-3"></i></button>
-        <button class="btn-ghost text-xs py-1.5 px-2 proj-del-btn" data-pid="${p.id}" title="Delete" style="color:var(--sf-red);"><i data-lucide="trash-2" class="w-3 h-3"></i></button>
-      </div>
-    </div>`;
-  }).join('');
-  if (typeof lucide !== "undefined") lucide.createIcons();
-
-  grid.querySelectorAll('.proj-open-btn').forEach(b => b.addEventListener('click', () => openProject(b.dataset.pid)));
-  grid.querySelectorAll('.proj-dup-btn').forEach(b => b.addEventListener('click', () => duplicateProject(b.dataset.pid)));
-  grid.querySelectorAll('.proj-export-btn').forEach(b => b.addEventListener('click', () => { toast('Export prepared. In a full deployment, this would download a ZIP file.', 'info'); }));
-  grid.querySelectorAll('.proj-del-btn').forEach(b => b.addEventListener('click', () => deleteProject(b.dataset.pid)));
-}
-
-function openProject(pid) {
-  currentProjectId = pid;
-  currentChapterId = null;
-  switchTab('studio');
-  renderStudio();
-}
-
-function duplicateProject(pid) {
-  const p = state.projects.find(x => x.id === pid);
-  if (!p) return;
-  const dup = JSON.parse(JSON.stringify(p));
-  dup.id = genId();
-  dup.title = p.title + ' (Copy)';
-  dup.createdAt = new Date().toISOString();
-  dup.updatedAt = new Date().toISOString();
-  dup.chapters.forEach(c => c.id = genId());
-  state.projects.push(dup);
-  saveState();
-  renderLibrary();
-  toast('Project duplicated');
-}
-
-function deleteProject(pid) {
-  state.projects = state.projects.filter(x => x.id !== pid);
-  if (currentProjectId === pid) { currentProjectId = null; currentChapterId = null; }
-  saveState();
-  renderLibrary();
-  toast('Project deleted', 'error');
-}
-
-$('new-project-btn-d4').addEventListener('click', showNewProjectModal);
-$('empty-new-btn-g7').addEventListener('click', showNewProjectModal);
-
-function showNewProjectModal() {
-  showModal(`
-    <h3 class="text-base font-semibold text-sf-text mb-4">New Project</h3>
-    <div class="flex flex-col gap-3 mb-5">
-      <div><label class="text-xs text-sf-muted mb-1 block">Title</label><input type="text" id="np-title-z1" class="input-field text-sm" placeholder="My Audiobook" /></div>
-      <div><label class="text-xs text-sf-muted mb-1 block">Genre</label>
-        <select id="np-genre-z2" class="input-field text-sm">
-          <option>Fiction</option><option>Non-Fiction</option><option>Children</option><option>Romance</option><option>Thriller</option><option>Fantasy</option><option>Self-Help</option><option>Biography</option>
-        </select>
-      </div>
-    </div>
-    <div class="flex gap-2 justify-end">
-      <button class="btn-secondary text-sm modal-close-btn">Cancel</button>
-      <button class="btn-primary text-sm" id="np-create-btn-z3">Create Project</button>
-    </div>
-  `);
-  setTimeout(() => {
-    $('np-create-btn-z3').addEventListener('click', () => {
-      const title = $('np-title-z1').value.trim() || 'Untitled Project';
-      const genre = $('np-genre-z2').value;
-      const proj = { id: genId(), title, genre, createdAt: new Date().toISOString(), updatedAt: new Date().toISOString(), chapters: [{ id: genId(), title: 'Chapter 1', text: '', voice: 'Rachel', voiceProvider: 'ElevenLabs', narration: 'Warm Storyteller', speed: 100, stability: 50, clarity: 75, style: 50, status: 'idle', audioGenerated: false, duration: 0 }] };
-      state.projects.push(proj);
-      saveState();
-      closeModal();
-      renderLibrary();
-      toast('Project created!');
-    });
-  }, 20);
-}
-
-/* ========================= STUDIO ========================= */
-function getProject() { return state.projects.find(p => p.id === currentProjectId); }
-function getChapter() { const p = getProject(); return p ? p.chapters.find(c => c.id === currentChapterId) : null; }
-
-function renderStudio() {
-  const proj = getProject();
-  if (!proj) { show('studio-no-project-h8'); hide('studio-workspace-j0'); return; }
-  hide('studio-no-project-h8'); show('studio-workspace-j0');
-  $('studio-project-title-l2').textContent = proj.title;
-  $('studio-project-genre-m3').textContent = proj.genre;
-  renderChapterList();
-  if (currentChapterId) renderEditor(); else { show('editor-no-chapter-r8'); hide('editor-active-s9'); }
-}
-
-function renderChapterList() {
-  const proj = getProject();
-  if (!proj) return;
-  const list = $('chapter-list-p6');
-  list.innerHTML = proj.chapters.map((ch, i) => {
-    const sel = ch.id === currentChapterId ? 'selected' : '';
-    const statusCls = 'status-' + (ch.status || 'idle');
-    return `<div class="chapter-item ${sel}" data-cid="${ch.id}" data-cidx="${i}">
-      <div class="flex items-center gap-2">
-        <span class="text-sf-dimmed cursor-grab" style="font-size:10px;">⠿</span>
-        <span class="status-dot ${statusCls}"></span>
-        <span class="text-sm text-sf-text truncate flex-1">${ch.title}</span>
-      </div>
-      <div class="flex items-center gap-2 mt-1 ml-6">
-        <span class="text-[10px] text-sf-dimmed">${ch.voice || '—'}</span>
-        ${ch.duration ? '<span class="text-[10px] text-sf-dimmed">· '+fmtDuration(ch.duration)+'</span>' : ''}
-      </div>
-    </div>`;
-  }).join('');
-
-  list.querySelectorAll('.chapter-item').forEach(el => {
-    el.addEventListener('click', () => { currentChapterId = el.dataset.cid; renderStudio(); });
-    el.addEventListener('contextmenu', (e) => { e.preventDefault(); showChapterContextMenu(e, el.dataset.cid); });
-  });
-}
-
-function showChapterContextMenu(e, cid) {
-  const menu = $('ctx-menu-x9z8');
-  menu.innerHTML = `
-    <button data-action="rename">Rename</button>
-    <button data-action="duplicate">Duplicate</button>
-    <button data-action="regenerate">Regenerate Audio</button>
-    <button class="danger-item" data-action="delete">Delete</button>
-  `;
-  menu.style.left = Math.min(e.clientX, window.innerWidth - 180) + 'px';
-  menu.style.top = Math.min(e.clientY, window.innerHeight - 160) + 'px';
-  show(menu);
-  menu.querySelectorAll('button').forEach(btn => {
-    btn.addEventListener('click', () => {
-      hide(menu);
-      const proj = getProject();
-      if (!proj) return;
-      const action = btn.dataset.action;
-      if (action === 'rename') {
-        const ch = proj.chapters.find(c => c.id === cid);
-        if (ch) { const n = prompt('Rename chapter:', ch.title); if (n) { ch.title = n; saveState(); renderStudio(); } }
-      } else if (action === 'duplicate') {
-        const ch = proj.chapters.find(c => c.id === cid);
-        if (ch) { const dup = JSON.parse(JSON.stringify(ch)); dup.id = genId(); dup.title += ' (Copy)'; proj.chapters.push(dup); saveState(); renderStudio(); toast('Chapter duplicated'); }
-      } else if (action === 'regenerate') {
-        currentChapterId = cid; renderStudio(); simulateGeneration();
-      } else if (action === 'delete') {
-        proj.chapters = proj.chapters.filter(c => c.id !== cid);
-        if (currentChapterId === cid) currentChapterId = null;
-        saveState(); renderStudio(); toast('Chapter deleted', 'error');
-      }
-    });
-  });
-  const closeCtx = (ev) => { if (!menu.contains(ev.target)) { hide(menu); document.removeEventListener('click', closeCtx); } };
-  setTimeout(() => document.addEventListener('click', closeCtx), 10);
-}
-
-$('add-ch-btn-o5').addEventListener('click', () => {
-  const proj = getProject();
-  if (!proj) return;
-  const ch = { id: genId(), title: 'Chapter ' + (proj.chapters.length+1), text: '', voice: 'Rachel', voiceProvider: 'ElevenLabs', narration: 'Warm Storyteller', speed: 100, stability: 50, clarity: 75, style: 50, status: 'idle', audioGenerated: false, duration: 0 };
-  proj.chapters.push(ch);
-  currentChapterId = ch.id;
-  saveState(); renderStudio(); toast('Chapter added');
-});
-
-$('import-ms-btn-n4').addEventListener('click', () => {
-  showModal(`
-    <h3 class="text-base font-semibold text-sf-text mb-4">Import Manuscript</h3>
-    <div class="flex flex-col gap-3 mb-4">
-      <textarea id="import-text-z4" class="input-field text-sm" style="min-height:180px;" placeholder="Paste your manuscript text here. Chapters will be auto-detected by headings like 'Chapter 1', 'CHAPTER ONE', 'Prologue', etc."></textarea>
-      <div class="text-center text-xs text-sf-muted">— or —</div>
-      <div class="border-2 border-dashed rounded-xl p-4 text-center cursor-pointer" style="border-color:rgba(255,255,255,0.1);" id="import-drop-z5">
-        <p class="text-sm text-sf-muted">Drop a .txt file or <span class="text-sf-teal">click to upload</span></p>
-        <input type="file" id="import-file-z6" class="hidden" accept=".txt" />
-      </div>
-    </div>
-    <div class="flex gap-2 justify-end">
-      <button class="btn-secondary text-sm modal-close-btn">Cancel</button>
-      <button class="btn-primary text-sm" id="import-go-btn-z7">Import & Split Chapters</button>
-    </div>
-  `);
-  setTimeout(() => {
-    $('import-drop-z5').addEventListener('click', () => $('import-file-z6').click());
-    $('import-file-z6').addEventListener('change', (e) => {
-      const file = e.target.files[0];
-      if (!file) return;
-      const reader = new FileReader();
-      reader.onload = (ev) => { $('import-text-z4').value = ev.target.result; };
-      reader.readAsText(file);
-    });
-    $('import-go-btn-z7').addEventListener('click', () => {
-      const text = $('import-text-z4').value.trim();
-      if (!text) { toast('No text to import', 'error'); return; }
-      importManuscript(text);
-      closeModal();
-    });
-  }, 20);
-});
-
-function importManuscript(text) {
-  const proj = getProject();
-  if (!proj) return;
-  const pattern = /^(chapter\s+\d+|chapter\s+(?:one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve|thirteen|fourteen|fifteen|sixteen|seventeen|eighteen|nineteen|twenty|\w+)|prologue|epilogue|part\s+\d+|part\s+(?:one|two|three|four|five|six|seven|eight|nine|ten)|CHAPTER\s+\w+)[\s:.\-—]*(.*)?$/im;
-  const lines = text.split('\n');
-  const chapters = [];
-  let current = null;
-  lines.forEach(line => {
-    const match = line.match(pattern);
-    if (match) {
-      if (current) chapters.push(current);
-      current = { title: line.trim().substring(0, 80), text: '' };
-    } else {
-      if (!current) current = { title: 'Imported Text', text: '' };
-      current.text += line + '\n';
-    }
-  });
-  if (current) chapters.push(current);
-  if (!chapters.length) chapters.push({ title: 'Imported Text', text });
-
-  chapters.forEach(ch => {
-    proj.chapters.push({ id: genId(), title: ch.title, text: ch.text.trim(), voice: 'Rachel', voiceProvider: 'ElevenLabs', narration: 'Warm Storyteller', speed: 100, stability: 50, clarity: 75, style: 50, status: 'idle', audioGenerated: false, duration: 0 });
-  });
-  saveState(); renderStudio();
-  toast(`Imported ${chapters.length} chapter(s)!`);
-}
-
-/* ========================= EDITOR ========================= */
-function renderEditor() {
-  const ch = getChapter();
-  if (!ch) { show('editor-no-chapter-r8'); hide('editor-active-s9'); return; }
-  hide('editor-no-chapter-r8'); show('editor-active-s9');
-  $('ch-title-input-t0').value = ch.title;
-  $('ch-text-area-u1').value = ch.text;
-  populateVoiceSelect();
-  $('ch-voice-select-v2').value = ch.voice || 'Rachel';
-  $('ch-narration-select-w3').value = ch.narration || 'Warm Storyteller';
-  $('ch-provider-select-x4').value = ch.voiceProvider || 'ElevenLabs';
-  $('speed-slider-z6').value = ch.speed || 100;
-  $('speed-val-y5').textContent = ((ch.speed||100)/100).toFixed(2) + '×';
-  $('stab-slider-b8').value = ch.stability || 50;
-  $('stab-val-a7').textContent = ch.stability || 50;
-  $('clar-slider-d0').value = ch.clarity || 75;
-  $('clar-val-c9').textContent = ch.clarity || 75;
-  $('style-slider-f2').value = ch.style || 50;
-  $('style-val-e1').textContent = ch.style || 50;
-  if (ch.audioGenerated) { show('audio-player-k7'); initWaveformBars(); } else { hide('audio-player-k7'); }
-  hide('gen-progress-bar-h4');
-}
-
-function populateVoiceSelect() {
-  const sel = $('ch-voice-select-v2');
-  const providers = [...new Set(VOICES.map(v => v.provider))];
-  let html = '';
-  providers.forEach(p => {
-    html += `<optgroup label="${p}">`;
-    VOICES.filter(v => v.provider === p).forEach(v => {
-      html += `<option value="${v.name}">${v.name} (${v.gender})</option>`;
-    });
-    html += '</optgroup>';
-  });
-  if (state.clonedVoices.length) {
-    html += '<optgroup label="Cloned">';
-    state.clonedVoices.forEach(v => { html += `<option value="${v.name}">${v.name} (Cloned)</option>`; });
-    html += '</optgroup>';
-  }
-  sel.innerHTML = html;
-}
-
-// Auto-save editor fields
-function saveChapterField(field, value) {
-  const ch = getChapter();
-  if (!ch) return;
-  ch[field] = value;
-  const proj = getProject();
-  if (proj) proj.updatedAt = new Date().toISOString();
-  saveState();
-}
-
-$('ch-title-input-t0').addEventListener('input', function() { saveChapterField('title', this.value); renderChapterList(); });
-$('ch-text-area-u1').addEventListener('input', function() { saveChapterField('text', this.value); });
-$('ch-voice-select-v2').addEventListener('change', function() { saveChapterField('voice', this.value); renderChapterList(); });
-$('ch-narration-select-w3').addEventListener('change', function() { saveChapterField('narration', this.value); });
-$('ch-provider-select-x4').addEventListener('change', function() { saveChapterField('voiceProvider', this.value); });
-$('speed-slider-z6').addEventListener('input', function() { $('speed-val-y5').textContent = (this.value/100).toFixed(2)+'×'; saveChapterField('speed', parseInt(this.value)); });
-$('stab-slider-b8').addEventListener('input', function() { $('stab-val-a7').textContent = this.value; saveChapterField('stability', parseInt(this.value)); });
-$('clar-slider-d0').addEventListener('input', function() { $('clar-val-c9').textContent = this.value; saveChapterField('clarity', parseInt(this.value)); });
-$('style-slider-f2').addEventListener('input', function() { $('style-val-e1').textContent = this.value; saveChapterField('style', parseInt(this.value)); });
-
-$('back-to-lib-btn-k1').addEventListener('click', () => { currentProjectId = null; currentChapterId = null; switchTab('library'); renderLibrary(); });
-$('go-library-btn-i9').addEventListener('click', () => switchTab('library'));
-
-/* ========================= AUDIO GENERATION ========================= */
-$('generate-audio-btn-g3').addEventListener('click', simulateGeneration);
-
-async function simulateGeneration() {
-  const ch = getChapter();
-  if (!ch) return;
-  if (!ch.text.trim()) { toast('Add some text first', 'error'); return; }
-
-  ch.status = 'generating';
-  renderChapterList();
-  const btn = $('generate-audio-btn-g3');
-  btn.disabled = true;
-  btn.innerHTML = '<span class="spinner inline-block w-5 h-5 border-2 border-white/30 border-t-white rounded-full"></span> Generating…';
-  show('gen-progress-bar-h4');
-  hide('audio-player-k7');
-
-  // Try real TTS via AppSDK.ai.speak
-  let usedRealTTS = false;
-  const textSnippet = ch.text.substring(0, 800); // Keep within limits
-
-  // Map voice names to AppSDK voice IDs
-  const voiceMap = { 'Rachel':'marilyn','Bella':'marilyn','Charlotte':'jazz','Emily':'marilyn','Dorothy':'brook','Freya':'jazz','Nova':'marilyn','Shimmer':'brook','Sage':'brook','Coral':'jazz','Alloy':'elan','Fable':'brook','Onyx':'dan','Echo':'rio','Ash':'aster','Ballad':'brook','Verse':'jazz' };
-  const sdkVoice = voiceMap[ch.voice] || 'dan';
-
-  // Animate progress bar
-  const progressFill = $('gen-progress-fill-i5');
-  const progressText = $('gen-progress-text-j6');
-  let progress = 0;
-  const progressInterval = setInterval(() => {
-    progress = Math.min(progress + Math.random() * 8, 90);
-    progressFill.style.width = progress + '%';
-    if (progress < 30) progressText.textContent = 'Analyzing text…';
-    else if (progress < 60) progressText.textContent = 'Synthesizing speech…';
-    else progressText.textContent = 'Rendering waveform…';
-  }, 300);
-
-  try {
-    if (window.AppSDK && window.AppSDK.ai && window.AppSDK.ai.speak) {
-      const result = await AppSDK.ai.speak({ text: textSnippet, voice: sdkVoice, audioFormat: 'mp3' });
-      if (result && result.audio) {
-        currentAudio = new Audio(`data:audio/${result.format};base64,${result.audio}`);
-        usedRealTTS = true;
-      }
-    }
-  } catch(e) {
-    console.log('AppSDK TTS fallback:', e.message);
-  }
-
-  if (!usedRealTTS) {
-    // Fallback: Web Audio API oscillator
-    try {
-      const actx = new (window.AudioContext || window.webkitAudioContext)();
-      const dur = 2.5;
-      const sampleRate = actx.sampleRate;
-      const buffer = actx.createBuffer(1, sampleRate * dur, sampleRate);
-      const data = buffer.getChannelData(0);
-      for (let i = 0; i < data.length; i++) {
-        const t = i / sampleRate;
-        data[i] = 0.15 * Math.sin(2 * Math.PI * 220 * t) * Math.exp(-t * 0.8) +
-                  0.08 * Math.sin(2 * Math.PI * 330 * t) * Math.exp(-t * 1.2) +
-                  0.05 * Math.sin(2 * Math.PI * 440 * t) * Math.exp(-t * 1.5);
-      }
-      const offlineCtx = new OfflineAudioContext(1, buffer.length, sampleRate);
-      const src = offlineCtx.createBufferSource();
-      src.buffer = buffer;
-      src.connect(offlineCtx.destination);
-      src.start();
-      const rendered = await offlineCtx.startRendering();
-      // Convert to wav blob
-      const wavBlob = audioBufferToWav(rendered);
-      currentAudio = new Audio(URL.createObjectURL(wavBlob));
-    } catch(e) {
-      currentAudio = null;
-    }
-  }
-
-  clearInterval(progressInterval);
-  progressFill.style.width = '100%';
-  progressText.textContent = 'Complete!';
-
-  setTimeout(() => {
-    ch.status = 'done';
-    ch.audioGenerated = true;
-    ch.duration = currentAudio ? (currentAudio.duration || (usedRealTTS ? 15 : 2.5)) : 2.5;
-    saveState();
-    btn.disabled = false;
-    btn.innerHTML = '<i data-lucide="sparkles" class="w-5 h-5"></i> Generate Audio';
-    if (typeof lucide !== "undefined") lucide.createIcons();
-    hide('gen-progress-bar-h4');
-    show('audio-player-k7');
-    initWaveformBars();
-    renderChapterList();
-    renderLibrary();
-    toast(usedRealTTS ? 'Audio generated with AI voice!' : 'Audio generated (placeholder tone)');
-  }, 600);
-}
-
-function audioBufferToWav(buffer) {
-  const numChannels = buffer.numberOfChannels;
-  const sampleRate = buffer.sampleRate;
-  const format = 1;
-  const bitDepth = 16;
-  const bytesPerSample = bitDepth / 8;
-  const blockAlign = numChannels * bytesPerSample;
-  const data = buffer.getChannelData(0);
-  const dataLength = data.length * bytesPerSample;
-  const headerLength = 44;
-  const totalLength = headerLength + dataLength;
-  const arrayBuffer = new ArrayBuffer(totalLength);
-  const view = new DataView(arrayBuffer);
-  function writeString(offset, string) { for (let i = 0; i < string.length; i++) view.setUint8(offset + i, string.charCodeAt(i)); }
-  writeString(0, 'RIFF');
-  view.setUint32(4, totalLength - 8, true);
-  writeString(8, 'WAVE');
-  writeString(12, 'fmt ');
-  view.setUint32(16, 16, true);
-  view.setUint16(20, format, true);
-  view.setUint16(22, numChannels, true);
-  view.setUint32(24, sampleRate, true);
-  view.setUint32(28, sampleRate * blockAlign, true);
-  view.setUint16(32, blockAlign, true);
-  view.setUint16(34, bitDepth, true);
-  writeString(36, 'data');
-  view.setUint32(40, dataLength, true);
-  let offset = 44;
-  for (let i = 0; i < data.length; i++) {
-    const sample = Math.max(-1, Math.min(1, data[i]));
-    view.setInt16(offset, sample < 0 ? sample * 0x8000 : sample * 0x7FFF, true);
-    offset += 2;
-  }
-  return new Blob([arrayBuffer], { type: 'audio/wav' });
-}
-
-/* ========================= AUDIO PLAYER ========================= */
-function initWaveformBars() {
-  const container = $('waveform-container-s5');
-  container.innerHTML = '';
-  for (let i = 0; i < 40; i++) {
-    const bar = document.createElement('div');
-    bar.className = 'waveform-bar';
-    bar.style.width = '4px';
-    bar.style.height = '6px';
-    bar.style.opacity = '0.5';
-    container.appendChild(bar);
-  }
-}
-
-function animateWaveform() {
-  const bars = $('waveform-container-s5').children;
-  for (let i = 0; i < bars.length; i++) {
-    const h = 6 + Math.random() * 38;
-    bars[i].style.height = h + 'px';
-    bars[i].style.opacity = '0.6';
-  }
-  if (isPlaying) waveformAnimId = requestAnimationFrame(() => setTimeout(animateWaveform, 80));
-}
-
-function stopWaveform() {
-  if (waveformAnimId) cancelAnimationFrame(waveformAnimId);
-  const bars = $('waveform-container-s5').children;
-  for (let i = 0; i < bars.length; i++) { bars[i].style.height = '6px'; bars[i].style.opacity = '0.5'; }
-}
-
-$('play-pause-btn-l8').addEventListener('click', () => {
-  if (!currentAudio) { toast('No audio to play', 'error'); return; }
-  if (isPlaying) {
-    currentAudio.pause();
-    isPlaying = false;
-    stopWaveform();
-    $('play-icon-m9').setAttribute('data-lucide', 'play');
-    if (typeof lucide !== "undefined") lucide.createIcons();
-  } else {
-    currentAudio.play().catch(() => {});
-    isPlaying = true;
-    animateWaveform();
-    $('play-icon-m9').setAttribute('data-lucide', 'pause');
-    if (typeof lucide !== "undefined") lucide.createIcons();
-    currentAudio.addEventListener('timeupdate', () => {
-      if (currentAudio.duration) {
-        const pct = (currentAudio.currentTime / currentAudio.duration) * 100;
-        $('audio-seek-fill-p2').style.width = pct + '%';
-        $('audio-time-n0').textContent = fmtDuration(currentAudio.currentTime);
-        $('audio-dur-q3').textContent = fmtDuration(currentAudio.duration);
-      }
-    });
-    currentAudio.addEventListener('ended', () => {
-      isPlaying = false;
-      stopWaveform();
-      $('play-icon-m9').setAttribute('data-lucide', 'play');
-      if (typeof lucide !== "undefined") lucide.createIcons();
-    });
-  }
-});
-
-$('audio-dl-btn-r4').addEventListener('click', () => {
-  if (!currentAudio || !currentAudio.src) { toast('No audio to download', 'error'); return; }
-  const a = document.createElement('a');
-  a.href = currentAudio.src;
-  a.download = 'storyforge_audio.wav';
-  a.click();
-  toast('Audio downloaded');
-});
-
-/* ========================= CHARACTER DETECTION ========================= */
-$('detect-chars-btn-t6').addEventListener('click', async () => {
-  const ch = getChapter();
-  if (!ch || !ch.text.trim()) { toast('Add text first', 'error'); return; }
-  const container = $('chars-list-u7');
-  container.innerHTML = '<span class="spinner inline-block w-4 h-4 border-2 border-sf-teal/30 border-t-sf-teal rounded-full mr-2"></span> Detecting characters…';
-
-  try {
-    if (window.AppSDK && window.AppSDK.ai && window.AppSDK.ai.chat) {
-      const res = await AppSDK.ai.chat({
-        messages: [
-          { role: 'system', content: 'You are a character detection tool. Given text, list all named speaking characters. Return ONLY a JSON array of strings with character names. If no named characters are found, return ["Narrator"].' },
-          { role: 'user', content: ch.text.substring(0, 2000) }
-        ]
-      });
-      try {
-        const chars = JSON.parse(res.content);
-        renderCharsList(chars);
-      } catch(e) {
-        renderCharsList(['Narrator', 'Character 1']);
-      }
-    } else {
-      // Fallback: simple regex detection
-      const names = [];
-      const dialoguePattern = /"[^"]+"\s*(?:said|whispered|shouted|asked|replied|murmured|exclaimed)\s+(\w+)/gi;
-      let match;
-      while ((match = dialoguePattern.exec(ch.text)) !== null) {
-        if (!names.includes(match[1])) names.push(match[1]);
-      }
-      if (!names.length) names.push('Narrator');
-      renderCharsList(names);
-    }
-  } catch(e) {
-    renderCharsList(['Narrator']);
-  }
-});
-
-function renderCharsList(chars) {
-  const container = $('chars-list-u7');
-  container.innerHTML = chars.map((name, i) => {
-    const color = AVATAR_COLORS[i % AVATAR_COLORS.length];
-    return `<div class="flex items-center gap-2 py-1.5">
-      <div class="w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold text-white" style="background:${color}">${name.charAt(0)}</div>
-      <span class="text-xs text-sf-text flex-1">${name}</span>
-      <select class="input-field text-[10px] py-1 px-2 w-28"><option>Rachel</option><option>Josh</option><option>Charlotte</option><option>Onyx</option><option>Fable</option></select>
-    </div>`;
-  }).join('');
-}
-
-/* ========================= VOICE LAB ========================= */
-let voiceFilter = { search: '', cat: 'all', provider: '', gender: '' };
-
-function renderVoiceGrid() {
-  let filtered = [...VOICES];
-  // Add cloned voices
-  state.clonedVoices.forEach(v => { filtered.push({...v, provider: 'Cloned', cat: 'cloned'}); });
-
-  if (voiceFilter.search) {
-    const q = voiceFilter.search.toLowerCase();
-    filtered = filtered.filter(v => v.name.toLowerCase().includes(q) || v.accent?.toLowerCase().includes(q) || v.tags?.some(t => t.toLowerCase().includes(q)) || v.desc?.toLowerCase().includes(q));
-  }
-  if (voiceFilter.cat !== 'all') filtered = filtered.filter(v => v.cat === voiceFilter.cat);
-  if (voiceFilter.provider) filtered = filtered.filter(v => v.provider === voiceFilter.provider);
-  if (voiceFilter.gender) filtered = filtered.filter(v => v.gender === voiceFilter.gender);
-
-  const grid = $('voice-grid-z2');
-  $('voice-grid-count-a3').textContent = `Showing ${filtered.length} of ${VOICES.length + state.clonedVoices.length} voices`;
-
-  grid.innerHTML = filtered.map((v, i) => {
-    const color = AVATAR_COLORS[v.name.charCodeAt(0) % AVATAR_COLORS.length];
-    const prov = PROVIDER_COLORS[v.provider] || {bg:'rgba(148,163,184,0.1)',text:'#94a3b8'};
-    const isFav = state.favoriteVoices.includes(v.name);
-    const flag = LANG_FLAGS[v.lang] || '🌐';
-    return `<div class="voice-card">
-      <div class="flex items-center gap-3 mb-2">
-        <div class="w-9 h-9 rounded-full flex items-center justify-center text-sm font-bold text-white shrink-0" style="background:${color}">${v.name.charAt(0)}</div>
-        <div class="flex-1 min-w-0">
-          <div class="flex items-center gap-1.5">
-            <span class="text-sm font-semibold text-sf-text truncate">${v.name}</span>
-            <span class="text-[10px]">${GENDER_ICONS[v.gender]||''}</span>
-            <span class="text-[10px]">${flag}</span>
-          </div>
-          <span class="badge text-[9px] mt-0.5" style="background:${prov.bg};color:${prov.text}">${v.provider}</span>
-        </div>
-        <button class="btn-ghost text-sm fav-voice-btn" data-vname="${v.name}" title="Favorite">${isFav ? '❤️' : '♡'}</button>
-      </div>
-      <div class="flex gap-1 mb-2 flex-wrap">${(v.tags||[]).map(t => `<span class="text-[9px] px-1.5 py-0.5 rounded-full" style="background:rgba(255,255,255,0.06);color:var(--sf-muted)">${t}</span>`).join('')}</div>
-      <p class="text-xs text-sf-muted mb-3 line-clamp-2">${v.desc||''}</p>
-      <div class="flex gap-2">
-        <button class="btn-secondary text-[11px] py-1 px-2.5 flex items-center gap-1 preview-voice-btn" data-vname="${v.name}"><i data-lucide="play" class="w-3 h-3"></i> Preview</button>
-        <button class="btn-primary text-[11px] py-1 px-2.5 use-voice-btn" data-vname="${v.name}" data-vprov="${v.provider}">Use in Studio</button>
-      </div>
-    </div>`;
-  }).join('');
-  if (typeof lucide !== "undefined") lucide.createIcons();
-
-  // Bind events
-  grid.querySelectorAll('.preview-voice-btn').forEach(btn => {
-    btn.addEventListener('click', async () => {
-      const vname = btn.dataset.vname;
-      btn.innerHTML = '<span class="spinner inline-block w-3 h-3 border-2 border-sf-teal/30 border-t-sf-teal rounded-full"></span>';
-      const sampleText = `Hello, I'm ${vname}. This is a preview of my voice for your audiobook narration.`;
-
-      try {
-        if (window.AppSDK && window.AppSDK.ai && window.AppSDK.ai.speak) {
-          const voices = ['dan','brook','rio','jazz','aster','marilyn','elan','amuch'];
-          const sdkVoice = voices[vname.charCodeAt(0) % voices.length];
-          const result = await AppSDK.ai.speak({ text: sampleText, voice: sdkVoice, audioFormat: 'mp3' });
-          const audio = new Audio(`data:audio/${result.format};base64,${result.audio}`);
-          await audio.play();
-        } else if ('speechSynthesis' in window) {
-          const u = new SpeechSynthesisUtterance(sampleText);
-          speechSynthesis.speak(u);
-        }
-      } catch(e) {
-        if ('speechSynthesis' in window) {
-          const u = new SpeechSynthesisUtterance(sampleText);
-          speechSynthesis.speak(u);
+async function loadState(){
+  try{
+    if(window.AppSDK){
+      const projResult=await AppSDK.list(DB_ENTITY);
+      if(projResult&&projResult.documents&&projResult.documents.length){
+        S.projects=[];
+        for(const doc of projResult.documents){
+          if(doc.data&&doc.data.id)S.projects.push(doc.data);
         }
       }
-      btn.innerHTML = '<i data-lucide="play" class="w-3 h-3"></i> Preview';
-      if (typeof lucide !== "undefined") lucide.createIcons();
-    });
-  });
-
-  grid.querySelectorAll('.fav-voice-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const vname = btn.dataset.vname;
-      if (state.favoriteVoices.includes(vname)) {
-        state.favoriteVoices = state.favoriteVoices.filter(n => n !== vname);
-        btn.textContent = '♡';
-      } else {
-        state.favoriteVoices.push(vname);
-        btn.textContent = '❤️';
-      }
-      saveState();
-    });
-  });
-
-  grid.querySelectorAll('.use-voice-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const ch = getChapter();
-      if (ch) {
-        ch.voice = btn.dataset.vname;
-        ch.voiceProvider = btn.dataset.vprov;
-        saveState();
-        toast(`Voice "${btn.dataset.vname}" assigned to current chapter`);
-        switchTab('studio');
-        renderStudio();
-      } else {
-        toast('Open a chapter in the Studio first', 'info');
-      }
-    });
-  });
-}
-
-$('voice-search-v8').addEventListener('input', (e) => { voiceFilter.search = e.target.value; renderVoiceGrid(); });
-$('voice-provider-filter-w9').addEventListener('change', (e) => { voiceFilter.provider = e.target.value; renderVoiceGrid(); });
-$('voice-gender-filter-x0').addEventListener('change', (e) => { voiceFilter.gender = e.target.value; renderVoiceGrid(); });
-
-$('voice-category-chips-y1').querySelectorAll('.filter-chip').forEach(chip => {
-  chip.addEventListener('click', () => {
-    $('voice-category-chips-y1').querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
-    chip.classList.add('active');
-    voiceFilter.cat = chip.dataset.cat;
-    renderVoiceGrid();
-  });
-});
-
-/* ========================= VOICE CLONING ========================= */
-let cloneFile = null;
-$('clone-dropzone-d6').addEventListener('click', () => $('clone-file-input-e7').click());
-$('clone-file-input-e7').addEventListener('change', (e) => {
-  cloneFile = e.target.files[0];
-  if (cloneFile) {
-    $('clone-file-name-f8').textContent = '📎 ' + cloneFile.name;
-    show('clone-file-name-f8');
-  }
-});
-$('clone-dropzone-d6').addEventListener('dragover', (e) => { e.preventDefault(); e.currentTarget.style.borderColor = 'var(--sf-teal)'; });
-$('clone-dropzone-d6').addEventListener('dragleave', (e) => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.1)'; });
-$('clone-dropzone-d6').addEventListener('drop', (e) => {
-  e.preventDefault();
-  e.currentTarget.style.borderColor = 'rgba(255,255,255,0.1)';
-  cloneFile = e.dataTransfer.files[0];
-  if (cloneFile) { $('clone-file-name-f8').textContent = '📎 ' + cloneFile.name; show('clone-file-name-f8'); }
-});
-
-$('clone-voice-btn-g9').addEventListener('click', () => {
-  const name = $('clone-name-b4').value.trim();
-  const desc = $('clone-desc-c5').value.trim();
-  if (!name) { toast('Enter a name for your clone', 'error'); return; }
-  const btn = $('clone-voice-btn-g9');
-  btn.disabled = true;
-  btn.innerHTML = '<span class="spinner inline-block w-4 h-4 border-2 border-white/30 border-t-white rounded-full"></span> Cloning voice…';
-  setTimeout(() => {
-    state.clonedVoices.push({ name, desc: desc || 'Custom cloned voice', gender: 'Neutral', accent: 'Custom', lang: 'en', tags: ['cloned','custom'] });
-    saveState();
-    btn.disabled = false;
-    btn.innerHTML = '<i data-lucide="copy" class="w-4 h-4"></i> Clone Voice (ElevenLabs API)';
-    if (typeof lucide !== "undefined") lucide.createIcons();
-    $('clone-name-b4').value = '';
-    $('clone-desc-c5').value = '';
-    hide('clone-file-name-f8');
-    cloneFile = null;
-    renderVoiceGrid();
-    toast('Voice cloned successfully!');
-  }, 4000);
-});
-
-/* ========================= AI AGENTS ========================= */
-const AGENT_OUTPUTS = {
-  director: (proj) => `📊 Analysis for "${proj?.title || 'Project'}":\n\n• Genre detected: ${proj?.genre || 'Fantasy'} — High emotional range expected\n• Prologue: Recommend "Warm Storyteller" — gentle introduction builds anticipation\n• Chapter 1: Recommend "Dramatic Epic" — the Ancient City reveal needs grandeur\n• Chapter 2: Recommend "Quiet Noir" — shadow imagery pairs with subdued tension\n• Overall pacing: Start slow, escalate through Ch.1, maintain suspense in Ch.2\n• Suggested voice temperature: Higher stability for narration, lower for dialogue`,
-  character: () => `👥 Character Analysis:\n\n• Lyra — Protagonist, female. Appears in all chapters. Suggested voice: Charlotte (ElevenLabs) — captures strength + vulnerability\n• Kael — Companion, male. Dialogue-heavy in Ch.1-2. Suggested voice: Josh (ElevenLabs) — deep, young, matches character\n• Narrator — Third-person omniscient. Suggested voice: Rachel (ElevenLabs) — warm, clear, consistent\n• The Shadow Figure — Brief appearance Ch.2. No dialogue yet — monitor for future chapters\n\n📌 Dialogue split: 35% narrator, 40% Lyra, 25% Kael`,
-  editor: () => `✏️ Text Cleanup Report:\n\n• Processed 3 chapters (550+ words total)\n• Expanded abbreviations: "Ch." → "Chapter" (2 instances)\n• Number conversions: "1000" → "one thousand" (1 instance)\n• Removed markdown artifacts: 0 found\n• Added pronunciation hints for: "Veradun" [vehr-ah-DOON], "Obsidian" [ob-SID-ee-un]\n• Replaced em-dashes with natural pauses for TTS compatibility\n• Added SSML breath marks before long sentences (8 additions)`,
-  pacing: () => `🎭 Pacing Adjustments:\n\n• Prologue: Added 3 dramatic pauses — after "something stirred", before "The Awakening", after "looked like runes"\n• Chapter 1: Added 4 pauses — at scene transitions and before Kael's first dialogue\n• Chapter 2: Added 3 pauses — shadow reveal, tension build, final silhouette\n• Inserted breath marks before 12 dialogue lines across all chapters\n• Added 0.5s pause after each paragraph break\n• Scene break indicators: *** → 1.5 second silence`,
-  qa: () => `🔍 Quality Assessment:\n\n• Chapter 1 "The Ancient City": Score 92/100 ✅\n  — Clear articulation, good pacing, natural pauses\n  — Minor: slight rush on "bioluminescent" — consider re-generate\n• Chapter 2 "Shadows and Light": Pending generation ⏳\n• Prologue "The Awakening": Pending generation ⏳\n\n📋 Recommendations:\n  — Re-run generation for Ch.1 with stability +5 for smoother flow\n  — All dialogue passages within acceptable naturalness range\n  — No detected mispronunciations in generated audio`,
-  translator: () => `🌐 Translation Preview (Spanish):\n\n• "The Midnight Chronicles" → "Las Crónicas de Medianoche"\n• Prologue title: "Prólogo: El Despertar"\n• Literary style preserved: metaphorical language adapted for Spanish readers\n• Character names retained (Lyra, Kael) — proper nouns kept unchanged\n• Dialogue markers converted: quotation marks → em-dash convention for Spanish\n• Word count delta: +8% (typical for English→Spanish)\n• Ready for voice generation with Spanish neural voices`
-};
-
-function addAgentLog(agent, msg) {
-  const now = new Date().toISOString().replace('T',' ').substring(0,19);
-  state.agentLog.unshift({ time: now, agent, msg });
-  if (state.agentLog.length > 50) state.agentLog.length = 50;
-  saveState();
-  renderAgentLog();
-}
-
-function renderAgentLog() {
-  const log = $('agent-log-j2');
-  log.innerHTML = state.agentLog.map(entry =>
-    `<div class="flex gap-2 py-1.5 border-b" style="border-color:rgba(255,255,255,0.04);">
-      <span class="text-sf-dimmed shrink-0 w-36">${entry.time}</span>
-      <span class="badge badge-teal text-[9px] shrink-0">${entry.agent}</span>
-      <span class="text-sf-muted">${entry.msg.substring(0, 120)}${entry.msg.length > 120 ? '…' : ''}</span>
-    </div>`
-  ).join('');
-}
-
-async function runAgent(agentName) {
-  const statusDot = $('agent-status-' + agentName);
-  const timeEl = $('agent-time-' + agentName);
-  const outputEl = $('agent-output-' + agentName);
-
-  statusDot.className = 'status-dot status-running';
-  timeEl.textContent = 'running…';
-
-  // Try real AI
-  const proj = getProject() || state.projects[0];
-  let output = '';
-
-  try {
-    if (window.AppSDK && window.AppSDK.ai && window.AppSDK.ai.chat) {
-      const prompts = {
-        director: `You are an audiobook director agent. Analyze this ${proj?.genre || 'Fantasy'} project titled "${proj?.title || 'Project'}" and suggest narration direction per chapter. Chapters: ${proj?.chapters?.map(c=>c.title).join(', ')}. Be specific and concise.`,
-        character: `You are a character detection agent. Analyze these chapter texts and identify all speaking characters, suggest voice assignments. Text excerpt: "${proj?.chapters?.[0]?.text?.substring(0,500) || 'No text available'}"`,
-        editor: `You are a TTS text editor agent. Report what cleanup you would do to prepare audiobook text for speech synthesis: expanding abbreviations, number-to-word conversion, pronunciation hints. Sample text: "${proj?.chapters?.[0]?.text?.substring(0,300) || ''}"`,
-        pacing: `You are a pacing agent for audiobooks. Analyze this text and suggest where to insert dramatic pauses and breath marks: "${proj?.chapters?.[0]?.text?.substring(0,400) || ''}"`,
-        qa: `You are a QA agent. Score the audio quality readiness of these chapters: ${proj?.chapters?.map(c => c.title + ' (status: ' + c.status + ')').join(', ')}. Rate each and give recommendations.`,
-        translator: `You are a translation agent. Provide a brief preview of translating "${proj?.title || 'Project'}" chapter titles to ${$('agent-cfg-translator')?.value || 'Spanish'}. Chapters: ${proj?.chapters?.map(c=>c.title).join(', ')}.`
-      };
-      const res = await AppSDK.ai.chat({
-        messages: [
-          { role: 'system', content: 'You are an AI agent for an audiobook production studio. Be concise and professional. Use bullet points.' },
-          { role: 'user', content: prompts[agentName] || 'Analyze the current audiobook project.' }
-        ]
-      });
-      output = res.content;
-    } else {
-      throw new Error('SDK not available');
+      try{
+        const setDoc=await AppSDK.get(DB_SETTINGS,'prefs');
+        if(setDoc&&setDoc.data){
+          if(setDoc.data.settings)Object.assign(S.settings,setDoc.data.settings);
+          if(setDoc.data.apiKeys)Object.assign(S.apiKeys,setDoc.data.apiKeys);
+          if(setDoc.data.favorites)S.favorites=setDoc.data.favorites;
+          if(setDoc.data.agentLog)S.agentLog=setDoc.data.agentLog;
+        }
+      }catch(e){}
     }
-  } catch(e) {
-    // Fallback to pre-written outputs
-    output = typeof AGENT_OUTPUTS[agentName] === 'function' ? AGENT_OUTPUTS[agentName](proj) : 'Agent completed.';
-  }
-
-  await new Promise(r => setTimeout(r, 1500 + Math.random() * 2000));
-
-  statusDot.className = 'status-dot status-done';
-  timeEl.textContent = 'just now';
-  outputEl.innerHTML = '<div class="glass-card-sm p-3 mt-2 text-xs text-sf-text whitespace-pre-wrap leading-relaxed">' + output.replace(/\n/g, '<br>') + '</div>';
-  show(outputEl);
-  addAgentLog(agentName.charAt(0).toUpperCase() + agentName.slice(1), output.substring(0, 150));
+  }catch(e){console.log('Load state fallback:',e);}
+}
+async function saveProjects(){
+  try{
+    if(window.AppSDK){
+      for(const p of S.projects){
+        const saveData={...p};
+        // Don't store audio blob URLs in persistence
+        if(saveData.chapters){
+          saveData.chapters=saveData.chapters.map(c=>({...c,audioUrl:null,audioBlob:null}));
+        }
+        await AppSDK.upsert(DB_ENTITY,p.id,saveData);
+      }
+    }
+  }catch(e){console.log('Save error:',e);}
+}
+async function saveSettings(){
+  try{
+    if(window.AppSDK){
+      await AppSDK.upsert(DB_SETTINGS,'prefs',{settings:S.settings,apiKeys:S.apiKeys,favorites:S.favorites,agentLog:S.agentLog.slice(0,30)});
+    }
+  }catch(e){console.log('Save settings error:',e);}
+}
+async function deleteProject(pid){
+  try{if(window.AppSDK)await AppSDK.delete(DB_ENTITY,pid);}catch(e){}
 }
 
-document.querySelectorAll('.agent-run-btn').forEach(btn => {
-  btn.addEventListener('click', () => runAgent(btn.dataset.agent));
+/* ===== HELPERS ===== */
+const $=id=>document.getElementById(id);
+const show=el=>{if(typeof el==='string')el=$(el);if(el)el.classList.remove('hidden');};
+const hide=el=>{if(typeof el==='string')el=$(el);if(el)el.classList.add('hidden');};
+const gid=()=>'p_'+Math.random().toString(36).substr(2,9);
+const fmt=s=>{if(!s||isNaN(s))return'0:00';const m=Math.floor(s/60),sec=Math.floor(s%60);return m+':'+String(sec).padStart(2,'0');};
+const wc=t=>t&&t.trim()?t.trim().split(/\s+/).length:0;
+const estMin=w=>Math.max(1,Math.round(w/150));
+
+function toast(msg,type='ok'){const c=$('toast-box-z9k1');const t=document.createElement('div');t.className='toast toast-'+type;t.textContent=msg;c.appendChild(t);setTimeout(()=>{t.style.opacity='0';t.style.transition='opacity .3s';setTimeout(()=>t.remove(),300);},3500);}
+
+/* ===== TEXT CHUNKING ===== */
+function chunkText(text, maxChars=3800){
+  const sentences=text.match(/[^.!?]+[.!?]+/g)||[text];
+  const chunks=[];let current='';
+  for(const sent of sentences){
+    if((current+sent).length>maxChars&&current){chunks.push(current.trim());current=sent;}
+    else{current+=' '+sent;}
+  }
+  if(current.trim())chunks.push(current.trim());
+  return chunks;
+}
+
+/* ===== CHAPTER DETECTION ===== */
+function detectChapters(text){
+  const lines=text.split('\n');const chapters=[];let cur=null;
+  const pat=/^(chapter\s+\d+|chapter\s+[ivxlcdm]+|\d+\.\s+[A-Z]|PART\s+\d+|[IVX]+\.\s|prologue|epilogue|introduction|conclusion)/i;
+  for(let i=0;i<lines.length;i++){
+    const line=lines[i].trim();if(!line)continue;
+    const isHeading=pat.test(line)||(line.length<60&&line.length>3&&line===line.toUpperCase()&&!/^\d+$/.test(line));
+    if(isHeading){
+      if(cur)chapters.push(cur);
+      cur={title:line.substring(0,80),content:''};
+    }else{
+      if(!cur)cur={title:'Chapter 1',content:''};
+      cur.content+=line+'\n';
+    }
+  }
+  if(cur)chapters.push(cur);
+  if(!chapters.length)chapters.push({title:'Full Book',content:text});
+  // Auto-split very long single chapters
+  if(chapters.length===1&&wc(chapters[0].content)>3000){
+    const words=chapters[0].content.split(/\s+/);const newChs=[];
+    for(let i=0;i<words.length;i+=2000){
+      newChs.push({title:'Section '+(Math.floor(i/2000)+1),content:words.slice(i,i+2000).join(' ')});
+    }
+    return newChs;
+  }
+  return chapters;
+}
+
+/* ===== TTS SYNTHESIS (AppSDK) ===== */
+async function synthesizeChapter(text,voiceSdk,onProgress){
+  const chunks=chunkText(text);
+  const audioBuffers=[];
+  for(let i=0;i<chunks.length;i++){
+    if(onProgress)onProgress(i,chunks.length);
+    try{
+      const result=await AppSDK.ai.speak({text:chunks[i],voice:voiceSdk||'dan',audioFormat:'mp3'});
+      const binaryStr=atob(result.audio);
+      const bytes=new Uint8Array(binaryStr.length);
+      for(let j=0;j<binaryStr.length;j++)bytes[j]=binaryStr.charCodeAt(j);
+      audioBuffers.push(bytes);
+    }catch(e){
+      console.error('TTS chunk error:',e);
+      throw new Error('TTS failed on chunk '+(i+1)+': '+e.message);
+    }
+  }
+  const totalLength=audioBuffers.reduce((a,b)=>a+b.byteLength,0);
+  const combined=new Uint8Array(totalLength);
+  let offset=0;
+  for(const buf of audioBuffers){combined.set(buf,offset);offset+=buf.byteLength;}
+  return new Blob([combined],{type:'audio/mpeg'});
+}
+
+/* ===== TABS ===== */
+function switchTab(t){
+  document.querySelectorAll('.tab-c').forEach(e=>e.classList.remove('active'));
+  document.querySelectorAll('.tab-pill').forEach(b=>b.classList.remove('active'));
+  const el=$('tab-'+t);if(el){el.classList.add('active');el.classList.add('fade-in');}
+  document.querySelectorAll(`[data-tab="${t}"]`).forEach(b=>b.classList.add('active'));
+  hide('mob-menu-n3k2');
+}
+document.querySelectorAll('[data-tab]').forEach(b=>b.addEventListener('click',()=>switchTab(b.dataset.tab)));
+$('mob-btn-m9k1').addEventListener('click',()=>show('mob-menu-n3k2'));
+$('mob-close-c4k3').addEventListener('click',()=>hide('mob-menu-n3k2'));
+$('modal-ov-p5k4').addEventListener('click',e=>{if(e.target===$('modal-ov-p5k4'))hide('modal-ov-p5k4');});
+
+/* ===== LIBRARY ===== */
+function getProj(){return S.projects.find(p=>p.id===S.activeProjectId);}
+function getCh(){const p=getProj();return p?p.chapters.find(c=>c.id===S.activeChapterId):null;}
+
+function renderLib(){
+  const g=$('lib-grid-g4j1'),em=$('lib-empty-e5k2'),ps=S.projects;
+  $('st-proj-s1g7').textContent=ps.length;
+  let tc=0,gc=0;ps.forEach(p=>{tc+=p.chapters.length;p.chapters.forEach(c=>{if(c.status==='generated')gc++;});});
+  $('st-chap-s2h8').textContent=tc;$('st-gen-s3i9').textContent=gc;
+  if(!ps.length){hide(g);show(em);return;}
+  show(g);hide(em);
+  g.innerHTML=ps.map(p=>{
+    const d=new Date(p.updatedAt).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
+    const genCount=p.chapters.filter(c=>c.status==='generated').length;
+    return `<div class="glass p-5 flex flex-col gap-3 fade-in"><div class="flex items-center justify-between"><h3 class="text-sm font-semibold truncate flex-1">${p.title}</h3></div><div class="flex gap-4 text-xs text-sf-muted"><span>${p.chapters.length} chapters</span><span>~${estMin(p.chapters.reduce((a,c)=>a+wc(c.text),0))} min</span></div><div class="progress-bar"><div class="progress-fill" style="width:${p.chapters.length?Math.round(genCount/p.chapters.length*100):0}%"></div></div><div class="text-[11px] text-sf-dimmed">${genCount}/${p.chapters.length} generated · Updated ${d}</div><div class="flex gap-2 mt-auto pt-2"><button class="btn-p text-xs flex-1 py-1.5 po" data-pid="${p.id}">Open in Studio</button><button class="btn-g text-xs py-1.5 px-2 pd" data-pid="${p.id}" style="color:var(--sf-red);"><i data-lucide="trash-2" class="w-3 h-3"></i></button></div></div>`;
+  }).join('');
+  refreshIcons();
+  g.querySelectorAll('.po').forEach(b=>b.addEventListener('click',()=>{S.activeProjectId=b.dataset.pid;S.activeChapterId=null;switchTab('studio');renderStudio();}));
+  g.querySelectorAll('.pd').forEach(b=>b.addEventListener('click',async()=>{if(confirm('Delete this project permanently?')){const pid=b.dataset.pid;S.projects=S.projects.filter(x=>x.id!==pid);if(S.activeProjectId===pid){S.activeProjectId=null;S.activeChapterId=null;}await deleteProject(pid);await saveProjects();renderLib();toast('Project deleted','err');}}));
+}
+
+/* ===== FILE UPLOAD ===== */
+$('upload-zone-u3d4').addEventListener('click',()=>$('upload-inp-i5f6').click());
+$('browse-btn-b4e5').addEventListener('click',e=>{e.stopPropagation();$('upload-inp-i5f6').click();});
+$('upload-inp-i5f6').addEventListener('change',async function(){if(this.files[0])await handleImport(this.files[0]);this.value='';});
+$('upload-zone-u3d4').addEventListener('dragover',e=>{e.preventDefault();e.currentTarget.classList.add('active');});
+$('upload-zone-u3d4').addEventListener('dragleave',e=>{e.currentTarget.classList.remove('active');});
+$('upload-zone-u3d4').addEventListener('drop',async e=>{e.preventDefault();e.currentTarget.classList.remove('active');if(e.dataTransfer.files[0])await handleImport(e.dataTransfer.files[0]);});
+
+async function handleImport(file){
+  const ext=file.name.split('.').pop().toLowerCase();let text='';
+  toast('Processing '+file.name+'…','info');
+  try{
+    if(ext==='pdf'){
+      if(typeof pdfjsLib==='undefined'){toast('PDF.js not loaded','err');return;}
+      const ab=await file.arrayBuffer();const pdf=await pdfjsLib.getDocument({data:ab}).promise;const pages=[];
+      for(let i=1;i<=pdf.numPages;i++){const pg=await pdf.getPage(i);const c=await pg.getTextContent();pages.push(c.items.map(it=>it.str).join(' '));}
+      text=pages.join('\n\n');
+    }else if(ext==='docx'||ext==='doc'){
+      if(typeof mammoth==='undefined'){toast('Mammoth.js not loaded','err');return;}
+      const ab=await file.arrayBuffer();const r=await mammoth.extractRawText({arrayBuffer:ab});text=r.value;
+    }else if(ext==='txt'||ext==='md'){text=await file.text();}
+    else{toast('Unsupported format','err');return;}
+    if(!text.trim()){toast('No text extracted','err');return;}
+    const chapters=detectChapters(text);
+    const proj={id:gid(),title:file.name.replace(/\.[^.]+$/,''),createdAt:new Date().toISOString(),updatedAt:new Date().toISOString(),chapters:chapters.map((ch,i)=>({id:gid(),title:ch.title,text:ch.content.trim(),status:'draft',audioUrl:null,audioBlob:null,voice:S.settings.voice}))};
+    S.projects.push(proj);
+    await saveProjects();renderLib();
+    toast('Imported '+chapters.length+' chapter(s) from '+file.name);
+    S.activeProjectId=proj.id;S.activeChapterId=proj.chapters[0]?.id||null;
+    switchTab('studio');renderStudio();
+  }catch(e){console.error(e);toast('Import failed: '+e.message,'err');}
+}
+
+/* ===== NEW PROJECT ===== */
+$('new-proj-btn-b2c3').addEventListener('click',()=>{
+  $('modal-bd-r6k5').innerHTML=`<h3 class="text-base font-semibold mb-4">New Project</h3><div class="flex flex-col gap-3 mb-5"><div><label class="text-xs text-sf-muted mb-1 block">Title</label><input type="text" id="np-t-t1a1" class="inp text-sm" placeholder="My Audiobook" /></div></div><div class="flex gap-2 justify-end"><button class="btn-s text-sm" id="np-cancel-c2b2">Cancel</button><button class="btn-p text-sm" id="np-go-g3c3">Create Project</button></div>`;
+  show('modal-ov-p5k4');
+  setTimeout(()=>{
+    $('np-cancel-c2b2').addEventListener('click',()=>hide('modal-ov-p5k4'));
+    $('np-go-g3c3').addEventListener('click',async()=>{
+      const t=$('np-t-t1a1').value.trim()||'Untitled Project';
+      const proj={id:gid(),title:t,createdAt:new Date().toISOString(),updatedAt:new Date().toISOString(),chapters:[{id:gid(),title:'Chapter 1',text:'',status:'draft',audioUrl:null,audioBlob:null,voice:S.settings.voice}]};
+      S.projects.push(proj);await saveProjects();hide('modal-ov-p5k4');renderLib();toast('Project created!');
+    });
+  },20);
 });
 
-$('run-all-agents-btn-h0').addEventListener('click', async () => {
-  const agents = ['director','character','editor','pacing','qa','translator'];
-  const btn = $('run-all-agents-btn-h0');
-  btn.disabled = true;
-  btn.innerHTML = '<span class="spinner inline-block w-4 h-4 border-2 border-white/30 border-t-white rounded-full"></span> Running…';
-  for (const agent of agents) {
-    await runAgent(agent);
+/* ===== STUDIO ===== */
+function renderStudio(){
+  const p=getProj();
+  if(!p){show('studio-empty-s6l3');hide('studio-ws-w8n5');return;}
+  hide('studio-empty-s6l3');show('studio-ws-w8n5');
+  $('ws-title-t1p7').textContent=p.title;
+  populateVoiceSelect($('ed-voice-v5t2'));
+  renderChList();
+  if(S.activeChapterId)renderEditor();else{show('ed-empty-e4t1');hide('ed-active-a5u2');}
+}
+
+function renderChList(){
+  const p=getProj();if(!p)return;
+  const list=$('ch-list-l4s1');
+  list.innerHTML=p.chapters.map((ch,i)=>{
+    const sel=ch.id===S.activeChapterId?'sel':'';
+    const w=wc(ch.text);
+    const statusBadge=ch.status==='generated'?'<span class="badge badge-g text-[9px]">Generated</span>':'<span class="badge badge-m text-[9px]">Draft</span>';
+    return `<div class="ch-item ${sel}" data-cid="${ch.id}"><div class="flex items-center gap-2"><span class="text-xs text-sf-dimmed font-mono w-5">${i+1}</span><span class="text-sm truncate flex-1">${ch.title}</span>${statusBadge}</div><div class="text-[10px] text-sf-dimmed ml-7 mt-0.5">${w} words · ~${estMin(w)} min</div></div>`;
+  }).join('');
+  list.querySelectorAll('.ch-item').forEach(el=>el.addEventListener('click',()=>{
+    S.activeChapterId=el.dataset.cid;renderStudio();
+  }));
+}
+
+function renderEditor(){
+  const ch=getCh();if(!ch){show('ed-empty-e4t1');hide('ed-active-a5u2');return;}
+  hide('ed-empty-e4t1');show('ed-active-a5u2');
+  $('ed-title-t6v3').value=ch.title;
+  $('ed-text-t1z7').value=ch.text;
+  updateCounts(ch.text);
+  $('ed-voice-v5t2').value=ch.voice||S.settings.voice||'dan';
+  if(ch.audioUrl||ch.audioBlob){
+    const url=ch.audioUrl||(ch.audioBlob?URL.createObjectURL(ch.audioBlob):null);
+    if(url){show('audio-player-a5c2');setupPlayer(url,ch.title);}
+  }else{hide('audio-player-a5c2');}
+  hide('gen-prog-p1y7');
+}
+
+function updateCounts(t){
+  const w=wc(t);
+  $('ed-wc-w7w4').textContent=w+' words';
+  $('ed-cc-c8x5').textContent=t.length+' chars';
+  $('ed-est-e9y6').textContent='~'+estMin(w)+' min';
+}
+
+function populateVoiceSelect(sel){
+  let h='<optgroup label="StoryForge TTS">';
+  VOICES.forEach(v=>{h+=`<option value="${v.sdk}">${v.n} — ${v.d.split('—')[0].trim()}</option>`;});
+  h+='</optgroup>';
+  sel.innerHTML=h;
+}
+
+$('ed-title-t6v3').addEventListener('input',function(){const ch=getCh();if(ch){ch.title=this.value;const p=getProj();if(p)p.updatedAt=new Date().toISOString();saveProjects();renderChList();}});
+$('ed-text-t1z7').addEventListener('input',function(){const ch=getCh();if(ch){ch.text=this.value;updateCounts(this.value);const p=getProj();if(p)p.updatedAt=new Date().toISOString();saveProjects();}});
+$('ed-voice-v5t2').addEventListener('change',function(){const ch=getCh();if(ch){ch.voice=this.value;saveProjects();}});
+$('sl-spd-s8w5').addEventListener('input',function(){$('sl-spd-v-v7v4').textContent=(this.value/100).toFixed(2)+'×';});
+
+$('add-ch-btn-a3r9').addEventListener('click',()=>{const p=getProj();if(!p)return;const ch={id:gid(),title:'Chapter '+(p.chapters.length+1),text:'',status:'draft',audioUrl:null,audioBlob:null,voice:S.settings.voice};p.chapters.push(ch);S.activeChapterId=ch.id;saveProjects();renderStudio();toast('Chapter added');});
+
+$('back-lib-btn-b9o6').addEventListener('click',()=>{S.activeProjectId=null;S.activeChapterId=null;switchTab('library');renderLib();});
+$('go-lib-btn-b7m4').addEventListener('click',()=>switchTab('library'));
+
+/* ===== GENERATE AUDIO ===== */
+$('gen-btn-g9x6').addEventListener('click',async()=>{
+  const ch=getCh();if(!ch){toast('Select a chapter first','err');return;}
+  if(!ch.text.trim()){toast('Add some text first','err');return;}
+  const voiceSdk=$('ed-voice-v5t2').value||'dan';
+  const btn=$('gen-btn-g9x6');btn.disabled=true;
+  btn.innerHTML='<span class="spinner inline-block w-5 h-5 border-2 border-white/30 border-t-white rounded-full"></span> Generating…';
+  show('gen-prog-p1y7');hide('audio-player-a5c2');
+  $('gen-fill-f3a9').style.width='0%';
+  $('gen-status-s2z8').textContent='Synthesizing audio…';
+  try{
+    const blob=await synthesizeChapter(ch.text,voiceSdk,(i,total)=>{
+      const pct=Math.round(((i+1)/total)*100);
+      $('gen-fill-f3a9').style.width=pct+'%';
+      $('gen-detail-d4b1').textContent=`Chunk ${i+1} of ${total}`;
+      $('gen-status-s2z8').textContent=i===total-1?'Finalizing…':'Synthesizing audio…';
+    });
+    $('gen-fill-f3a9').style.width='100%';
+    $('gen-status-s2z8').textContent='Complete!';
+    ch.audioBlob=blob;
+    ch.audioUrl=URL.createObjectURL(blob);
+    ch.status='generated';
+    const p=getProj();if(p)p.updatedAt=new Date().toISOString();
+    await saveProjects();
+    setTimeout(()=>{
+      hide('gen-prog-p1y7');
+      show('audio-player-a5c2');
+      setupPlayer(ch.audioUrl,ch.title);
+      renderChList();renderLib();
+      toast('Audio generated successfully!');
+    },500);
+  }catch(e){
+    console.error(e);toast('Generation failed: '+e.message,'err');
+    hide('gen-prog-p1y7');
   }
-  btn.disabled = false;
-  btn.innerHTML = '<i data-lucide="play" class="w-4 h-4"></i> Run All Agents';
-  if (typeof lucide !== "undefined") lucide.createIcons();
+  btn.disabled=false;btn.innerHTML='<i data-lucide="sparkles" class="w-5 h-5"></i> Generate Chapter Audio';refreshIcons();
+});
+
+/* Generate All */
+$('gen-all-btn-g2q8').addEventListener('click',async()=>{
+  const p=getProj();if(!p){toast('No project open','err');return;}
+  const drafts=p.chapters.filter(c=>c.status!=='generated'&&c.text.trim());
+  if(!drafts.length){toast('All chapters already generated','info');return;}
+  const btn=$('gen-all-btn-g2q8');btn.disabled=true;
+  btn.innerHTML='<span class="spinner inline-block w-4 h-4 border-2 border-white/30 border-t-white rounded-full"></span> Generating All…';
+  show('gen-prog-p1y7');
+  for(let ci=0;ci<drafts.length;ci++){
+    const ch=drafts[ci];
+    $('gen-status-s2z8').textContent=`Chapter ${ci+1}/${drafts.length}: ${ch.title}`;
+    try{
+      const voiceSdk=ch.voice||S.settings.voice||'dan';
+      const blob=await synthesizeChapter(ch.text,voiceSdk,(i,total)=>{
+        const overallPct=Math.round(((ci+i/total)/drafts.length)*100);
+        $('gen-fill-f3a9').style.width=overallPct+'%';
+        $('gen-detail-d4b1').textContent=`Chapter ${ci+1}/${drafts.length} · Chunk ${i+1}/${total}`;
+      });
+      ch.audioBlob=blob;ch.audioUrl=URL.createObjectURL(blob);ch.status='generated';
+    }catch(e){toast(`Failed: ${ch.title} — ${e.message}`,'err');}
+  }
+  $('gen-fill-f3a9').style.width='100%';$('gen-status-s2z8').textContent='All done!';
+  p.updatedAt=new Date().toISOString();await saveProjects();
+  setTimeout(()=>{hide('gen-prog-p1y7');renderChList();renderLib();toast('All chapters generated!');},500);
+  btn.disabled=false;btn.innerHTML='<i data-lucide="sparkles" class="w-4 h-4"></i> Generate All';refreshIcons();
+});
+
+/* ===== AUDIO PLAYER ===== */
+function setupPlayer(url,title){
+  if(curAudio){curAudio.pause();curAudio=null;}
+  isPlay=false;if(wfAnimId)cancelAnimationFrame(wfAnimId);
+  curAudio=new Audio(url);
+  $('pl-chapter-name-n6d3').textContent=title||'Chapter';
+  $('pl-cur-c5l2').textContent='0:00';$('pl-dur-d7n4').textContent='0:00';
+  $('pl-seek-s6m3').value=0;
+  $('pl-ico-i2i8').setAttribute('data-lucide','play');refreshIcons();
+  // Setup Web Audio analyser
+  try{
+    if(!audioCtx)audioCtx=new(window.AudioContext||window.webkitAudioContext)();
+    if(audioSource){try{audioSource.disconnect();}catch(e){}}
+    audioSource=audioCtx.createMediaElementSource(curAudio);
+    analyserNode=audioCtx.createAnalyser();analyserNode.fftSize=128;
+    audioSource.connect(analyserNode);analyserNode.connect(audioCtx.destination);
+  }catch(e){console.log('Web Audio setup note:',e.message);}
+  curAudio.addEventListener('loadedmetadata',()=>{$('pl-dur-d7n4').textContent=fmt(curAudio.duration);});
+  curAudio.addEventListener('timeupdate',()=>{if(curAudio.duration){$('pl-cur-c5l2').textContent=fmt(curAudio.currentTime);$('pl-seek-s6m3').value=Math.round((curAudio.currentTime/curAudio.duration)*1000);}});
+  curAudio.addEventListener('ended',()=>{
+    isPlay=false;stopWaveform();$('pl-ico-i2i8').setAttribute('data-lucide','play');refreshIcons();
+    // Auto-play next
+    if(S.settings.autoplay){
+      const p=getProj();if(p){
+        const idx=p.chapters.findIndex(c=>c.id===S.activeChapterId);
+        if(idx>=0&&idx<p.chapters.length-1){
+          const next=p.chapters[idx+1];
+          if(next.audioUrl||next.audioBlob){
+            S.activeChapterId=next.id;renderStudio();
+            setTimeout(()=>{if(curAudio){curAudio.play().catch(()=>{});isPlay=true;startWaveform();$('pl-ico-i2i8').setAttribute('data-lucide','pause');refreshIcons();}},300);
+          }
+        }
+      }
+    }
+  });
+  drawStaticWaveform();
+}
+
+const canvas=$('waveform-cv-c7e4');const canvasCtx=canvas.getContext('2d');
+function resizeCanvas(){canvas.width=canvas.parentElement.clientWidth*2;canvas.height=canvas.parentElement.clientHeight*2;}
+resizeCanvas();window.addEventListener('resize',resizeCanvas);
+
+function drawStaticWaveform(){
+  resizeCanvas();const w=canvas.width,h=canvas.height;canvasCtx.clearRect(0,0,w,h);
+  const bars=64;const barW=w/bars-2;const grad=canvasCtx.createLinearGradient(0,0,w,0);
+  grad.addColorStop(0,'#00d4ff');grad.addColorStop(1,'#7c3aed');
+  canvasCtx.fillStyle=grad;
+  for(let i=0;i<bars;i++){
+    const bh=h*0.15+Math.random()*h*0.35;
+    const x=i*(barW+2);const y=(h-bh)/2;
+    canvasCtx.fillRect(x,y,barW,bh);
+  }
+  canvasCtx.globalAlpha=0.4;canvasCtx.fillStyle=grad;
+  canvasCtx.globalAlpha=1;
+}
+
+function startWaveform(){
+  function draw(){
+    if(!isPlay){return;}
+    resizeCanvas();const w=canvas.width,h=canvas.height;canvasCtx.clearRect(0,0,w,h);
+    const grad=canvasCtx.createLinearGradient(0,0,w,0);
+    grad.addColorStop(0,'#00d4ff');grad.addColorStop(1,'#7c3aed');
+    canvasCtx.fillStyle=grad;
+    if(analyserNode){
+      const bufLen=analyserNode.frequencyBinCount;const data=new Uint8Array(bufLen);analyserNode.getByteFrequencyData(data);
+      const bars=bufLen;const barW=w/bars-1;
+      for(let i=0;i<bars;i++){
+        const val=data[i]/255;const bh=Math.max(4,val*h*0.9);
+        const x=i*(barW+1);const y=(h-bh)/2;
+        canvasCtx.fillRect(x,y,barW,bh);
+      }
+    }else{
+      const bars=64;const barW=w/bars-2;
+      for(let i=0;i<bars;i++){
+        const bh=h*0.1+Math.random()*h*0.6;
+        canvasCtx.fillRect(i*(barW+2),(h-bh)/2,barW,bh);
+      }
+    }
+    wfAnimId=requestAnimationFrame(draw);
+  }
+  draw();
+}
+function stopWaveform(){if(wfAnimId)cancelAnimationFrame(wfAnimId);drawStaticWaveform();}
+
+$('pl-play-p1h7').addEventListener('click',()=>{
+  if(!curAudio){toast('No audio loaded','err');return;}
+  if(audioCtx&&audioCtx.state==='suspended')audioCtx.resume();
+  if(isPlay){curAudio.pause();isPlay=false;stopWaveform();$('pl-ico-i2i8').setAttribute('data-lucide','play');}
+  else{curAudio.play().catch(()=>{});isPlay=true;startWaveform();$('pl-ico-i2i8').setAttribute('data-lucide','pause');}
+  refreshIcons();
+});
+$('pl-seek-s6m3').addEventListener('input',function(){if(curAudio&&curAudio.duration)curAudio.currentTime=(this.value/1000)*curAudio.duration;});
+$('pl-vol-v8o5').addEventListener('input',function(){if(curAudio)curAudio.volume=this.value/100;});
+$('pl-speed-s9p6').addEventListener('change',function(){if(curAudio)curAudio.playbackRate=parseFloat(this.value);});
+$('pl-rew-r9g6').addEventListener('click',()=>{if(curAudio)curAudio.currentTime=Math.max(0,curAudio.currentTime-10);});
+$('pl-fwd-f3j9').addEventListener('click',()=>{if(curAudio)curAudio.currentTime=Math.min(curAudio.duration||0,curAudio.currentTime+10);});
+
+function navChapter(dir){
+  const p=getProj();if(!p)return;
+  const idx=p.chapters.findIndex(c=>c.id===S.activeChapterId);
+  const ni=idx+dir;
+  if(ni>=0&&ni<p.chapters.length){S.activeChapterId=p.chapters[ni].id;renderStudio();}
+}
+$('pl-prev-ch-p8f5').addEventListener('click',()=>navChapter(-1));
+$('pl-next-ch-n4k1').addEventListener('click',()=>navChapter(1));
+
+$('pl-dl-d1q7').addEventListener('click',()=>{
+  const ch=getCh();if(!ch||(!ch.audioUrl&&!ch.audioBlob)){toast('No audio to download','err');return;}
+  const a=document.createElement('a');
+  a.href=ch.audioUrl||URL.createObjectURL(ch.audioBlob);
+  a.download=(ch.title.replace(/[^a-zA-Z0-9]/g,'_'))+'.mp3';a.click();
+  toast('Download started');
+});
+$('pl-dl-all-a2r8').addEventListener('click',()=>{
+  const p=getProj();if(!p)return;
+  const generated=p.chapters.filter(c=>c.audioUrl||c.audioBlob);
+  if(!generated.length){toast('No generated chapters','err');return;}
+  generated.forEach((ch,i)=>{
+    setTimeout(()=>{
+      const a=document.createElement('a');
+      a.href=ch.audioUrl||URL.createObjectURL(ch.audioBlob);
+      a.download=`${String(i+1).padStart(2,'0')}_${ch.title.replace(/[^a-zA-Z0-9]/g,'_')}.mp3`;a.click();
+    },i*500);
+  });
+  toast('Downloading '+generated.length+' chapter(s)…');
+});
+
+/* ===== VOICE LAB ===== */
+let vlFilter={search:'',cat:'all',prov:'',gen:''};
+
+function renderVoiceLab(){
+  let filtered=[...VOICES];
+  if(vlFilter.search){const q=vlFilter.search.toLowerCase();filtered=filtered.filter(v=>v.n.toLowerCase().includes(q)||v.d.toLowerCase().includes(q));}
+  if(vlFilter.cat!=='all')filtered=filtered.filter(v=>v.cat===vlFilter.cat);
+  if(vlFilter.prov)filtered=filtered.filter(v=>v.p===vlFilter.prov);
+  if(vlFilter.gen)filtered=filtered.filter(v=>v.g===vlFilter.gen);
+  $('vl-count-c7f4').textContent=`Showing ${filtered.length} of ${VOICES.length} voices`;
+  const grid=$('vl-grid-g8g5');
+  grid.innerHTML=filtered.map(v=>{
+    const col=AV_COL[v.n.charCodeAt(0)%AV_COL.length];
+    const pc=PROV_COL[v.p]||{bg:'rgba(148,163,184,.1)',t:'#94a3b8'};
+    const isFav=S.favorites[v.sdk];
+    const ch=getCh();const isSelected=ch&&ch.voice===v.sdk;
+    return `<div class="voice-card ${isSelected?'selected':''} ${isFav?'fav':''}"><div class="flex items-center gap-3 mb-2"><div class="w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold text-white shrink-0" style="background:${col}">${v.n.charAt(0)}</div><div class="flex-1 min-w-0"><div class="flex items-center gap-2"><span class="text-sm font-semibold">${v.n}</span><button class="btn-g p-0.5 vl-fav" data-vk="${v.sdk}" title="Favorite"><i data-lucide="${isFav?'star':'star'}" class="w-3.5 h-3.5 ${isFav?'text-sf-amber':'text-sf-dimmed'}"></i></button></div><span class="badge text-[9px]" style="background:${pc.bg};color:${pc.t}">${v.p}</span></div></div><p class="text-xs text-sf-muted mb-2">${v.d}</p><div class="flex items-center gap-2 text-[10px] text-sf-dimmed mb-3"><span class="badge badge-m text-[9px]">${v.g}</span><span class="badge badge-m text-[9px]">${v.cat}</span></div><div class="flex gap-2"><button class="btn-s text-[11px] py-1.5 px-3 flex items-center gap-1 vl-prev" data-vk="${v.sdk}" data-vn="${v.n}"><i data-lucide="play" class="w-3 h-3"></i> Preview</button><button class="btn-p text-[11px] py-1.5 px-3 vl-use" data-vk="${v.sdk}" data-vn="${v.n}">Use Voice</button></div></div>`;
+  }).join('');
+  refreshIcons();
+  grid.querySelectorAll('.vl-prev').forEach(b=>b.addEventListener('click',async()=>{
+    const vk=b.dataset.vk;const vn=b.dataset.vn;
+    b.innerHTML='<span class="spinner inline-block w-3 h-3 border-2 border-sf-teal/30 border-t-sf-teal rounded-full"></span> Playing…';
+    b.disabled=true;
+    try{
+      const sample=`Hello! I'm ${vn}. This is a preview of my voice for your audiobook narration.`;
+      const result=await AppSDK.ai.speak({text:sample,voice:vk,audioFormat:'mp3'});
+      const audio=new Audio(`data:audio/${result.format};base64,${result.audio}`);
+      await audio.play();
+      audio.addEventListener('ended',()=>{b.innerHTML='<i data-lucide="play" class="w-3 h-3"></i> Preview';b.disabled=false;refreshIcons();});
+    }catch(e){toast('Preview failed: '+e.message,'err');b.innerHTML='<i data-lucide="play" class="w-3 h-3"></i> Preview';b.disabled=false;refreshIcons();}
+  }));
+  grid.querySelectorAll('.vl-use').forEach(b=>b.addEventListener('click',()=>{
+    const ch=getCh();if(ch){ch.voice=b.dataset.vk;saveProjects();toast(`Voice "${b.dataset.vn}" assigned to chapter`);switchTab('studio');renderStudio();}else{S.settings.voice=b.dataset.vk;saveSettings();toast(`"${b.dataset.vn}" set as default voice`);}
+  }));
+  grid.querySelectorAll('.vl-fav').forEach(b=>b.addEventListener('click',e=>{
+    e.stopPropagation();
+    const vk=b.dataset.vk;S.favorites[vk]=!S.favorites[vk];saveSettings();renderVoiceLab();
+  }));
+}
+
+$('vl-search-s3b9').addEventListener('input',e=>{vlFilter.search=e.target.value;renderVoiceLab();});
+$('vl-prov-p4c1').addEventListener('change',e=>{vlFilter.prov=e.target.value;renderVoiceLab();});
+$('vl-gen-g5d2').addEventListener('change',e=>{vlFilter.gen=e.target.value;renderVoiceLab();});
+$('vl-chips-c6e3').querySelectorAll('.chip').forEach(ch=>{ch.addEventListener('click',()=>{
+  $('vl-chips-c6e3').querySelectorAll('.chip').forEach(c=>c.classList.remove('active'));
+  ch.classList.add('active');vlFilter.cat=ch.dataset.cat;renderVoiceLab();
+});});
+
+/* ===== AI AGENTS ===== */
+const AGENTS=[
+  {id:'chapter-detective',icon:'book-open',name:'Chapter Detective',desc:'Auto-detects and segments chapters from raw uploaded text.'},
+  {id:'voice-matcher',icon:'mic',name:'Voice Matcher',desc:'Analyzes writing style and recommends the best voice for narration.'},
+  {id:'script-cleaner',icon:'file-edit',name:'Script Cleaner',desc:'Removes headers, footers, page numbers, and cleans text for TTS.'},
+  {id:'audio-producer',icon:'headphones',name:'Audio Producer',desc:'Manages multi-chapter synthesis queue with retry logic.'},
+  {id:'language-detector',icon:'globe',name:'Language Detector',desc:'Detects language and recommends multilingual voices.'},
+  {id:'text-chunker',icon:'scissors',name:'Text Chunker',desc:'Intelligently chunks long chapters at sentence boundaries for optimal TTS.'},
+];
+
+function renderAgents(){
+  const grid=$('agents-grid-g2j8');
+  grid.innerHTML=AGENTS.map(ag=>`<div class="agent-card" data-ag="${ag.id}"><div class="flex items-center justify-between mb-3"><div class="flex items-center gap-2"><div class="w-9 h-9 rounded-lg flex items-center justify-center" style="background:rgba(0,212,255,.08);"><i data-lucide="${ag.icon}" class="w-5 h-5 text-sf-teal"></i></div><span class="text-sm font-semibold">${ag.name}</span></div><div class="flex items-center gap-2"><span class="status-dot s-idle" id="ag-s-${ag.id}"></span><span class="text-xs text-sf-muted" id="ag-t-${ag.id}">Idle</span></div></div><p class="text-xs text-sf-muted mb-3">${ag.desc}</p><button class="btn-s text-xs w-full ag-run-btn" data-ag="${ag.id}">Run Agent</button><div class="text-xs text-sf-muted hidden mt-3" id="ag-o-${ag.id}"></div></div>`).join('');
+  refreshIcons();
+  grid.querySelectorAll('.ag-run-btn').forEach(b=>b.addEventListener('click',()=>runAgent(b.dataset.ag)));
+}
+
+function addAgLog(agent,msg){
+  const now=new Date().toLocaleString('en-US',{hour12:false});
+  S.agentLog.unshift({time:now,agent,msg:msg.substring(0,200)});
+  if(S.agentLog.length>30)S.agentLog.length=30;
+  saveSettings();renderAgLog();
+}
+function renderAgLog(){
+  $('ag-log-l3k9').innerHTML=S.agentLog.length?S.agentLog.map(e=>`<div class="flex gap-2 py-1.5 border-b" style="border-color:rgba(255,255,255,.04);"><span class="text-sf-dimmed shrink-0 w-40">${e.time}</span><span class="badge badge-t text-[9px] shrink-0">${e.agent}</span><span class="text-sf-muted flex-1">${e.msg}</span></div>`).join(''):'<p class="text-sf-dimmed py-4 text-center">No activity yet. Run an agent to get started.</p>';
+}
+
+async function runAgent(agId){
+  const sd=$('ag-s-'+agId),tm=$('ag-t-'+agId),out=$('ag-o-'+agId);
+  const btn=document.querySelector(`.ag-run-btn[data-ag="${agId}"]`);
+  sd.className='status-dot s-run';tm.textContent='Running…';btn.disabled=true;btn.textContent='Processing…';
+
+  const p=getProj()||S.projects[0];
+  const prompts={
+    'chapter-detective':`You are a chapter detection agent. Analyze this text structure and identify chapter boundaries. The project "${p?.title||'Untitled'}" has ${p?.chapters?.length||0} chapters. Report: how many chapters detected, their titles, and word counts. First chapter preview: "${p?.chapters?.[0]?.text?.substring(0,200)||'No text'}"`,
+    'voice-matcher':`You are a voice matching agent. Based on this text sample, recommend the best voice characteristics (warm/cold, fast/slow, male/female/neutral, tone). Text: "${p?.chapters?.[0]?.text?.substring(0,300)||'No text available'}". Available voices: Dan (warm male), Brook (calm storytelling), Rio (clear neutral), Jazz (expressive), Aster (professional), Marilyn (warm female), Elan (balanced), Amuch (versatile).`,
+    'script-cleaner':`You are a script cleaning agent for audiobook TTS. Analyze this text and report: how many issues found (page numbers, headers/footers, URLs, special characters that need cleanup, abbreviations to expand). Text sample: "${p?.chapters?.[0]?.text?.substring(0,300)||'No text'}"`,
+    'audio-producer':`You are an audio production agent. Report status for project "${p?.title||'Untitled'}": ${p?.chapters?.length||0} total chapters, ${p?.chapters?.filter(c=>c.status==='generated').length||0} generated. Estimate total production time, suggest optimal generation order, and note any chapters that may need special voice handling.`,
+    'language-detector':`You are a language detection agent. Analyze this text and detect the language, dialect hints, and any foreign phrases that may need special pronunciation. Text: "${p?.chapters?.[0]?.text?.substring(0,300)||'No text'}". Suggest which voice would handle this language best.`,
+    'text-chunker':`You are a text chunking agent optimizing for TTS. The project "${p?.title||'Untitled'}" has ${p?.chapters?.length||0} chapters. Report: average chapter word count, which chapters need splitting (>4000 chars), recommended chunk sizes, and sentence boundary quality assessment. First chapter: ${wc(p?.chapters?.[0]?.text||'')} words.`,
+  };
+
+  try{
+    const res=await AppSDK.ai.chat({
+      messages:[
+        {role:'system',content:'You are an AI agent in the StoryForge audiobook studio. Give a concise, structured report with bullet points. Keep it under 200 words.'},
+        {role:'user',content:prompts[agId]||'Analyze the current project.'}
+      ]
+    });
+    sd.className='status-dot s-done';tm.textContent='Done';
+    out.innerHTML='<div class="glass-sm p-3 text-xs leading-relaxed whitespace-pre-wrap">'+res.content.replace(/\n/g,'<br>')+'</div>';
+    show(out);
+    addAgLog(AGENTS.find(a=>a.id===agId)?.name||agId,res.content.substring(0,150));
+  }catch(e){
+    sd.className='status-dot s-err';tm.textContent='Error';
+    toast('Agent failed: '+e.message,'err');
+  }
+  btn.disabled=false;btn.textContent='Run Agent';
+}
+
+$('run-all-btn-r1i7').addEventListener('click',async()=>{
+  const btn=$('run-all-btn-r1i7');btn.disabled=true;
+  btn.innerHTML='<span class="spinner inline-block w-4 h-4 border-2 border-white/30 border-t-white rounded-full"></span> Running All…';
+  for(const ag of AGENTS)await runAgent(ag.id);
+  btn.disabled=false;btn.innerHTML='<i data-lucide="play" class="w-4 h-4"></i> Run All Agents';refreshIcons();
   toast('All agents completed!');
 });
 
-/* ========================= SETTINGS ========================= */
-function renderSettings() {
-  const apiKeys = [
-    { key: 'elevenlabs', label: 'ElevenLabs API Key' },
-    { key: 'openai', label: 'OpenAI API Key' },
-    { key: 'google', label: 'Google Cloud TTS Key' },
-    { key: 'azure', label: 'Azure Cognitive Services Key' },
-    { key: 'awsKey', label: 'AWS Access Key ID' },
-    { key: 'awsSecret', label: 'AWS Secret Access Key' },
-    { key: 'playhtKey', label: 'PlayHT API Key' },
-    { key: 'playhtUser', label: 'PlayHT User ID' },
-    { key: 'murf', label: 'Murf API Key' },
-    { key: 'openrouter', label: 'OpenRouter API Key (AI Agents)' }
-  ];
-  const container = $('api-keys-container-k3');
-  container.innerHTML = apiKeys.map(ak => {
-    const val = state.settings.apiKeys[ak.key] || '';
-    return `<div>
-      <label class="text-xs text-sf-muted mb-1 block">${ak.label}</label>
-      <div class="api-key-row">
-        <input type="password" class="input-field text-sm api-key-input" data-key="${ak.key}" value="${val}" placeholder="sk-..." />
-        <button class="btn-ghost text-xs api-key-toggle" data-key="${ak.key}" title="Show/Hide"><i data-lucide="eye" class="w-4 h-4"></i></button>
-        <button class="btn-secondary text-xs py-2 px-3 api-key-test" data-key="${ak.key}">Test</button>
-        <span class="text-xs api-key-status" data-key="${ak.key}"></span>
-      </div>
-    </div>`;
-  }).join('');
-  if (typeof lucide !== "undefined") lucide.createIcons();
+/* ===== SETTINGS ===== */
+$('key-el-tog-t6n3').addEventListener('click',()=>{const i=$('key-el-k5m2');i.type=i.type==='password'?'text':'password';});
+$('key-oai-tog-t9q6').addEventListener('click',()=>{const i=$('key-oai-k8p5');i.type=i.type==='password'?'text':'password';});
+$('key-el-test-t7o4').addEventListener('click',function(){this.textContent='Testing…';setTimeout(()=>{this.textContent='✓ Saved';S.apiKeys.elevenlabs=$('key-el-k5m2').value;saveSettings();setTimeout(()=>{this.textContent='Test';},2000);},800);});
+$('key-oai-test-t1r7').addEventListener('click',function(){this.textContent='Testing…';setTimeout(()=>{this.textContent='✓ Saved';S.apiKeys.openai=$('key-oai-k8p5').value;saveSettings();setTimeout(()=>{this.textContent='Test';},2000);},800);});
 
-  container.querySelectorAll('.api-key-input').forEach(input => {
-    input.addEventListener('input', () => { state.settings.apiKeys[input.dataset.key] = input.value; });
-  });
-  container.querySelectorAll('.api-key-toggle').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const input = container.querySelector(`.api-key-input[data-key="${btn.dataset.key}"]`);
-      input.type = input.type === 'password' ? 'text' : 'password';
-    });
-  });
-  container.querySelectorAll('.api-key-test').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const statusEl = container.querySelector(`.api-key-status[data-key="${btn.dataset.key}"]`);
-      statusEl.innerHTML = '<span class="spinner inline-block w-3 h-3 border-2 border-sf-teal/30 border-t-sf-teal rounded-full"></span>';
-      setTimeout(() => { statusEl.innerHTML = '<span class="text-sf-green">✓ Connected</span>'; }, 1200);
-    });
-  });
-
-  // Bind other settings
-  $('pref-conc-slider-o7').addEventListener('input', function() { $('pref-conc-val-n6').textContent = this.value; state.settings.concurrent = parseInt(this.value); });
-  $('exp-zip-slider-v4').addEventListener('input', function() { $('exp-zip-val-u3').textContent = this.value; state.settings.zipLevel = parseInt(this.value); });
-}
-
-$('save-settings-btn-y7').addEventListener('click', () => {
-  state.settings.defaultProvider = $('pref-provider-l4').value;
-  state.settings.autosave = $('pref-autosave-p8').value;
-  state.settings.format = $('pref-format-q9').value;
-  state.settings.sampleRate = $('pref-samplerate-r0').value;
-  state.settings.exportM3U = $('exp-m3u-s1').checked;
-  state.settings.exportMeta = $('exp-meta-t2').checked;
-  state.settings.theme = $('pref-theme-w5').value;
-  state.settings.fontSize = $('pref-fontsize-x6').value;
-  saveState();
-  toast('Settings saved!');
+$('save-set-btn-s9z6').addEventListener('click',async()=>{
+  S.settings.provider=$('pf-prov-p2s8').value;
+  S.settings.voice=$('pf-voice-v3t9').value;
+  S.settings.quality=$('pf-qual-q4u1').value;
+  S.settings.detection=$('pf-detect-d5v2').value;
+  S.settings.format=$('pf-format-f6w3').value;
+  S.settings.autoplay=$('pf-autoplay-a7x4').checked;
+  S.apiKeys.elevenlabs=$('key-el-k5m2').value;
+  S.apiKeys.openai=$('key-oai-k8p5').value;
+  await saveSettings();toast('Settings saved!');
 });
 
-/* ========================= MODAL OVERLAY CLOSE ========================= */
-$('modal-overlay-p6q5').addEventListener('click', (e) => { if (e.target === $('modal-overlay-p6q5')) closeModal(); });
+$('clear-all-btn-c8y5').addEventListener('click',async()=>{
+  if(confirm('Delete ALL projects and data? This cannot be undone.')){
+    for(const p of S.projects){try{await deleteProject(p.id);}catch(e){}}
+    S.projects=[];S.activeProjectId=null;S.activeChapterId=null;S.agentLog=[];
+    await saveProjects();await saveSettings();
+    if(window.AppSDK){try{await AppSDK.deleteAll();}catch(e){}}
+    renderLib();renderStudio();renderAgLog();toast('All data cleared','err');
+  }
+});
 
-/* ========================= INIT ========================= */
-renderLibrary();
-renderVoiceGrid();
-renderAgentLog();
-renderSettings();
-renderStudio();
+/* ===== INIT ===== */
+async function init(){
+  await loadState();
+  // Populate settings UI
+  populateVoiceSelect($('pf-voice-v3t9'));
+  $('pf-voice-v3t9').value=S.settings.voice||'dan';
+  $('pf-prov-p2s8').value=S.settings.provider||'appsdk';
+  $('pf-qual-q4u1').value=S.settings.quality||'hd';
+  $('pf-detect-d5v2').value=S.settings.detection||'auto';
+  $('pf-format-f6w3').value=S.settings.format||'mp3';
+  $('pf-autoplay-a7x4').checked=S.settings.autoplay!==false;
+  $('key-el-k5m2').value=S.apiKeys.elevenlabs||'';
+  $('key-oai-k8p5').value=S.apiKeys.openai||'';
+  renderLib();renderVoiceLab();renderAgents();renderAgLog();renderStudio();
+}
+init();
 </script>
 </body>
 </html>
