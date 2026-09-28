@@ -95,6 +95,16 @@ tailwind.config = {
   .status-generating { background: rgba(245,158,11,0.15); color: #f59e0b; }
   .status-done { background: rgba(16,185,129,0.15); color: #10b981; }
   .status-error { background: rgba(239,68,68,0.15); color: #ef4444; }
+  .genre-card { transition: all 0.25s; cursor: pointer; border: 2px solid rgba(255,255,255,0.06); }
+  .genre-card:hover { transform: translateY(-3px); border-color: rgba(255,255,255,0.18); box-shadow: 0 8px 24px rgba(0,0,0,0.3); }
+  .genre-card.active { border-color: var(--genre-color, #00d4ff); box-shadow: 0 0 20px rgba(0,212,255,0.15); }
+  .genre-scroll { overflow-x: auto; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+  .genre-scroll::-webkit-scrollbar { display: none; }
+  .genre-scroll > * { scroll-snap-align: start; }
+  .profile-card { transition: all 0.2s; }
+  .profile-card:hover { transform: translateY(-2px); border-color: rgba(255,255,255,0.15); }
+  .char-row { transition: background 0.15s; }
+  .char-row:hover { background: rgba(255,255,255,0.03); }
   @media (max-width: 768px) {
     .studio-layout { flex-direction: column !important; }
     .studio-left, .studio-right { width: 100% !important; max-width: 100% !important; min-width: 0 !important; }
@@ -120,20 +130,17 @@ tailwind.config = {
           <p data-id="9" class="text-xs text-muted -mt-0.5">Aurelio Dioval Audiobook Studio</p>
         </div>
       </div>
-      <!-- Desktop nav -->
       <nav data-id="10" class="hidden md:flex gap-1">
         <button data-id="11" class="tab-btn-main active px-4 py-2 text-sm font-medium" data-tab="library">Library</button>
         <button data-id="12" class="tab-btn-main px-4 py-2 text-sm font-medium" data-tab="studio">Studio</button>
         <button data-id="13" class="tab-btn-main px-4 py-2 text-sm font-medium" data-tab="voicelab">Voice Lab</button>
         <button data-id="14" class="tab-btn-main px-4 py-2 text-sm font-medium" data-tab="settings">Settings</button>
       </nav>
-      <!-- Mobile menu button -->
       <button data-id="15" id="mobile-menu-btn-xz41" class="md:hidden p-2 text-muted hover:text-txt">
         <i data-id="16" data-lucide="menu" class="w-6 h-6"></i>
       </button>
     </div>
   </div>
-  <!-- Mobile nav -->
   <nav data-id="17" id="mobile-menu-qr82" class="hidden md:hidden border-t border-glassborder">
     <div data-id="18" class="flex flex-col px-4 py-2 gap-1">
       <button data-id="19" class="tab-btn-main active text-left px-3 py-2 text-sm font-medium rounded-lg" data-tab="library">Library</button>
@@ -151,8 +158,6 @@ tailwind.config = {
     <i data-id="26" data-lucide="library" class="w-6 h-6 inline-block mr-2 align-text-bottom" style="color:#00d4ff"></i>
     My Library
   </h2>
-
-  <!-- Upload area -->
   <div data-id="27" id="drop-zone-ab12" class="drop-zone p-8 md:p-12 text-center mb-8 glass rounded-2xl">
     <div data-id="28" class="mb-4">
       <i data-id="29" data-lucide="file-up" class="w-12 h-12 mx-auto text-muted"></i>
@@ -167,8 +172,6 @@ tailwind.config = {
     </div>
     <input data-id="37" type="file" id="file-input-cd34" class="hidden" accept=".pdf,.docx,.txt,.md"/>
   </div>
-
-  <!-- Projects list -->
   <div data-id="38" id="projects-list-ef56" class="space-y-4"></div>
   <div data-id="39" id="no-projects-gh78" class="text-center py-12 text-muted">
     <i data-id="40" data-lucide="book-open" class="w-10 h-10 mx-auto mb-3 opacity-40"></i>
@@ -178,7 +181,6 @@ tailwind.config = {
 
 <!-- ===================== STUDIO TAB ===================== -->
 <div data-id="42" id="tab-studio" class="tab-content" style="height:calc(100vh - 64px - 48px);">
-  <!-- No project state -->
   <div data-id="43" id="studio-empty-ij90" class="flex items-center justify-center h-full">
     <div data-id="44" class="text-center text-muted">
       <i data-id="45" data-lucide="mic-off" class="w-12 h-12 mx-auto mb-3 opacity-40"></i>
@@ -186,9 +188,7 @@ tailwind.config = {
       <p data-id="47" class="text-sm">Go to Library to import a book first.</p>
     </div>
   </div>
-  <!-- Studio layout -->
   <div data-id="48" id="studio-main-kl12" class="hidden studio-layout flex h-full">
-    <!-- LEFT: Chapter list -->
     <div data-id="49" class="studio-left border-r border-glassborder flex flex-col" style="width:280px;min-width:220px;">
       <div data-id="50" class="p-4 border-b border-glassborder">
         <h3 data-id="51" id="studio-project-title-mn34" class="text-sm font-bold truncate gradient-text"></h3>
@@ -201,11 +201,9 @@ tailwind.config = {
         </button>
       </div>
     </div>
-    <!-- CENTER: Player/Generator -->
     <div data-id="57" class="studio-center flex-1 overflow-y-auto p-4 md:p-6">
       <div data-id="58" id="center-content-uv12"></div>
     </div>
-    <!-- RIGHT: Chapter text -->
     <div data-id="59" class="studio-right border-l border-glassborder flex flex-col" style="width:340px;min-width:260px;">
       <div data-id="60" class="p-4 border-b border-glassborder flex items-center justify-between">
         <span data-id="61" class="text-xs font-medium text-muted uppercase tracking-wider">Chapter Text</span>
@@ -220,130 +218,164 @@ tailwind.config = {
 
 <!-- ===================== VOICE LAB TAB ===================== -->
 <div data-id="65" id="tab-voicelab" class="tab-content max-w-6xl mx-auto px-4 md:px-6 py-6 md:py-10">
-  <h2 data-id="66" class="text-2xl font-bold mb-2">
-    <i data-id="67" data-lucide="audio-lines" class="w-6 h-6 inline-block mr-2 align-text-bottom" style="color:#7c3aed"></i>
-    Voice Lab
-  </h2>
-  <p data-id="68" class="text-sm text-muted mb-6">Browse and preview available TTS voices. Click "Use this voice" to set as your default.</p>
-
-  <!-- Filter -->
-  <div data-id="69" class="flex flex-wrap gap-2 mb-6">
-    <button data-id="70" class="voice-filter-btn active px-4 py-2 rounded-xl text-sm font-medium glass glass-hover" data-filter="all">All Voices</button>
-    <button data-id="71" class="voice-filter-btn px-4 py-2 rounded-xl text-sm font-medium glass glass-hover" data-filter="openai">OpenAI</button>
-    <button data-id="72" class="voice-filter-btn px-4 py-2 rounded-xl text-sm font-medium glass glass-hover" data-filter="elevenlabs">ElevenLabs</button>
+  <!-- Header -->
+  <div data-id="66" class="mb-8">
+    <h2 data-id="67" class="text-2xl font-bold mb-2">
+      <i data-id="68" data-lucide="audio-lines" class="w-6 h-6 inline-block mr-2 align-text-bottom" style="color:#7c3aed"></i>
+      Voice Profiles
+    </h2>
+    <p data-id="69" class="text-sm text-muted">Choose your genre — each profile is tuned for perfect narration</p>
   </div>
 
-  <div data-id="73" id="voice-grid-ab34" class="voice-grid grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+  <!-- Genre Selector -->
+  <div data-id="70" id="genre-selector-row" class="genre-scroll flex gap-3 pb-4 mb-8">
+    <!-- populated by JS -->
+  </div>
+
+  <!-- Genre Description -->
+  <div data-id="71" id="genre-description-area" class="mb-8"></div>
+
+  <!-- Voice Profile Cards -->
+  <div data-id="72" id="voice-profiles-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 mb-12"></div>
+
+  <!-- Divider -->
+  <div data-id="73" class="border-t border-glassborder my-10"></div>
+
+  <!-- Character Voice Mapping -->
+  <div data-id="74" class="mb-6">
+    <h3 data-id="75" class="text-xl font-bold mb-2">
+      <span data-id="76" class="mr-2">🎭</span>Character Voice Mapping
+    </h3>
+    <p data-id="77" class="text-sm text-muted mb-5">Assign different voices to characters found in your book</p>
+    <div data-id="78" class="flex flex-wrap gap-3 mb-6">
+      <button data-id="79" id="auto-detect-chars-btn" class="btn-gradient px-5 py-2.5 rounded-xl text-sm font-semibold flex items-center gap-2">
+        <i data-id="80" data-lucide="scan-search" class="w-4 h-4"></i> Auto-Detect Characters
+      </button>
+      <button data-id="81" id="clear-chars-btn" class="px-5 py-2.5 rounded-xl text-sm font-medium glass glass-hover text-re-400 flex items-center gap-2">
+        <i data-id="82" data-lucide="trash-2" class="w-4 h-4"></i> Clear All
+      </button>
+    </div>
+    <div data-id="83" id="char-map-container" class="glass rounded-2xl overflow-hidden">
+      <div data-id="84" class="hidden md:grid grid-cols-[1fr_1fr_140px_100px] gap-3 px-5 py-3 border-b border-glassborder text-xs text-muted font-medium uppercase tracking-wider">
+        <span data-id="85">Character Name</span>
+        <span data-id="86">Voice</span>
+        <span data-id="87">Provider</span>
+        <span data-id="88">Action</span>
+      </div>
+      <div data-id="89" id="char-rows-container" class="divide-y divide-glassborder"></div>
+      <div data-id="90" class="px-5 py-3 border-t border-glassborder">
+        <button data-id="91" id="add-char-btn" class="text-sm font-medium text-teal-400 hover:text-teal-300 flex items-center gap-2 py-1">
+          <i data-id="92" data-lucide="plus" class="w-4 h-4"></i> Add Character
+        </button>
+      </div>
+    </div>
+    <div data-id="93" id="no-project-char-msg" class="hidden text-center py-8 text-muted text-sm glass rounded-2xl">
+      <i data-id="94" data-lucide="user-x" class="w-8 h-8 mx-auto mb-2 opacity-40"></i>
+      <p data-id="95">Open a project in the Studio first to map character voices.</p>
+    </div>
+  </div>
 </div>
 
 <!-- ===================== SETTINGS TAB ===================== -->
-<div data-id="74" id="tab-settings" class="tab-content max-w-3xl mx-auto px-4 md:px-6 py-6 md:py-10">
-  <h2 data-id="75" class="text-2xl font-bold mb-6">
-    <i data-id="76" data-lucide="settings" class="w-6 h-6 inline-block mr-2 align-text-bottom" style="color:#00d4ff"></i>
+<div data-id="96" id="tab-settings" class="tab-content max-w-3xl mx-auto px-4 md:px-6 py-6 md:py-10">
+  <h2 data-id="97" class="text-2xl font-bold mb-6">
+    <i data-id="98" data-lucide="settings" class="w-6 h-6 inline-block mr-2 align-text-bottom" style="color:#00d4ff"></i>
     Settings
   </h2>
-
-  <!-- Active Provider -->
-  <div data-id="77" class="glass rounded-2xl p-6 mb-6">
-    <h3 data-id="78" class="text-lg font-semibold mb-4">Active Provider</h3>
-    <div data-id="79" class="flex gap-4 mb-5">
-      <label data-id="80" class="flex items-center gap-2 cursor-pointer">
-        <input data-id="81" type="radio" name="provider" value="openai" checked class="accent-teal-400"/>
-        <span data-id="82" class="text-sm font-medium">OpenAI TTS</span>
+  <div data-id="99" class="glass rounded-2xl p-6 mb-6">
+    <h3 data-id="100" class="text-lg font-semibold mb-4">Active Provider</h3>
+    <div data-id="101" class="flex gap-4 mb-5">
+      <label data-id="102" class="flex items-center gap-2 cursor-pointer">
+        <input data-id="103" type="radio" name="provider" value="openai" checked class="accent-teal-400"/>
+        <span data-id="104" class="text-sm font-medium">OpenAI TTS</span>
       </label>
-      <label data-id="83" class="flex items-center gap-2 cursor-pointer">
-        <input data-id="84" type="radio" name="provider" value="elevenlabs" class="accent-purp-400"/>
-        <span data-id="85" class="text-sm font-medium">ElevenLabs</span>
+      <label data-id="105" class="flex items-center gap-2 cursor-pointer">
+        <input data-id="106" type="radio" name="provider" value="elevenlabs" class="accent-purp-400"/>
+        <span data-id="107" class="text-sm font-medium">ElevenLabs</span>
       </label>
     </div>
-    <div data-id="86">
-      <label data-id="87" class="text-xs text-muted font-medium uppercase tracking-wider block mb-2">Speed: <span data-id="88" id="speed-val-cd56">1.0x</span></label>
-      <input data-id="89" type="range" id="speed-slider-ef78" min="50" max="200" value="100" class="w-full"/>
+    <div data-id="108">
+      <label data-id="109" class="text-xs text-muted font-medium uppercase tracking-wider block mb-2">Speed: <span data-id="110" id="speed-val-cd56">1.0x</span></label>
+      <input data-id="111" type="range" id="speed-slider-ef78" min="50" max="200" value="100" class="w-full"/>
     </div>
   </div>
-
-  <!-- OpenAI TTS -->
-  <div data-id="90" class="glass rounded-2xl p-6 mb-6">
-    <div data-id="91" class="flex items-center justify-between mb-4">
-      <h3 data-id="92" class="text-lg font-semibold">OpenAI TTS</h3>
-      <span data-id="93" id="openai-status-gh90" class="status-badge status-draft">Not set</span>
+  <div data-id="112" class="glass rounded-2xl p-6 mb-6">
+    <div data-id="113" class="flex items-center justify-between mb-4">
+      <h3 data-id="114" class="text-lg font-semibold">OpenAI TTS</h3>
+      <span data-id="115" id="openai-status-gh90" class="status-badge status-draft">Not set</span>
     </div>
-    <div data-id="94" class="space-y-4">
-      <div data-id="95">
-        <label data-id="96" class="text-xs text-muted font-medium uppercase tracking-wider block mb-2">API Key</label>
-        <div data-id="97" class="flex gap-2">
-          <input data-id="98" type="password" id="openai-key-ij12" placeholder="sk-..." class="flex-1"/>
-          <button data-id="99" id="openai-key-toggle-kl34" class="px-3 py-2 glass rounded-xl text-xs font-medium text-muted hover:text-txt">Show</button>
+    <div data-id="116" class="space-y-4">
+      <div data-id="117">
+        <label data-id="118" class="text-xs text-muted font-medium uppercase tracking-wider block mb-2">API Key</label>
+        <div data-id="119" class="flex gap-2">
+          <input data-id="120" type="password" id="openai-key-ij12" placeholder="sk-..." class="flex-1"/>
+          <button data-id="121" id="openai-key-toggle-kl34" class="px-3 py-2 glass rounded-xl text-xs font-medium text-muted hover:text-txt">Show</button>
         </div>
       </div>
-      <div data-id="100">
-        <label data-id="101" class="text-xs text-muted font-medium uppercase tracking-wider block mb-2">Default Voice</label>
-        <select data-id="102" id="openai-voice-mn56">
-          <option data-id="103" value="alloy">alloy — Neutral, versatile</option>
-          <option data-id="104" value="echo">echo — Male, crisp</option>
-          <option data-id="105" value="fable">fable — British, warm</option>
-          <option data-id="106" value="onyx">onyx — Male, deep</option>
-          <option data-id="107" value="nova">nova — Female, bright</option>
-          <option data-id="108" value="shimmer">shimmer — Female, soft</option>
-          <option data-id="109" value="ash">ash — Male, balanced</option>
-          <option data-id="110" value="coral">coral — Female, warm</option>
-          <option data-id="111" value="sage">sage — Neutral, calm</option>
-          <option data-id="112" value="verse">verse — Male, expressive</option>
+      <div data-id="122">
+        <label data-id="123" class="text-xs text-muted font-medium uppercase tracking-wider block mb-2">Default Voice</label>
+        <select data-id="124" id="openai-voice-mn56">
+          <option data-id="125" value="alloy">alloy — Neutral, versatile</option>
+          <option data-id="126" value="echo">echo — Male, crisp</option>
+          <option data-id="127" value="fable">fable — British, warm</option>
+          <option data-id="128" value="onyx">onyx — Male, deep</option>
+          <option data-id="129" value="nova">nova — Female, bright</option>
+          <option data-id="130" value="shimmer">shimmer — Female, soft</option>
+          <option data-id="131" value="ash">ash — Male, balanced</option>
+          <option data-id="132" value="coral">coral — Female, warm</option>
+          <option data-id="133" value="sage">sage — Neutral, calm</option>
+          <option data-id="134" value="verse">verse — Male, expressive</option>
         </select>
       </div>
     </div>
   </div>
-
-  <!-- ElevenLabs TTS -->
-  <div data-id="113" class="glass rounded-2xl p-6 mb-6">
-    <div data-id="114" class="flex items-center justify-between mb-4">
-      <h3 data-id="115" class="text-lg font-semibold">ElevenLabs TTS</h3>
-      <span data-id="116" id="el-status-op78" class="status-badge status-draft">Not set</span>
+  <div data-id="135" class="glass rounded-2xl p-6 mb-6">
+    <div data-id="136" class="flex items-center justify-between mb-4">
+      <h3 data-id="137" class="text-lg font-semibold">ElevenLabs TTS</h3>
+      <span data-id="138" id="el-status-op78" class="status-badge status-draft">Not set</span>
     </div>
-    <div data-id="117" class="space-y-4">
-      <div data-id="118">
-        <label data-id="119" class="text-xs text-muted font-medium uppercase tracking-wider block mb-2">API Key</label>
-        <div data-id="120" class="flex gap-2">
-          <input data-id="121" type="password" id="el-key-qr90" placeholder="xi-..." class="flex-1"/>
-          <button data-id="122" id="el-key-toggle-st12" class="px-3 py-2 glass rounded-xl text-xs font-medium text-muted hover:text-txt">Show</button>
+    <div data-id="139" class="space-y-4">
+      <div data-id="140">
+        <label data-id="141" class="text-xs text-muted font-medium uppercase tracking-wider block mb-2">API Key</label>
+        <div data-id="142" class="flex gap-2">
+          <input data-id="143" type="password" id="el-key-qr90" placeholder="xi-..." class="flex-1"/>
+          <button data-id="144" id="el-key-toggle-st12" class="px-3 py-2 glass rounded-xl text-xs font-medium text-muted hover:text-txt">Show</button>
         </div>
       </div>
-      <div data-id="123">
-        <label data-id="124" class="text-xs text-muted font-medium uppercase tracking-wider block mb-2">Default Voice</label>
-        <select data-id="125" id="el-voice-uv34"></select>
+      <div data-id="145">
+        <label data-id="146" class="text-xs text-muted font-medium uppercase tracking-wider block mb-2">Default Voice</label>
+        <select data-id="147" id="el-voice-uv34"></select>
       </div>
-      <div data-id="126" class="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div data-id="127">
-          <label data-id="128" class="text-xs text-muted font-medium uppercase tracking-wider block mb-2">Stability: <span data-id="129" id="stab-val-wx56">50</span></label>
-          <input data-id="130" type="range" id="stab-slider-yz78" min="0" max="100" value="50" class="w-full"/>
+      <div data-id="148" class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div data-id="149">
+          <label data-id="150" class="text-xs text-muted font-medium uppercase tracking-wider block mb-2">Stability: <span data-id="151" id="stab-val-wx56">50</span></label>
+          <input data-id="152" type="range" id="stab-slider-yz78" min="0" max="100" value="50" class="w-full"/>
         </div>
-        <div data-id="131">
-          <label data-id="132" class="text-xs text-muted font-medium uppercase tracking-wider block mb-2">Similarity: <span data-id="133" id="sim-val-ab90">75</span></label>
-          <input data-id="134" type="range" id="sim-slider-cd12" min="0" max="100" value="75" class="w-full"/>
+        <div data-id="153">
+          <label data-id="154" class="text-xs text-muted font-medium uppercase tracking-wider block mb-2">Similarity: <span data-id="155" id="sim-val-ab90">75</span></label>
+          <input data-id="156" type="range" id="sim-slider-cd12" min="0" max="100" value="75" class="w-full"/>
         </div>
-        <div data-id="135">
-          <label data-id="136" class="text-xs text-muted font-medium uppercase tracking-wider block mb-2">Style: <span data-id="137" id="style-val-ef34">0</span></label>
-          <input data-id="138" type="range" id="style-slider-gh56" min="0" max="100" value="0" class="w-full"/>
+        <div data-id="157">
+          <label data-id="158" class="text-xs text-muted font-medium uppercase tracking-wider block mb-2">Style: <span data-id="159" id="style-val-ef34">0</span></label>
+          <input data-id="160" type="range" id="style-slider-gh56" min="0" max="100" value="0" class="w-full"/>
         </div>
       </div>
     </div>
   </div>
-
-  <!-- Save -->
-  <button data-id="139" id="save-settings-btn-ij78" class="btn-gradient px-8 py-3 rounded-xl text-sm font-semibold flex items-center gap-2">
-    <i data-id="140" data-lucide="save" class="w-4 h-4"></i> Save Settings
+  <button data-id="161" id="save-settings-btn-ij78" class="btn-gradient px-8 py-3 rounded-xl text-sm font-semibold flex items-center gap-2">
+    <i data-id="162" data-lucide="save" class="w-4 h-4"></i> Save Settings
   </button>
 </div>
 </main>
 
 <!-- FOOTER -->
-<footer data-id="141" id="footer-kl90" class="border-t border-glassborder py-4 text-center mt-auto">
-  <p data-id="142" class="text-xs text-muted">&copy; 2026 StoryForge — Aurelio Dioval Audiobook Studio. All rights reserved.</p>
-  <p data-id="143" class="text-xs text-muted mt-1" style="opacity:0.5;">Made by Copilot</p>
+<footer data-id="163" id="footer-kl90" class="border-t border-glassborder py-4 text-center mt-auto">
+  <p data-id="164" class="text-xs text-muted">&copy; 2026 StoryForge — Aurelio Dioval Audiobook Studio. All rights reserved.</p>
+  <p data-id="165" class="text-xs text-muted mt-1" style="opacity:0.5;">Made by Copilot</p>
 </footer>
 
 <!-- Toast container -->
-<div data-id="144" id="toast-container" class="toast-container"></div>
+<div data-id="166" id="toast-container" class="toast-container"></div>
 
 <script>
 // ===================== UTILITY / STORAGE =====================
@@ -362,6 +394,7 @@ function fmtDuration(words) { const m=Math.round(words/150); return m<1?'<1 min'
 let activeChapterId = null;
 let currentAudioEl = null;
 let generatingCancel = false;
+let selectedGenre = 'literary';
 
 // ===================== TOAST =====================
 function showToast(msg, type) {
@@ -519,6 +552,103 @@ const EL_VOICES = [
   });
 })();
 
+// ===================== VOICE PROFILES DATA =====================
+const VOICE_PROFILES = {
+  literary: {
+    label: "Literary Fiction", icon: "\uD83D\uDCD6",
+    description: "Rich, measured narration with emotional depth. Perfect for character-driven stories.",
+    color: "#7c3aed",
+    voices: [
+      { id:"daniel_literary", name:"Daniel", role:"Primary Narrator", description:"Authoritative British delivery with warmth and gravitas. The gold standard for literary fiction.", provider:"elevenlabs", voiceKey:"daniel", voiceId:"onwK4e9ZLuTAKqWW03F9", gender:"Male", accent:"British", settings:{stability:65,similarity:82,style:22,speed:0.92}, sampleText:"The city had changed, as cities do \u2014 silently, without announcement, leaving only the ghost of what once was.", tags:["Narrator","Deep","Emotional"] },
+      { id:"matilda_literary", name:"Matilda", role:"Female Narrator", description:"Warm American voice with natural cadence. Brings female protagonists to life.", provider:"elevenlabs", voiceKey:"matilda", voiceId:"XrExE9yKIg1WjnnlVkGX", gender:"Female", accent:"American", settings:{stability:68,similarity:80,style:20,speed:0.93}, sampleText:"She had learned long ago that silence was its own kind of answer.", tags:["Narrator","Warm","Intimate"] },
+      { id:"fable_literary", name:"Fable", role:"OpenAI Alternative", description:"British warmth with expressive range. Ideal when ElevenLabs isn't available.", provider:"openai", voiceKey:"fable", gender:"Male", accent:"British", settings:{speed:0.92}, sampleText:"In the quiet of the old house, memories moved like dust in afternoon light.", tags:["British","Expressive","Literary"] },
+      { id:"dorothy_literary", name:"Dorothy", role:"Character Voice", description:"Pleasant British. Ideal for elderly or wise female characters.", provider:"elevenlabs", voiceKey:"dorothy", voiceId:"ThT5KcBeYPX3keUQqHPh", gender:"Female", accent:"British", settings:{stability:72,similarity:78,style:15,speed:0.90}, sampleText:"My dear, the things we leave unsaid have a way of saying themselves.", tags:["Character","Wise","Gentle"] }
+    ]
+  },
+  thriller: {
+    label: "Thriller / Mystery", icon: "\uD83D\uDD2A",
+    description: "Tense, urgent delivery that keeps listeners on the edge of their seat.",
+    color: "#ef4444",
+    voices: [
+      { id:"callum_thriller", name:"Callum", role:"Primary Narrator", description:"Intense transatlantic delivery with an edge of danger. Built for high-stakes tension.", provider:"elevenlabs", voiceKey:"callum", voiceId:"N2lVS1w4EtoT3dr4eOWO", gender:"Male", accent:"American", settings:{stability:52,similarity:74,style:38,speed:0.96}, sampleText:"The door was unlocked. It shouldn't have been. He drew his weapon.", tags:["Tense","Gripping","Dark"] },
+      { id:"adam_thriller", name:"Adam", role:"Deep Narrator", description:"Commanding deep American voice. Perfect for hard-boiled detective noir.", provider:"elevenlabs", voiceKey:"adam", voiceId:"pNInz6obpgDQGcFmaJgB", gender:"Male", accent:"American", settings:{stability:58,similarity:76,style:30,speed:0.94}, sampleText:"Three days. That's how long the body had been there. Three days and nobody noticed.", tags:["Noir","Deep","Brooding"] },
+      { id:"onyx_thriller", name:"Onyx", role:"OpenAI Alternative", description:"Deep authoritative OpenAI voice. Drives tension through measured delivery.", provider:"openai", voiceKey:"onyx", gender:"Male", accent:"American", settings:{speed:0.95}, sampleText:"She knew too much. And now, so did he.", tags:["Authoritative","Dark","Suspense"] },
+      { id:"harry_thriller", name:"Harry", role:"Anxious Character", description:"Young, whispery, anxious energy. Perfect for unreliable narrators and frightened characters.", provider:"elevenlabs", voiceKey:"harry", voiceId:"SOYHLrjzK2X1ezoPC6cr", gender:"Male", accent:"American", settings:{stability:42,similarity:68,style:45,speed:0.98}, sampleText:"They were watching. He was sure of it now. Every shadow, every sound.", tags:["Anxious","Whispery","Character"] },
+      { id:"nicole_thriller", name:"Nicole", role:"Female Character", description:"Soft, whispery female voice \u2014 ideal for secretive or morally complex female characters.", provider:"elevenlabs", voiceKey:"nicole", voiceId:"piTKgcLEGmPE4e6mEKli", gender:"Female", accent:"American", settings:{stability:48,similarity:72,style:40,speed:0.95}, sampleText:"I didn't plan for any of this. I want you to know that.", tags:["Mysterious","Soft","Femme Fatale"] }
+    ]
+  },
+  romance: {
+    label: "Romance", icon: "\uD83D\uDC95",
+    description: "Warm, intimate, emotionally expressive voices that make hearts flutter.",
+    color: "#f59e0b",
+    voices: [
+      { id:"sarah_romance", name:"Sarah", role:"Primary Narrator", description:"Soft, young, intimate American voice. Captures the emotional vulnerability of romance perfectly.", provider:"elevenlabs", voiceKey:"sarah", voiceId:"EXAVITQu4vr4xnSDxMaL", gender:"Female", accent:"American", settings:{stability:60,similarity:85,style:30,speed:0.90}, sampleText:"When his eyes met hers across the room, everything else stopped. Just like that.", tags:["Intimate","Warm","Soft"] },
+      { id:"emily_romance", name:"Emily", role:"Calm Female Narrator", description:"Meditative, calm presence that draws readers deep into emotional moments.", provider:"elevenlabs", voiceKey:"emily", voiceId:"LcfcDJNUP1GQjkzn1xUU", gender:"Female", accent:"American", settings:{stability:68,similarity:82,style:22,speed:0.88}, sampleText:"Love, she had decided, was not a feeling. It was a choice you made every morning.", tags:["Meditative","Emotional","Soulful"] },
+      { id:"nova_romance", name:"Nova", role:"OpenAI Alternative", description:"Warm, bright female OpenAI voice \u2014 emotionally resonant and inviting.", provider:"openai", voiceKey:"nova", gender:"Female", accent:"American", settings:{speed:0.90}, sampleText:"She had stopped believing in love stories \u2014 until she became one.", tags:["Bright","Warm","Romantic"] },
+      { id:"drew_romance", name:"Drew", role:"Male Love Interest", description:"Well-rounded, smooth American voice. The perfect leading man.", provider:"elevenlabs", voiceKey:"drew", voiceId:"29vD33N1osed6aR8deSXH", gender:"Male", accent:"American", settings:{stability:62,similarity:80,style:28,speed:0.92}, sampleText:"I've been thinking about you. More than I should admit.", tags:["Smooth","Charming","Male Lead"] },
+      { id:"aria_romance", name:"Aria", role:"Expressive Female", description:"Highly expressive American voice \u2014 perfect for passionate scenes and emotional peaks.", provider:"elevenlabs", voiceKey:"aria", voiceId:"9BWtsMINqrJLrRacOk9x", gender:"Female", accent:"American", settings:{stability:55,similarity:80,style:38,speed:0.91}, sampleText:"She pressed her hand to her chest, as if she could hold the feeling there forever.", tags:["Expressive","Passionate","Vivid"] }
+    ]
+  },
+  fantasy: {
+    label: "Fantasy / Sci-Fi", icon: "\uD83D\uDC09",
+    description: "Epic, world-building voices that transport listeners to other realms.",
+    color: "#00d4ff",
+    voices: [
+      { id:"arnold_fantasy", name:"Arnold", role:"Epic Narrator", description:"Crisp, commanding American voice. Carries the weight of worlds and the sweep of epic narratives.", provider:"elevenlabs", voiceKey:"arnold", voiceId:"VR6AewLTigWG4xSOukaG", gender:"Male", accent:"American", settings:{stability:55,similarity:72,style:38,speed:0.95}, sampleText:"In the age before memory, when dragons still walked beneath open skies, the first war began.", tags:["Epic","Commanding","World-Builder"] },
+      { id:"george_fantasy", name:"George", role:"British Narrator", description:"Deep British presence that evokes Tolkien-esque grandeur and gravitas.", provider:"elevenlabs", voiceKey:"george", voiceId:"JBFqnCBsd6RMkjVDRZzb", gender:"Male", accent:"British", settings:{stability:60,similarity:75,style:32,speed:0.93}, sampleText:"The prophecy spoke of a child born between two moons, marked by fire and shadow.", tags:["Tolkien","Grand","British"] },
+      { id:"echo_fantasy", name:"Echo", role:"OpenAI Alternative", description:"Crisp, precise OpenAI voice \u2014 excellent for sci-fi's analytical, world-defining narration.", provider:"openai", voiceKey:"echo", gender:"Male", accent:"American", settings:{speed:0.97}, sampleText:"The colony ship had been traveling for 847 years when the signal arrived.", tags:["Sci-Fi","Precise","Futuristic"] },
+      { id:"fin_fantasy", name:"Fin", role:"Rogue / Traveler", description:"Irish sailor energy \u2014 perfect for wandering adventurers, rogues, and comic relief characters.", provider:"elevenlabs", voiceKey:"fin", voiceId:"D38z5RcWu1voky8WS1ja", gender:"Male", accent:"Irish", settings:{stability:50,similarity:70,style:42,speed:1.0}, sampleText:"Aye, I've seen stranger things in the markets of the Eastern Reach. This barely qualifies.", tags:["Irish","Adventurer","Witty"] },
+      { id:"domi_fantasy", name:"Domi", role:"Warrior / Strong Female", description:"Strong, confident American female. Embodies warrior queens, powerful mages, and fierce heroines.", provider:"elevenlabs", voiceKey:"domi", voiceId:"AZnzlk1XvdvUeBnXmlld", gender:"Female", accent:"American", settings:{stability:52,similarity:74,style:40,speed:0.98}, sampleText:"I did not come this far to be stopped by a locked door and three guards.", tags:["Strong","Warrior","Fierce"] },
+      { id:"river_fantasy", name:"River", role:"Mystical / Sage", description:"Gender-neutral, ethereal quality \u2014 perfect for oracles, ancient beings, and mysterious figures.", provider:"elevenlabs", voiceKey:"river", voiceId:"SAz9YHcvj6GT2YYXdXww", gender:"Neutral", accent:"American", settings:{stability:62,similarity:76,style:35,speed:0.88}, sampleText:"The answer you seek is already within you. You simply do not know how to listen yet.", tags:["Mystical","Sage","Oracle"] }
+    ]
+  },
+  nonfiction: {
+    label: "Non-Fiction", icon: "\uD83D\uDCCA",
+    description: "Clear, authoritative, conversational voices that build trust and clarity.",
+    color: "#10b981",
+    voices: [
+      { id:"liam_nonfiction", name:"Liam", role:"Primary Narrator", description:"Articulate, clear American voice. Sounds like a knowledgeable friend explaining complex ideas.", provider:"elevenlabs", voiceKey:"liam", voiceId:"TX3LPaxmHKxFdv7VOQHJ", gender:"Male", accent:"American", settings:{stability:75,similarity:82,style:10,speed:1.0}, sampleText:"The research is clear: small daily habits, compounded over time, produce extraordinary results.", tags:["Clear","Authoritative","Conversational"] },
+      { id:"river_nonfiction", name:"River", role:"Neutral Narrator", description:"Clean, neutral delivery \u2014 no accent distractions. Lets the content speak for itself.", provider:"elevenlabs", voiceKey:"river", voiceId:"SAz9YHcvj6GT2YYXdXww", gender:"Neutral", accent:"American", settings:{stability:78,similarity:84,style:8,speed:1.0}, sampleText:"What separates high performers from everyone else isn't talent. It's their relationship with discomfort.", tags:["Neutral","Clean","Business"] },
+      { id:"alloy_nonfiction", name:"Alloy", role:"OpenAI Alternative", description:"Perfectly balanced OpenAI voice \u2014 professional, trustworthy, never distracting.", provider:"openai", voiceKey:"alloy", gender:"Neutral", accent:"American", settings:{speed:1.0}, sampleText:"Three principles guide every successful organization. Let us examine each one.", tags:["Balanced","Professional","Clear"] },
+      { id:"daniel_nonfiction", name:"Daniel", role:"Academic / Credentialed", description:"British authority lends academic credibility \u2014 ideal for history, science, and business.", provider:"elevenlabs", voiceKey:"daniel", voiceId:"onwK4e9ZLuTAKqWW03F9", gender:"Male", accent:"British", settings:{stability:72,similarity:80,style:12,speed:0.98}, sampleText:"The data from fifteen longitudinal studies points to a single inescapable conclusion.", tags:["Academic","Credible","British"] }
+    ]
+  },
+  childrens: {
+    label: "Children's", icon: "\uD83C\uDF1F",
+    description: "Bright, playful, energetic voices that spark imagination in young listeners.",
+    color: "#f59e0b",
+    voices: [
+      { id:"matilda_childrens", name:"Matilda", role:"Primary Narrator", description:"Warm, inviting American voice that naturally makes children feel safe and engaged.", provider:"elevenlabs", voiceKey:"matilda", voiceId:"XrExE9yKIg1WjnnlVkGX", gender:"Female", accent:"American", settings:{stability:70,similarity:85,style:45,speed:0.95}, sampleText:"And that is how the very small bear made the very big discovery that changed everything.", tags:["Warm","Playful","Story Time"] },
+      { id:"coral_childrens", name:"Coral", role:"OpenAI Alternative", description:"Vibrant, friendly OpenAI voice \u2014 naturally fun and engaging for kids.", provider:"openai", voiceKey:"coral", gender:"Female", accent:"American", settings:{speed:0.95}, sampleText:"The dragon sneezed. And when a dragon sneezes \u2014 well, things tend to catch fire.", tags:["Vibrant","Fun","Child-Friendly"] },
+      { id:"sarah_childrens", name:"Sarah", role:"Young Narrator", description:"Young, bright energy \u2014 feels like an older sibling telling a bedtime story.", provider:"elevenlabs", voiceKey:"sarah", voiceId:"EXAVITQu4vr4xnSDxMaL", gender:"Female", accent:"American", settings:{stability:68,similarity:84,style:48,speed:0.96}, sampleText:"Pip the penguin had one problem: he could not stop dancing. Not even a little bit.", tags:["Young","Bright","Energetic"] },
+      { id:"charlie_childrens", name:"Charlie", role:"Male Storyteller", description:"Casual, Australian warmth \u2014 the fun uncle who tells the best adventure stories.", provider:"elevenlabs", voiceKey:"charlie", voiceId:"IKne3meq5aSn9XLyUdCD", gender:"Male", accent:"Australian", settings:{stability:65,similarity:80,style:50,speed:0.97}, sampleText:"Now, I know what you're thinking. How does a turtle win a race against a rabbit? Listen closely.", tags:["Australian","Fun","Storyteller"] }
+    ]
+  },
+  biography: {
+    label: "Biography / Memoir", icon: "\uD83D\uDC64",
+    description: "Personal, reflective, authentic voices that honour real human stories.",
+    color: "#94a3b8",
+    voices: [
+      { id:"josh_biography", name:"Josh", role:"Primary Narrator", description:"Deep, young American voice with grounded authenticity. Feels like the subject telling their own story.", provider:"elevenlabs", voiceKey:"josh", voiceId:"TxGEqnHWrfWFTfGW9XjX", gender:"Male", accent:"American", settings:{stability:70,similarity:82,style:15,speed:0.90}, sampleText:"I didn't choose this life. But looking back now, I wouldn't change a single moment of it.", tags:["Personal","Grounded","Authentic"] },
+      { id:"paul_biography", name:"Paul", role:"Journalistic Narrator", description:"Grounded, journalistic American voice \u2014 ideal for political biographies and investigative memoirs.", provider:"elevenlabs", voiceKey:"paul", voiceId:"5Q0t7uMcjvnagumLfvZi", gender:"Male", accent:"American", settings:{stability:73,similarity:80,style:12,speed:0.92}, sampleText:"By 1987, the senator had made three promises to three different people. He would keep none of them.", tags:["Journalistic","Trustworthy","Investigative"] },
+      { id:"ash_biography", name:"Ash", role:"OpenAI Alternative", description:"Smooth, clear OpenAI voice \u2014 respectful and measured. Honours the subject's story.", provider:"openai", voiceKey:"ash", gender:"Male", accent:"American", settings:{speed:0.91}, sampleText:"She was born into a world that had no place for her. So she built her own.", tags:["Smooth","Respectful","Clear"] },
+      { id:"sage_biography", name:"Sage", role:"Female Memoir Voice", description:"Calm, wise OpenAI voice \u2014 perfect for women's memoirs and reflective first-person narratives.", provider:"openai", voiceKey:"sage", gender:"Neutral", accent:"American", settings:{speed:0.89}, sampleText:"Looking back, I understand now what I couldn't then: that silence was its own kind of survival.", tags:["Wise","Reflective","Memoir"] }
+    ]
+  },
+  horror: {
+    label: "Horror", icon: "\uD83D\uDC7B",
+    description: "Dark, slow, unsettling voices that build dread and keep listeners awake at night.",
+    color: "#6b21a8",
+    voices: [
+      { id:"harry_horror", name:"Harry", role:"Primary Narrator", description:"Anxious, whispery energy that makes every sentence feel like a warning.", provider:"elevenlabs", voiceKey:"harry", voiceId:"SOYHLrjzK2X1ezoPC6cr", gender:"Male", accent:"American", settings:{stability:38,similarity:65,style:48,speed:0.85}, sampleText:"I should not have gone back. Everyone told me not to go back. I went back.", tags:["Anxious","Whispery","Dread"] },
+      { id:"clyde_horror", name:"Clyde", role:"Deep Dread Narrator", description:"Middle-aged warmth turned sinister \u2014 the monster that sounds like your neighbour.", provider:"elevenlabs", voiceKey:"clyde", voiceId:"2EiwWnXFnvU5JabPnv8n", gender:"Male", accent:"American", settings:{stability:42,similarity:68,style:45,speed:0.82}, sampleText:"The thing in the basement had been there for years. We had just learned not to ask about it.", tags:["Deep","Sinister","Slow-Burn"] },
+      { id:"callum_horror", name:"Callum", role:"Intense Horror", description:"Intense transatlantic delivery \u2014 perfect for psychological horror and unreliable narrators.", provider:"elevenlabs", voiceKey:"callum", voiceId:"N2lVS1w4EtoT3dr4eOWO", gender:"Male", accent:"American", settings:{stability:35,similarity:62,style:52,speed:0.88}, sampleText:"She saw it again last night. Standing at the foot of the bed. Smiling.", tags:["Psychological","Intense","Unnerving"] },
+      { id:"verse_horror", name:"Verse", role:"OpenAI Alternative", description:"Expressive OpenAI voice \u2014 unpredictable enough to feel genuinely unsettling.", provider:"openai", voiceKey:"verse", gender:"Male", accent:"American", settings:{speed:0.85}, sampleText:"The phone rang at 3am. The caller ID showed my own number.", tags:["Expressive","Unpredictable","Dark"] },
+      { id:"nicole_horror", name:"Nicole", role:"Female Horror", description:"Soft, whispery female voice \u2014 the woman who knows something terrible and can barely bring herself to say it.", provider:"elevenlabs", voiceKey:"nicole", voiceId:"piTKgcLEGmPE4e6mEKli", gender:"Female", accent:"American", settings:{stability:36,similarity:64,style:50,speed:0.83}, sampleText:"Don't open the door. Whatever you do, whatever you hear \u2014 do not open that door.", tags:["Whisper","Eerie","Female"] }
+    ]
+  }
+};
+
 // ===================== TTS SYNTHESIS =====================
 async function synthesizeOpenAI(text, voice, apiKey, speedVal, onChunkDone) {
   const safeVoice = OPENAI_VOICES.find(v=>v.id===voice) ? voice : 'alloy';
@@ -617,7 +747,6 @@ async function generateAudio(chapterId) {
     }
     updateGeneratingUI(100, 'Done!');
     const url = URL.createObjectURL(blob);
-    // Store blob reference for download
     chapter.audioUrl = url;
     chapter.audioBlobUrl = url;
     chapter.status = 'done';
@@ -727,6 +856,7 @@ async function handleFileImport(file) {
         similarity: cfg.similarity != null ? cfg.similarity : 75,
         style: cfg.style != null ? cfg.style : 0
       })),
+      characterVoices: [],
       createdAt: new Date().toISOString()
     };
     const projects = getProjects();
@@ -771,9 +901,7 @@ function renderLibrary() {
       </div>`;
     list.appendChild(div);
   });
-  // Re-render icons
   if (typeof lucide !== 'undefined' && typeof lucide.createIcons === 'function') lucide.createIcons();
-  // Bind buttons
   list.querySelectorAll('.open-proj-btn').forEach(btn => {
     btn.addEventListener('click', () => { setActiveProjectId(btn.dataset.id); activeChapterId = null; showTab('studio'); });
   });
@@ -807,7 +935,6 @@ function renderStudio() {
   document.getElementById('studio-project-title-mn34').textContent = proj.title;
   document.getElementById('studio-project-meta-op56').textContent = proj.chapters.length + ' chapters \u00B7 ' + totalWords.toLocaleString() + ' words';
   renderChapterList();
-  // Auto-select first chapter if none selected
   if (!activeChapterId && proj.chapters.length > 0) {
     activeChapterId = proj.chapters[0].id;
   }
@@ -872,7 +999,7 @@ function renderCenterPanel(chapter) {
             <div id="gen-progress-bar-xq12" class="h-full rounded-full shimmer transition-all duration-500" style="width:5%"></div>
           </div>
         </div>
-        <div class="flex justify-center gap-1 my-6" id="gen-wave-zz12">
+        <div class="flex justify-center gap-1 my-6">
           ${Array.from({length:32},(_,i)=>`<div class="waveform-bar generating" style="height:${12+Math.random()*28}px;animation-delay:${i*0.05}s"></div>`).join('')}
         </div>
         <p class="text-center text-sm text-muted mb-4">Synthesizing voice...</p>
@@ -920,7 +1047,6 @@ function renderCenterPanel(chapter) {
     return;
   }
 
-  // Draft or error state
   const voiceOptions = provider === 'openai'
     ? OPENAI_VOICES.map(v => `<option value="${v.id}" ${v.id===voice?'selected':''}>${v.id} \u2014 ${v.desc}</option>`).join('')
     : EL_VOICES.map(v => `<option value="${v.id}" ${v.id===voice?'selected':''}>${v.id} \u2014 ${v.desc}</option>`).join('');
@@ -971,7 +1097,6 @@ function renderCenterPanel(chapter) {
     </div>`;
   if (typeof lucide !== 'undefined' && typeof lucide.createIcons === 'function') lucide.createIcons();
 
-  // Bind chapter-level settings
   const voiceSel = document.getElementById('ch-voice-sel-mm12');
   const provSel = document.getElementById('ch-provider-sel-nn12');
   const speedSl = document.getElementById('ch-speed-sl-pp12');
@@ -991,7 +1116,6 @@ function renderCenterPanel(chapter) {
     const pv = provSel.value;
     updateChapter('provider', pv);
     elSettings.classList.toggle('hidden', pv !== 'elevenlabs');
-    // Re-populate voice list
     const newOpts = pv === 'openai'
       ? OPENAI_VOICES.map(v => `<option value="${v.id}">${v.id} \u2014 ${v.desc}</option>`).join('')
       : EL_VOICES.map(v => `<option value="${v.id}">${v.id} \u2014 ${v.desc}</option>`).join('');
@@ -1004,7 +1128,6 @@ function renderCenterPanel(chapter) {
     updateChapter('speed', v);
   });
 
-  // ElevenLabs sliders
   ['stab','sim','sty'].forEach(k => {
     const map = {stab:'stability',sim:'similarity',sty:'style'};
     const sl = document.getElementById('ch-'+k+'-sl-'+(k==='stab'?'ss12':k==='sim'?'uu12':'ww12'));
@@ -1098,7 +1221,6 @@ function buildPlayer(chapter) {
     const p = ps.find(x => x.id === getActiveProjectId());
     if (p) { const c = p.chapters.find(x => x.id === chapter.id); if(c) { c.status='draft'; c.audioUrl=null; saveProjects(ps); renderCenterPanel(c); renderChapterList(); } }
   });
-  // Initial draw
   drawWave(false);
 }
 
@@ -1114,7 +1236,6 @@ function playNextChapter() {
       renderChapterList();
       renderCenterPanel(next);
       renderRightPanel(next);
-      // Auto-play
       setTimeout(() => {
         const playBtn = document.getElementById('play-btn-dd12');
         if (playBtn) playBtn.click();
@@ -1132,7 +1253,6 @@ function renderRightPanel(chapter) {
   wc.textContent = (chapter.wordCount||0).toLocaleString() + ' words';
 }
 
-// Text editor auto-save
 let textSaveTimer = null;
 document.getElementById('chapter-text-editor-yz56').addEventListener('input', (e) => {
   clearTimeout(textSaveTimer);
@@ -1152,109 +1272,368 @@ document.getElementById('chapter-text-editor-yz56').addEventListener('input', (e
 });
 
 // ===================== VOICE LAB =====================
-function renderVoiceLab(filter) {
-  filter = filter || 'all';
-  const grid = document.getElementById('voice-grid-ab34');
-  grid.innerHTML = '';
-  const colors = ['#00d4ff','#7c3aed','#f59e0b','#10b981','#ef4444','#ec4899','#f97316','#06b6d4','#8b5cf6','#84cc16'];
+function renderVoiceLab() {
+  renderGenreSelector();
+  renderGenreProfiles(selectedGenre);
+  renderCharacterMapping();
+}
 
-  function addCard(v, providerName, providerColor) {
-    const col = colors[v.name.charCodeAt(0) % colors.length];
-    const div = document.createElement('div');
-    div.className = 'voice-card glass rounded-2xl p-5';
-    div.innerHTML = `
-      <div class="flex items-center gap-3 mb-3">
-        <div class="w-10 h-10 rounded-full flex items-center justify-center text-white font-bold text-sm shrink-0" style="background:${col}">${v.name.charAt(0)}</div>
-        <div class="min-w-0">
-          <h4 class="text-sm font-bold text-txt">${v.name}</h4>
-          <span class="text-xs px-2 py-0.5 rounded-full font-medium" style="background:${providerColor};color:#fff;">${providerName}</span>
-        </div>
-      </div>
-      <p class="text-xs text-muted mb-2">${v.desc}</p>
-      <div class="flex flex-wrap gap-1 mb-3">
-        <span class="text-xs px-2 py-0.5 rounded-full glass text-muted">${v.gender}</span>
-        ${v.accent ? `<span class="text-xs px-2 py-0.5 rounded-full glass text-muted">${v.accent}</span>` : ''}
-        <span class="text-xs px-2 py-0.5 rounded-full glass" style="color:${col}">${v.best}</span>
-      </div>
-      <div class="flex gap-2">
-        <button class="preview-voice-btn flex-1 px-3 py-2 rounded-xl text-xs font-medium glass glass-hover text-teal-400" data-voice="${v.id}" data-provider="${providerName.toLowerCase().replace(' ','')}">
-          <i data-lucide="play" class="w-3 h-3 inline mr-1"></i>Preview
-        </button>
-        <button class="use-voice-btn flex-1 px-3 py-2 rounded-xl text-xs font-medium btn-gradient" data-voice="${v.id}" data-provider="${providerName==='OpenAI'?'openai':'elevenlabs'}">
-          Use this voice
-        </button>
-      </div>`;
-    grid.appendChild(div);
-  }
-
-  if (filter === 'all' || filter === 'openai') {
-    OPENAI_VOICES.forEach(v => addCard(v, 'OpenAI', 'rgba(16,185,129,0.7)'));
-  }
-  if (filter === 'all' || filter === 'elevenlabs') {
-    EL_VOICES.forEach(v => addCard(v, 'ElevenLabs', 'rgba(124,58,237,0.7)'));
-  }
-
-  if (typeof lucide !== 'undefined' && typeof lucide.createIcons === 'function') lucide.createIcons();
-
-  // Preview buttons
-  grid.querySelectorAll('.preview-voice-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const keys = getApiKeys();
-      const prov = btn.dataset.provider;
-      if (prov === 'openai' && !keys.openai) { showToast('Add your OpenAI API key in Settings to preview voices', 'info'); return; }
-      if (prov === 'elevenlabs' && !keys.elevenlabs) { showToast('Add your ElevenLabs API key in Settings to preview voices', 'info'); return; }
-      previewVoice(btn.dataset.voice, prov, btn);
+function renderGenreSelector() {
+  const container = document.getElementById('genre-selector-row');
+  container.innerHTML = '';
+  const genreKeys = Object.keys(VOICE_PROFILES);
+  genreKeys.forEach(key => {
+    const g = VOICE_PROFILES[key];
+    const card = document.createElement('div');
+    card.className = 'genre-card rounded-2xl p-4 glass flex-shrink-0 text-center' + (key === selectedGenre ? ' active' : '');
+    card.style.setProperty('--genre-color', g.color);
+    card.style.minWidth = '120px';
+    card.innerHTML = `
+      <div class="text-2xl mb-2">${g.icon}</div>
+      <p class="text-xs font-bold text-txt leading-tight">${g.label}</p>
+    `;
+    card.addEventListener('click', () => {
+      selectedGenre = key;
+      renderGenreSelector();
+      renderGenreProfiles(key);
     });
-  });
-
-  // Use voice buttons
-  grid.querySelectorAll('.use-voice-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const cfg = getConfig();
-      cfg.provider = btn.dataset.provider;
-      cfg.defaultVoice = btn.dataset.voice;
-      saveConfig(cfg);
-      showToast('Default voice set to ' + btn.dataset.voice + ' (' + btn.dataset.provider + ')', 'success');
-    });
+    container.appendChild(card);
   });
 }
 
-async function previewVoice(voiceId, provider, btn) {
-  const origText = btn.innerHTML;
-  btn.innerHTML = '<i data-lucide="loader" class="w-3 h-3 inline mr-1 animate-spin"></i>Loading...';
+function renderGenreProfiles(genreKey) {
+  const genre = VOICE_PROFILES[genreKey];
+  if (!genre) return;
+
+  // Description area
+  const descArea = document.getElementById('genre-description-area');
+  descArea.innerHTML = `
+    <div class="glass rounded-2xl p-5 flex items-start gap-4" style="border-left:4px solid ${genre.color}">
+      <span class="text-3xl">${genre.icon}</span>
+      <div>
+        <h3 class="text-lg font-bold text-txt mb-1">${genre.label}</h3>
+        <p class="text-sm text-muted">${genre.description}</p>
+      </div>
+    </div>
+  `;
+
+  // Voice cards
+  const grid = document.getElementById('voice-profiles-grid');
+  grid.innerHTML = '';
+
+  genre.voices.forEach(vp => {
+    const provColor = vp.provider === 'elevenlabs' ? 'rgba(124,58,237,0.85)' : 'rgba(16,185,129,0.85)';
+    const provLabel = vp.provider === 'elevenlabs' ? 'ElevenLabs' : 'OpenAI';
+    const settingsStr = vp.provider === 'elevenlabs'
+      ? `Stability ${vp.settings.stability} \u00B7 Similarity ${vp.settings.similarity} \u00B7 Style ${vp.settings.style} \u00B7 Speed ${vp.settings.speed}x`
+      : `Speed ${vp.settings.speed}x`;
+
+    const card = document.createElement('div');
+    card.className = 'profile-card glass rounded-2xl p-5 flex flex-col';
+    card.innerHTML = `
+      <div class="flex items-center gap-3 mb-3">
+        <div class="w-11 h-11 rounded-full flex items-center justify-center text-white font-bold text-base shrink-0" style="background:${genre.color}">${vp.name.charAt(0)}</div>
+        <div class="min-w-0 flex-1">
+          <h4 class="text-base font-bold text-txt">${vp.name}</h4>
+          <div class="flex flex-wrap gap-1.5 mt-1">
+            <span class="text-[10px] px-2 py-0.5 rounded-full font-semibold" style="background:${provColor};color:#fff;">${provLabel}</span>
+            <span class="text-[10px] px-2 py-0.5 rounded-full font-semibold glass text-txt">${vp.role}</span>
+          </div>
+        </div>
+      </div>
+      <p class="text-xs text-muted mb-2 leading-relaxed">${vp.description}</p>
+      <div class="flex flex-wrap gap-1 mb-2">
+        <span class="text-[10px] px-2 py-0.5 rounded-full glass text-muted">${vp.gender}</span>
+        ${vp.accent ? `<span class="text-[10px] px-2 py-0.5 rounded-full glass text-muted">${vp.accent}</span>` : ''}
+      </div>
+      <p class="text-xs italic text-muted/70 mb-3 leading-relaxed border-l-2 pl-3" style="border-color:${genre.color}40">"${vp.sampleText}"</p>
+      <div class="flex flex-wrap gap-1 mb-3">
+        ${vp.tags.map(t => `<span class="text-[10px] px-2 py-0.5 rounded-full font-medium" style="background:${genre.color}20;color:${genre.color}">${t}</span>`).join('')}
+      </div>
+      <p class="text-[10px] text-muted/60 mb-4 font-mono">${settingsStr}</p>
+      <div class="flex gap-2 mt-auto">
+        <button id="apply-${vp.id}" class="flex-1 btn-gradient px-3 py-2.5 rounded-xl text-xs font-semibold flex items-center justify-center gap-1.5">
+          <i data-lucide="zap" class="w-3.5 h-3.5"></i> Apply to Project
+        </button>
+        <button id="preview-${vp.id}" class="flex-1 px-3 py-2.5 rounded-xl text-xs font-medium glass glass-hover text-teal-400 flex items-center justify-center gap-1.5">
+          <i data-lucide="play" class="w-3.5 h-3.5"></i> Preview
+        </button>
+      </div>
+    `;
+    grid.appendChild(card);
+
+    // Bind apply
+    card.querySelector('#apply-' + vp.id).addEventListener('click', () => applyVoiceProfile(vp));
+    // Bind preview
+    card.querySelector('#preview-' + vp.id).addEventListener('click', () => previewProfileVoice(vp));
+  });
+
   if (typeof lucide !== 'undefined' && typeof lucide.createIcons === 'function') lucide.createIcons();
+}
+
+async function previewProfileVoice(voiceProfile) {
   const keys = getApiKeys();
-  const sampleText = 'Welcome to StoryForge. Let me read a passage for you. The morning sun cast golden rays across the quiet village, awakening the world to a new day filled with wonder and possibility.';
+  const btn = document.getElementById('preview-' + voiceProfile.id);
+  if (!btn) return;
+  btn.disabled = true;
+  const origHTML = btn.innerHTML;
+  btn.innerHTML = '<i data-lucide="loader" class="w-3.5 h-3.5 animate-spin"></i> Generating...';
+  if (typeof lucide !== 'undefined' && typeof lucide.createIcons === 'function') lucide.createIcons();
+
+  try {
+    let blob;
+    if (voiceProfile.provider === 'elevenlabs') {
+      if (!keys.elevenlabs) { showToast('Add ElevenLabs API key in Settings first', 'error'); btn.innerHTML = origHTML; btn.disabled = false; if (typeof lucide !== 'undefined' && typeof lucide.createIcons === 'function') lucide.createIcons(); return; }
+      blob = await synthesizeElevenLabs(voiceProfile.sampleText, voiceProfile.voiceKey, keys.elevenlabs, voiceProfile.settings.stability, voiceProfile.settings.similarity, voiceProfile.settings.style, null);
+    } else {
+      if (!keys.openai) { showToast('Add OpenAI API key in Settings first', 'error'); btn.innerHTML = origHTML; btn.disabled = false; if (typeof lucide !== 'undefined' && typeof lucide.createIcons === 'function') lucide.createIcons(); return; }
+      blob = await synthesizeOpenAI(voiceProfile.sampleText, voiceProfile.voiceKey, keys.openai, voiceProfile.settings.speed, null);
+    }
+    const url = URL.createObjectURL(blob);
+    if (currentAudioEl) { currentAudioEl.pause(); currentAudioEl = null; }
+    const audio = new Audio(url);
+    currentAudioEl = audio;
+    audio.play();
+    btn.innerHTML = '<i data-lucide="volume-2" class="w-3.5 h-3.5"></i> Playing...';
+    if (typeof lucide !== 'undefined' && typeof lucide.createIcons === 'function') lucide.createIcons();
+    audio.addEventListener('ended', () => { btn.innerHTML = origHTML; btn.disabled = false; if (typeof lucide !== 'undefined' && typeof lucide.createIcons === 'function') lucide.createIcons(); URL.revokeObjectURL(url); });
+  } catch(err) {
+    showToast('Preview failed: ' + err.message, 'error');
+    btn.innerHTML = origHTML;
+    btn.disabled = false;
+    if (typeof lucide !== 'undefined' && typeof lucide.createIcons === 'function') lucide.createIcons();
+  }
+}
+
+function applyVoiceProfile(voiceProfile) {
+  const cfg = getConfig();
+  cfg.defaultVoice = voiceProfile.voiceKey;
+  cfg.provider = voiceProfile.provider;
+  cfg.speed = voiceProfile.settings.speed || 1.0;
+  if (voiceProfile.settings.stability != null) cfg.stability = voiceProfile.settings.stability;
+  if (voiceProfile.settings.similarity != null) cfg.similarity = voiceProfile.settings.similarity;
+  if (voiceProfile.settings.style !== undefined) cfg.style = voiceProfile.settings.style;
+  saveConfig(cfg);
+
+  const projects = getProjects();
+  const pid = getActiveProjectId();
+  const project = projects.find(p => p.id === pid);
+  if (project) {
+    project.chapters.forEach(ch => {
+      if (ch.status !== 'done') {
+        ch.voice = voiceProfile.voiceKey;
+        ch.provider = voiceProfile.provider;
+        ch.speed = voiceProfile.settings.speed || 1.0;
+        if (voiceProfile.settings.stability != null) ch.stability = voiceProfile.settings.stability;
+        if (voiceProfile.settings.similarity != null) ch.similarity = voiceProfile.settings.similarity;
+        if (voiceProfile.settings.style !== undefined) ch.style = voiceProfile.settings.style;
+      }
+    });
+    saveProjects(projects);
+    showToast('\u2705 "' + voiceProfile.name + '" applied to all pending chapters!', 'success');
+  } else {
+    showToast('"' + voiceProfile.name + '" set as default voice', 'success');
+  }
+}
+
+// ===================== CHARACTER VOICE MAPPING =====================
+function renderCharacterMapping() {
+  const projId = getActiveProjectId();
+  const projects = getProjects();
+  const proj = projects.find(p => p.id === projId);
+  const container = document.getElementById('char-map-container');
+  const noProjectMsg = document.getElementById('no-project-char-msg');
+
+  if (!proj) {
+    container.classList.add('hidden');
+    noProjectMsg.classList.remove('hidden');
+    return;
+  }
+  container.classList.remove('hidden');
+  noProjectMsg.classList.add('hidden');
+
+  if (!proj.characterVoices) proj.characterVoices = [];
+  renderCharRows(proj);
+}
+
+function renderCharRows(proj) {
+  const rowsContainer = document.getElementById('char-rows-container');
+  rowsContainer.innerHTML = '';
+
+  const allVoiceOptions = [
+    ...OPENAI_VOICES.map(v => ({value: v.id, label: v.id + ' \u2014 ' + v.desc, provider: 'openai'})),
+    ...EL_VOICES.map(v => ({value: v.id, label: v.id + ' \u2014 ' + v.desc, provider: 'elevenlabs'}))
+  ];
+
+  (proj.characterVoices || []).forEach((cv, idx) => {
+    const row = document.createElement('div');
+    row.className = 'char-row px-5 py-3 grid grid-cols-1 md:grid-cols-[1fr_1fr_140px_100px] gap-3 items-center';
+    
+    const provOpts = `<option value="openai" ${cv.provider==='openai'?'selected':''}>OpenAI</option><option value="elevenlabs" ${cv.provider==='elevenlabs'?'selected':''}>ElevenLabs</option>`;
+    const filteredVoices = cv.provider === 'openai' ? OPENAI_VOICES : EL_VOICES;
+    const voiceOpts = filteredVoices.map(v => `<option value="${v.id}" ${v.id===cv.voice?'selected':''}>${v.id} \u2014 ${v.desc}</option>`).join('');
+
+    row.innerHTML = `
+      <input type="text" class="char-name-input" value="${esc(cv.name)}" placeholder="Character name..." style="font-size:13px;padding:8px 12px;"/>
+      <select class="char-voice-sel" style="font-size:13px;padding:8px 12px;">${voiceOpts}</select>
+      <select class="char-prov-sel" style="font-size:13px;padding:8px 12px;">${provOpts}</select>
+      <div class="flex gap-1">
+        <button class="char-preview-btn px-2 py-1.5 rounded-lg text-[11px] font-medium glass glass-hover text-teal-400 flex items-center gap-1">
+          <i data-lucide="play" class="w-3 h-3"></i>
+        </button>
+        <button class="char-del-btn px-2 py-1.5 rounded-lg text-[11px] font-medium glass glass-hover text-re-400 flex items-center gap-1">
+          <i data-lucide="trash-2" class="w-3 h-3"></i>
+        </button>
+      </div>
+    `;
+    rowsContainer.appendChild(row);
+
+    const nameInput = row.querySelector('.char-name-input');
+    const voiceSel = row.querySelector('.char-voice-sel');
+    const provSel = row.querySelector('.char-prov-sel');
+
+    nameInput.addEventListener('input', () => {
+      const ps = getProjects();
+      const p = ps.find(x => x.id === proj.id);
+      if (p && p.characterVoices[idx]) { p.characterVoices[idx].name = nameInput.value; saveProjects(ps); }
+    });
+
+    voiceSel.addEventListener('change', () => {
+      const ps = getProjects();
+      const p = ps.find(x => x.id === proj.id);
+      if (p && p.characterVoices[idx]) { p.characterVoices[idx].voice = voiceSel.value; saveProjects(ps); }
+    });
+
+    provSel.addEventListener('change', () => {
+      const ps = getProjects();
+      const p = ps.find(x => x.id === proj.id);
+      if (p && p.characterVoices[idx]) {
+        p.characterVoices[idx].provider = provSel.value;
+        p.characterVoices[idx].voice = provSel.value === 'openai' ? 'alloy' : 'rachel';
+        saveProjects(ps);
+        renderCharRows(p);
+      }
+    });
+
+    row.querySelector('.char-preview-btn').addEventListener('click', () => {
+      const keys = getApiKeys();
+      const prov = provSel.value;
+      const voice = voiceSel.value;
+      if (prov === 'openai' && !keys.openai) { showToast('Add OpenAI API key in Settings first', 'error'); return; }
+      if (prov === 'elevenlabs' && !keys.elevenlabs) { showToast('Add ElevenLabs API key in Settings first', 'error'); return; }
+      const sampleText = 'Hello, my name is ' + (nameInput.value || 'this character') + '. Let me show you how I sound.';
+      previewCharVoice(voice, prov, sampleText, row.querySelector('.char-preview-btn'));
+    });
+
+    row.querySelector('.char-del-btn').addEventListener('click', () => {
+      const ps = getProjects();
+      const p = ps.find(x => x.id === proj.id);
+      if (p) { p.characterVoices.splice(idx, 1); saveProjects(ps); renderCharRows(p); }
+    });
+  });
+
+  if (typeof lucide !== 'undefined' && typeof lucide.createIcons === 'function') lucide.createIcons();
+}
+
+async function previewCharVoice(voiceId, provider, text, btn) {
+  const keys = getApiKeys();
+  const origHTML = btn.innerHTML;
+  btn.innerHTML = '<i data-lucide="loader" class="w-3 h-3 animate-spin"></i>';
+  if (typeof lucide !== 'undefined' && typeof lucide.createIcons === 'function') lucide.createIcons();
   try {
     let blob;
     if (provider === 'openai') {
-      blob = await synthesizeOpenAI(sampleText, voiceId, keys.openai, 1.0, null);
+      blob = await synthesizeOpenAI(text, voiceId, keys.openai, 1.0, null);
     } else {
       const cfg = getConfig();
-      blob = await synthesizeElevenLabs(sampleText, voiceId, keys.elevenlabs, cfg.stability||50, cfg.similarity||75, cfg.style||0, null);
+      blob = await synthesizeElevenLabs(text, voiceId, keys.elevenlabs, cfg.stability||50, cfg.similarity||75, cfg.style||0, null);
     }
     const url = URL.createObjectURL(blob);
     if (currentAudioEl) { currentAudioEl.pause(); currentAudioEl = null; }
     const a = new Audio(url);
     currentAudioEl = a;
     a.play();
-    btn.innerHTML = '<i data-lucide="volume-2" class="w-3 h-3 inline mr-1"></i>Playing...';
+    btn.innerHTML = '<i data-lucide="volume-2" class="w-3 h-3"></i>';
     if (typeof lucide !== 'undefined' && typeof lucide.createIcons === 'function') lucide.createIcons();
-    a.addEventListener('ended', () => { btn.innerHTML = origText; if (typeof lucide !== 'undefined' && typeof lucide.createIcons === 'function') lucide.createIcons(); });
+    a.addEventListener('ended', () => { btn.innerHTML = origHTML; if (typeof lucide !== 'undefined' && typeof lucide.createIcons === 'function') lucide.createIcons(); URL.revokeObjectURL(url); });
   } catch(err) {
     showToast('Preview failed: ' + err.message, 'error');
-    btn.innerHTML = origText;
+    btn.innerHTML = origHTML;
     if (typeof lucide !== 'undefined' && typeof lucide.createIcons === 'function') lucide.createIcons();
   }
 }
 
-// Voice filter buttons
-document.querySelectorAll('.voice-filter-btn').forEach(btn => {
-  btn.addEventListener('click', () => {
-    document.querySelectorAll('.voice-filter-btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    renderVoiceLab(btn.dataset.filter);
+// Add Character button
+document.getElementById('add-char-btn').addEventListener('click', () => {
+  const projId = getActiveProjectId();
+  const projects = getProjects();
+  const proj = projects.find(p => p.id === projId);
+  if (!proj) { showToast('Open a project first', 'info'); return; }
+  if (!proj.characterVoices) proj.characterVoices = [];
+  proj.characterVoices.push({ name: '', voice: 'alloy', provider: 'openai' });
+  saveProjects(projects);
+  renderCharRows(proj);
+});
+
+// Clear All characters
+document.getElementById('clear-chars-btn').addEventListener('click', () => {
+  const projId = getActiveProjectId();
+  const projects = getProjects();
+  const proj = projects.find(p => p.id === projId);
+  if (!proj) return;
+  proj.characterVoices = [];
+  saveProjects(projects);
+  renderCharRows(proj);
+  showToast('Character map cleared', 'info');
+});
+
+// Auto-detect characters
+document.getElementById('auto-detect-chars-btn').addEventListener('click', () => {
+  const projId = getActiveProjectId();
+  const projects = getProjects();
+  const proj = projects.find(p => p.id === projId);
+  if (!proj) { showToast('Open a project first', 'info'); return; }
+
+  const allText = proj.chapters.map(c => c.content || '').join('\n');
+  const nameSet = new Set();
+
+  // Pattern: "..." Name said / asked / whispered etc.
+  const saidPattern = /["\u201C\u201D].+?["\u201C\u201D],?\s+([A-Z][a-z]+(?:\s[A-Z][a-z]+)?)\s+(?:said|asked|whispered|replied|exclaimed|murmured|shouted|muttered|called|cried|answered|demanded|yelled|screamed|insisted|suggested|continued|added|explained|sighed|laughed|groaned)/g;
+  let match;
+  while ((match = saidPattern.exec(allText)) !== null) {
+    const name = match[1].trim();
+    if (name.length > 1 && name.length < 30) nameSet.add(name);
+  }
+
+  // Pattern: Name: "..."
+  const colonPattern = /^([A-Z][a-z]+(?:\s[A-Z][a-z]+)?)\s*:/gm;
+  while ((match = colonPattern.exec(allText)) !== null) {
+    const name = match[1].trim();
+    if (name.length > 1 && name.length < 30 && !['Chapter','Part','Note','Section','Introduction','Prologue','Epilogue'].includes(name)) nameSet.add(name);
+  }
+
+  if (!proj.characterVoices) proj.characterVoices = [];
+
+  // Always ensure NARRATOR exists
+  const existingNames = new Set(proj.characterVoices.map(cv => cv.name.toUpperCase()));
+  if (!existingNames.has('NARRATOR')) {
+    proj.characterVoices.unshift({ name: 'NARRATOR', voice: 'alloy', provider: 'openai' });
+  }
+
+  // Add discovered names
+  const voices = ['rachel','drew','sarah','liam','dorothy','josh','emily','callum','adam','nicole'];
+  let vIdx = 0;
+  nameSet.forEach(name => {
+    if (!existingNames.has(name.toUpperCase())) {
+      const v = voices[vIdx % voices.length];
+      proj.characterVoices.push({ name: name, voice: v, provider: 'elevenlabs' });
+      vIdx++;
+    }
   });
+
+  saveProjects(projects);
+  renderCharRows(proj);
+  showToast('Found ' + nameSet.size + ' character' + (nameSet.size !== 1 ? 's' : '') + ' in text', 'success');
 });
 
 // ===================== SETTINGS =====================
@@ -1294,7 +1673,6 @@ function updateKeyStatus() {
   else { eStatus.className = 'status-badge status-draft'; eStatus.textContent = 'Not set'; }
 }
 
-// Settings event bindings
 document.getElementById('speed-slider-ef78').addEventListener('input', (e) => {
   document.getElementById('speed-val-cd56').textContent = (parseInt(e.target.value)/100).toFixed(1) + 'x';
 });
@@ -1308,7 +1686,6 @@ document.getElementById('style-slider-gh56').addEventListener('input', (e) => {
   document.getElementById('style-val-ef34').textContent = e.target.value;
 });
 
-// Key toggle buttons
 document.getElementById('openai-key-toggle-kl34').addEventListener('click', () => {
   const inp = document.getElementById('openai-key-ij12');
   const btn = document.getElementById('openai-key-toggle-kl34');
@@ -1322,7 +1699,6 @@ document.getElementById('el-key-toggle-st12').addEventListener('click', () => {
   btn.textContent = inp.type === 'password' ? 'Show' : 'Hide';
 });
 
-// Save settings
 document.getElementById('save-settings-btn-ij78').addEventListener('click', () => {
   const keys = {
     openai: document.getElementById('openai-key-ij12').value.trim(),
@@ -1366,37 +1742,15 @@ fileInput.addEventListener('change', () => {
   fileInput.value = '';
 });
 
-// Generate All button
 document.getElementById('generate-all-btn-st90').addEventListener('click', () => generateAll());
-
-// ===================== VOICE FILTER ACTIVE STYLES =====================
-document.querySelectorAll('.voice-filter-btn').forEach(btn => {
-  btn.addEventListener('click', () => {
-    document.querySelectorAll('.voice-filter-btn').forEach(b => {
-      b.style.background = '';
-      b.style.color = '';
-      b.style.borderColor = '';
-    });
-    btn.style.background = 'linear-gradient(135deg, #00d4ff, #7c3aed)';
-    btn.style.color = '#fff';
-  });
-});
 
 // ===================== INIT =====================
 if (typeof lucide !== 'undefined' && typeof lucide.createIcons === 'function') {
   lucide.createIcons();
 }
 
-// Load initial state
 renderLibrary();
 loadSettings();
-
-// Set initial active filter style
-const firstFilter = document.querySelector('.voice-filter-btn.active');
-if (firstFilter) {
-  firstFilter.style.background = 'linear-gradient(135deg, #00d4ff, #7c3aed)';
-  firstFilter.style.color = '#fff';
-}
 </script>
 </body>
 </html>
