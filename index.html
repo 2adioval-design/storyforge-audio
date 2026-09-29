@@ -1,1569 +1,942 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<meta name="color-scheme" content="dark"/>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="dark">
 <title>StoryForge — Aurelio Dioval Audiobook Studio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <script src="https://cdn.tailwindcss.com"></script>
-<script>
-tailwind.config = {
-  theme: {
-    extend: {
-      colors: {
-        deepest: '#0a0a14',
-        base: '#0f0f1a',
-        card: '#151528',
-        cardalt: '#1a1a30',
-        teal: { 50:'#e0faff', 100:'#b3f0ff', 200:'#80e5ff', 300:'#4ddbff', 400:'#00d4ff', 500:'#00b8db', 600:'#009bb8', 700:'#007e94', 800:'#006170', 900:'#00444d' },
-        purp: { 50:'#f0e6ff', 100:'#d9b8ff', 200:'#c28aff', 300:'#ab5cff', 400:'#7c3aed', 500:'#6a2ec7', 600:'#5823a1', 700:'#46187b', 800:'#340d55', 900:'#22022f' },
-        amber: { 400:'#f59e0b', 500:'#d97706' },
-        gre: { 400:'#10b981', 500:'#059669' },
-        re: { 400:'#ef4444', 500:'#dc2626' },
-        txt: '#f1f5f9',
-        muted: '#94a3b8',
-        glassbg: 'rgba(255,255,255,0.04)',
-        glassborder: 'rgba(255,255,255,0.08)',
-      },
-      fontFamily: {
-        sans: ['Inter', 'sans-serif'],
-      },
-    },
-  },
-};
-</script>
 <script src="https://unpkg.com/lucide@latest" defer></script>
-<link rel="preconnect" href="https://fonts.googleapis.com"/>
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
 <script src="https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.min.js"></script>
-<script>if(window.pdfjsLib)pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.worker.min.js';</script>
 <script src="https://cdn.jsdelivr.net/npm/mammoth@1.6.0/mammoth.browser.min.js"></script>
+<script>
+tailwind.config={theme:{extend:{colors:{sf:{bg:'#0a0a14',card:'#151528',cardalt:'#1a1a30',cardlight:'#1e1e3a',accent:'#00d4ff',purple:'#7c3aed',text:'#f1f5f9',muted:'#94a3b8',muteddark:'#64748b',border:'rgba(255,255,255,0.08)',glass:'rgba(255,255,255,0.04)',success:'#10b981',error:'#ef4444',warning:'#f59e0b'}},fontFamily:{sans:['Inter','sans-serif']}}}}
+</script>
 <style>
-  * { box-sizing: border-box; }
-  body { background: #0a0a14; color: #f1f5f9; font-family: 'Inter', sans-serif; margin: 0; min-height: 100vh; display: flex; flex-direction: column; }
-  ::-webkit-scrollbar { width: 6px; }
-  ::-webkit-scrollbar-track { background: rgba(255,255,255,0.02); }
-  ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 3px; }
-  .gradient-text { background: linear-gradient(135deg, #00d4ff, #7c3aed); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
-  .glass { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); }
-  .glass-hover:hover { background: rgba(255,255,255,0.07); border-color: rgba(255,255,255,0.12); }
-  .btn-gradient { background: linear-gradient(135deg, #00d4ff, #7c3aed); color: #fff; border: none; cursor: pointer; transition: all 0.2s; }
-  .btn-gradient:hover { filter: brightness(1.15); transform: translateY(-1px); }
-  .btn-gradient:disabled { opacity: 0.5; cursor: not-allowed; transform: none; filter: none; }
-  .tab-btn-main { transition: all 0.2s; cursor: pointer; }
-  .tab-btn-main.active { color: #00d4ff; border-bottom: 2px solid #00d4ff; }
-  .tab-btn-main:not(.active) { color: #94a3b8; border-bottom: 2px solid transparent; }
-  .tab-btn-main:hover:not(.active) { color: #f1f5f9; }
-  .tab-content { display: none; opacity: 0; transition: opacity 0.3s; }
-  .tab-content.active { display: block; opacity: 1; }
-  .toast-container { position: fixed; bottom: 24px; right: 24px; z-index: 9999; display: flex; flex-direction: column; gap: 8px; }
-  .toast { padding: 12px 20px; border-radius: 12px; background: #1a1a30; border-left: 4px solid #00d4ff; color: #f1f5f9; font-size: 14px; transform: translateX(120%); transition: transform 0.3s ease; max-width: 380px; box-shadow: 0 8px 32px rgba(0,0,0,0.4); }
-  .toast.show { transform: translateX(0); }
-  .toast-success { border-left-color: #10b981; }
-  .toast-error { border-left-color: #ef4444; }
-  .toast-info { border-left-color: #00d4ff; }
-  .pulse-amber { animation: pulseAmber 1.5s ease-in-out infinite; }
-  @keyframes pulseAmber { 0%,100% { opacity: 1; } 50% { opacity: 0.4; } }
-  .shimmer { background: linear-gradient(90deg, #00d4ff 0%, #7c3aed 50%, #00d4ff 100%); background-size: 200% 100%; animation: shimmer 2s ease-in-out infinite; }
-  @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
-  .waveform-bar { display: inline-block; width: 3px; margin: 0 1px; border-radius: 2px; background: rgba(255,255,255,0.15); transition: height 0.15s; }
-  .waveform-bar.active { background: #00d4ff; }
-  .waveform-bar.generating { animation: waveAnim 0.8s ease-in-out infinite; }
-  @keyframes waveAnim { 0%,100% { transform: scaleY(0.3); } 50% { transform: scaleY(1); } }
-  input[type="range"] { -webkit-appearance: none; appearance: none; height: 6px; border-radius: 3px; background: rgba(255,255,255,0.1); outline: none; }
-  input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 16px; height: 16px; border-radius: 50%; background: #00d4ff; cursor: pointer; }
-  input[type="range"]::-moz-range-thumb { width: 16px; height: 16px; border-radius: 50%; background: #00d4ff; cursor: pointer; border: none; }
-  .drop-zone { border: 2px dashed rgba(255,255,255,0.12); border-radius: 16px; transition: all 0.3s; }
-  .drop-zone.drag-over { border-color: #00d4ff; background: rgba(0,212,255,0.05); }
-  .chapter-item { cursor: pointer; transition: all 0.2s; border-left: 3px solid transparent; }
-  .chapter-item:hover { background: rgba(255,255,255,0.04); }
-  .chapter-item.active { border-left-color: #00d4ff; background: rgba(0,212,255,0.06); }
-  .voice-card { transition: all 0.2s; cursor: pointer; }
-  .voice-card:hover { transform: translateY(-2px); border-color: rgba(255,255,255,0.15); }
-  select, input[type="text"], input[type="password"], textarea {
-    background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); color: #f1f5f9;
-    border-radius: 10px; padding: 10px 14px; font-family: 'Inter', sans-serif; font-size: 14px;
-    outline: none; transition: all 0.2s; width: 100%;
-  }
-  select:focus, input[type="text"]:focus, input[type="password"]:focus, textarea:focus {
-    border-color: #00d4ff; background: rgba(255,255,255,0.08);
-  }
-  select { cursor: pointer; }
-  .status-badge { font-size: 11px; padding: 2px 8px; border-radius: 6px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; }
-  .status-draft { background: rgba(148,163,184,0.15); color: #94a3b8; }
-  .status-generating { background: rgba(245,158,11,0.15); color: #f59e0b; }
-  .status-done { background: rgba(16,185,129,0.15); color: #10b981; }
-  .status-error { background: rgba(239,68,68,0.15); color: #ef4444; }
-  .genre-btn { transition: all 0.25s; cursor: pointer; flex-shrink: 0; }
-  .genre-btn:hover { transform: translateY(-2px); }
-  .genre-btn.active { box-shadow: 0 0 20px rgba(0,212,255,0.15); }
-  .genre-scroll { overflow-x: auto; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
-  .genre-scroll::-webkit-scrollbar { display: none; }
-  .genre-scroll > * { scroll-snap-align: start; }
-  .profile-card { transition: all 0.2s; }
-  .profile-card:hover { transform: translateY(-2px); border-color: rgba(255,255,255,0.15); }
-  .char-row { transition: background 0.15s; }
-  .char-row:hover { background: rgba(255,255,255,0.03); }
-  @media (max-width: 768px) {
-    .studio-layout { flex-direction: column !important; }
-    .studio-left, .studio-right { width: 100% !important; max-width: 100% !important; min-width: 0 !important; }
-    .studio-center { min-width: 0 !important; }
-    .voice-grid { grid-template-columns: 1fr !important; }
-  }
-  @media (max-width: 640px) {
-    .voice-grid { grid-template-columns: 1fr !important; }
-  }
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',sans-serif;background:#0a0a14;color:#f1f5f9;min-height:100vh;overflow-x:hidden}
+::-webkit-scrollbar{width:6px;height:6px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.1);border-radius:3px}
+::-webkit-scrollbar-thumb:hover{background:rgba(255,255,255,0.2)}
+.gradient-text{background:linear-gradient(135deg,#00d4ff,#7c3aed);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.gradient-btn{background:linear-gradient(135deg,#00d4ff,#7c3aed);color:#fff;border:none;cursor:pointer;transition:all .2s}
+.gradient-btn:hover{opacity:.9;transform:translateY(-1px);box-shadow:0 4px 20px rgba(0,212,255,0.3)}
+.gradient-btn:disabled{opacity:.5;cursor:not-allowed;transform:none;box-shadow:none}
+.glass-card{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);backdrop-filter:blur(20px);border-radius:16px}
+.glass-card-hover:hover{background:rgba(255,255,255,0.07);border-color:rgba(255,255,255,0.14)}
+.drop-zone{border:2px dashed rgba(255,255,255,0.15);border-radius:16px;transition:all .3s}
+.drop-zone.drag-over{border-color:#00d4ff;background:rgba(0,212,255,0.05)}
+.tab-btn{padding:8px 18px;border-radius:10px;font-size:14px;font-weight:500;color:#94a3b8;background:transparent;border:none;cursor:pointer;transition:all .2s;white-space:nowrap}
+.tab-btn:hover{color:#f1f5f9;background:rgba(255,255,255,0.06)}
+.tab-btn.active{color:#fff;background:linear-gradient(135deg,rgba(0,212,255,0.2),rgba(124,58,237,0.2));border:1px solid rgba(0,212,255,0.3)}
+.status-badge{padding:2px 10px;border-radius:20px;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.5px}
+.status-draft{background:rgba(148,163,184,0.15);color:#94a3b8}
+.status-generating{background:rgba(245,158,11,0.15);color:#f59e0b;animation:pulse-glow 1.5s infinite}
+.status-done{background:rgba(16,185,129,0.15);color:#10b981}
+.status-error{background:rgba(239,68,68,0.15);color:#ef4444}
+@keyframes pulse-glow{0%,100%{opacity:1}50%{opacity:.5}}
+@keyframes wave-bar{0%,100%{height:8px}50%{height:var(--max-h,28px)}}
+.wave-bar{width:3px;border-radius:2px;background:#00d4ff;transition:height .1s}
+.wave-bar.animating{animation:wave-bar var(--dur,0.8s) ease-in-out infinite;animation-delay:var(--delay,0s)}
+.chapter-row{padding:10px 14px;border-radius:10px;cursor:pointer;transition:all .15s;border:1px solid transparent}
+.chapter-row:hover{background:rgba(255,255,255,0.05)}
+.chapter-row.active{background:rgba(0,212,255,0.08);border-color:rgba(0,212,255,0.2)}
+.toast{position:fixed;bottom:24px;right:24px;padding:14px 20px;border-radius:12px;background:#1a1a30;border:1px solid rgba(255,255,255,0.1);color:#f1f5f9;font-size:13px;z-index:9999;animation:slide-in .3s ease;max-width:360px;display:flex;align-items:center;gap:10px;box-shadow:0 8px 30px rgba(0,0,0,0.4)}
+.toast.success{border-left:3px solid #10b981}
+.toast.error{border-left:3px solid #ef4444}
+.toast.info{border-left:3px solid #00d4ff}
+@keyframes slide-in{from{transform:translateX(100px);opacity:0}to{transform:translateX(0);opacity:1}}
+@keyframes slide-out{from{transform:translateX(0);opacity:1}to{transform:translateX(100px);opacity:0}}
+.genre-btn{padding:10px 20px;border-radius:12px;font-size:13px;font-weight:600;cursor:pointer;transition:all .2s;border:1px solid rgba(255,255,255,0.08);background:rgba(255,255,255,0.04);color:#94a3b8;white-space:nowrap;display:flex;align-items:center;gap:8px}
+.genre-btn:hover{background:rgba(255,255,255,0.08)}
+.genre-btn.active{color:#fff;border-color:var(--gc)}
+.voice-card{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:16px;padding:24px;transition:all .2s}
+.voice-card:hover{background:rgba(255,255,255,0.07);border-color:rgba(255,255,255,0.14)}
+.voice-card.applied{border-color:#00d4ff;box-shadow:0 0 20px rgba(0,212,255,0.1)}
+.scrubber{-webkit-appearance:none;width:100%;height:4px;border-radius:2px;background:rgba(255,255,255,0.1);outline:none;cursor:pointer}
+.scrubber::-webkit-slider-thumb{-webkit-appearance:none;width:14px;height:14px;border-radius:50%;background:#00d4ff;cursor:pointer;box-shadow:0 0 8px rgba(0,212,255,0.4)}
+.speed-slider{-webkit-appearance:none;width:100%;height:4px;border-radius:2px;background:rgba(255,255,255,0.1);outline:none}
+.speed-slider::-webkit-slider-thumb{-webkit-appearance:none;width:16px;height:16px;border-radius:50%;background:linear-gradient(135deg,#00d4ff,#7c3aed);cursor:pointer}
+.mobile-menu{display:none;position:fixed;inset:0;background:#0a0a14;z-index:100;flex-direction:column;padding:24px}
+.mobile-menu.open{display:flex}
+@media(max-width:767px){.desktop-tabs{display:none!important}.hamburger-btn{display:flex!important}.studio-layout{flex-direction:column!important}.studio-left,.studio-right{width:100%!important;max-height:40vh;overflow-y:auto}.studio-center{min-height:60vh}}
+@media(min-width:768px){.hamburger-btn{display:none!important}}
+.active-voice-badge{position:fixed;bottom:24px;left:24px;padding:8px 16px;border-radius:20px;background:rgba(21,21,40,0.95);border:1px solid rgba(0,212,255,0.2);font-size:12px;color:#94a3b8;z-index:50;backdrop-filter:blur(10px);display:flex;align-items:center;gap:6px}
+.loading-spinner{width:18px;height:18px;border:2px solid rgba(255,255,255,0.1);border-top-color:#00d4ff;border-radius:50%;animation:spin .6s linear infinite;display:inline-block}
+@keyframes spin{to{transform:rotate(360deg)}}
+textarea:focus,input:focus,select:focus{outline:none;border-color:rgba(0,212,255,0.4)!important;box-shadow:0 0 0 3px rgba(0,212,255,0.1)}
 </style>
 </head>
 <body data-id="0">
-<app-icon data-id="1" hidden data-icon="audio-lines" data-palette="Blue"></app-icon>
+<app-icon data-id="1" hidden data-icon="mic" data-palette="Dark"></app-icon>
 
 <!-- HEADER -->
-<header data-id="2" id="header-jk29" class="sticky top-0 z-50 border-b border-glassborder" style="background:rgba(10,10,20,0.85);backdrop-filter:blur(16px);">
-  <div data-id="3" class="max-w-7xl mx-auto px-4 md:px-6">
-    <div data-id="4" class="flex items-center justify-between py-3">
-      <div data-id="5" class="flex items-center gap-3">
-        <div data-id="6" class="text-2xl">🎙</div>
-        <div data-id="7">
-          <h1 data-id="8" class="text-xl md:text-2xl font-extrabold gradient-text leading-tight">StoryForge</h1>
-          <p data-id="9" class="text-xs text-muted -mt-0.5">Aurelio Dioval Audiobook Studio</p>
-        </div>
-      </div>
-      <nav data-id="10" class="hidden md:flex gap-1">
-        <button data-id="11" class="tab-btn-main active px-4 py-2 text-sm font-medium" data-tab="library">Library</button>
-        <button data-id="12" class="tab-btn-main px-4 py-2 text-sm font-medium" data-tab="studio">Studio</button>
-        <button data-id="13" class="tab-btn-main px-4 py-2 text-sm font-medium" data-tab="voicelab">Voice Lab</button>
-        <button data-id="14" class="tab-btn-main px-4 py-2 text-sm font-medium" data-tab="settings">Settings</button>
-      </nav>
-      <button data-id="15" id="mobile-menu-btn-xz41" class="md:hidden p-2 text-muted hover:text-txt">
-        <i data-id="16" data-lucide="menu" class="w-6 h-6"></i>
-      </button>
-    </div>
-  </div>
-  <nav data-id="17" id="mobile-menu-qr82" class="hidden md:hidden border-t border-glassborder">
-    <div data-id="18" class="flex flex-col px-4 py-2 gap-1">
-      <button data-id="19" class="tab-btn-main active text-left px-3 py-2 text-sm font-medium rounded-lg" data-tab="library">Library</button>
-      <button data-id="20" class="tab-btn-main text-left px-3 py-2 text-sm font-medium rounded-lg" data-tab="studio">Studio</button>
-      <button data-id="21" class="tab-btn-main text-left px-3 py-2 text-sm font-medium rounded-lg" data-tab="voicelab">Voice Lab</button>
-      <button data-id="22" class="tab-btn-main text-left px-3 py-2 text-sm font-medium rounded-lg" data-tab="settings">Settings</button>
-    </div>
-  </nav>
+<header data-id="2" id="header-main" class="fixed top-0 left-0 right-0 z-50 backdrop-blur-xl" style="background:rgba(10,10,20,0.85);border-bottom:1px solid rgba(255,255,255,0.06)">
+<div data-id="3" class="max-w-7xl mx-auto px-4 md:px-6 h-16 flex items-center justify-between">
+<div data-id="4" class="flex items-center gap-3">
+<div data-id="5" class="w-9 h-9 rounded-xl flex items-center justify-center" style="background:linear-gradient(135deg,#00d4ff,#7c3aed)">
+<i data-id="6" data-lucide="mic" class="w-5 h-5 text-white"></i>
+</div>
+<div data-id="7">
+<h1 data-id="8" class="text-lg font-bold gradient-text leading-tight">StoryForge</h1>
+<p data-id="9" class="text-[10px] text-sf-muted leading-tight hidden sm:block">Aurelio Dioval Audiobook Studio</p>
+</div>
+</div>
+<nav data-id="10" class="desktop-tabs flex items-center gap-1 bg-sf-card rounded-xl p-1" style="border:1px solid rgba(255,255,255,0.06)">
+<button data-id="11" class="tab-btn active" data-tab="library"><i data-id="12" data-lucide="library" class="w-4 h-4 inline mr-1.5"></i>Library</button>
+<button data-id="13" class="tab-btn" data-tab="studio"><i data-id="14" data-lucide="sliders-horizontal" class="w-4 h-4 inline mr-1.5"></i>Studio</button>
+<button data-id="15" class="tab-btn" data-tab="voicelab"><i data-id="16" data-lucide="audio-lines" class="w-4 h-4 inline mr-1.5"></i>Voice Lab</button>
+<button data-id="17" class="tab-btn" data-tab="settings"><i data-id="18" data-lucide="settings" class="w-4 h-4 inline mr-1.5"></i>Settings</button>
+</nav>
+<button data-id="19" class="hamburger-btn items-center justify-center w-10 h-10 rounded-xl" style="background:rgba(255,255,255,0.06);border:none;color:#f1f5f9;cursor:pointer" id="hamburger-open">
+<i data-id="20" data-lucide="menu" class="w-5 h-5"></i>
+</button>
+</div>
 </header>
 
-<main data-id="23" class="flex-1">
-<!-- ===================== LIBRARY TAB ===================== -->
-<div data-id="24" id="tab-library" class="tab-content active max-w-5xl mx-auto px-4 md:px-6 py-6 md:py-10">
-  <h2 data-id="25" class="text-2xl font-bold mb-6">
-    <i data-id="26" data-lucide="library" class="w-6 h-6 inline-block mr-2 align-text-bottom" style="color:#00d4ff"></i>
-    My Library
-  </h2>
-  <div data-id="27" id="drop-zone-ab12" class="drop-zone p-8 md:p-12 text-center mb-8 glass rounded-2xl">
-    <div data-id="28" class="mb-4">
-      <i data-id="29" data-lucide="file-up" class="w-12 h-12 mx-auto text-muted"></i>
-    </div>
-    <p data-id="30" class="text-lg font-semibold text-txt mb-1">Drop your book here</p>
-    <p data-id="31" class="text-sm text-muted mb-4">or click to browse</p>
-    <div data-id="32" class="flex gap-2 justify-center flex-wrap">
-      <span data-id="33" class="text-xs px-3 py-1 rounded-full glass text-teal-400 font-medium">PDF</span>
-      <span data-id="34" class="text-xs px-3 py-1 rounded-full glass text-purp-400 font-medium">DOCX</span>
-      <span data-id="35" class="text-xs px-3 py-1 rounded-full glass text-amber-400 font-medium">TXT</span>
-      <span data-id="36" class="text-xs px-3 py-1 rounded-full glass text-gre-400 font-medium">MD</span>
-    </div>
-    <input data-id="37" type="file" id="file-input-cd34" class="hidden" accept=".pdf,.docx,.txt,.md"/>
-  </div>
-  <div data-id="38" id="projects-list-ef56" class="space-y-4"></div>
-  <div data-id="39" id="no-projects-gh78" class="text-center py-12 text-muted">
-    <i data-id="40" data-lucide="book-open" class="w-10 h-10 mx-auto mb-3 opacity-40"></i>
-    <p data-id="41" class="text-sm">No projects yet. Upload a book to get started.</p>
-  </div>
+<!-- MOBILE MENU -->
+<div data-id="21" id="mobile-menu" class="mobile-menu">
+<div data-id="22" class="flex items-center justify-between mb-8">
+<h2 data-id="23" class="text-lg font-bold gradient-text">StoryForge</h2>
+<button data-id="24" id="hamburger-close" style="background:none;border:none;color:#f1f5f9;cursor:pointer"><i data-id="25" data-lucide="x" class="w-6 h-6"></i></button>
+</div>
+<div data-id="26" class="flex flex-col gap-2">
+<button data-id="27" class="tab-btn active text-left text-base py-3" data-tab="library" data-mobile="1"><i data-id="28" data-lucide="library" class="w-5 h-5 inline mr-2"></i>Library</button>
+<button data-id="29" class="tab-btn text-left text-base py-3" data-tab="studio" data-mobile="1"><i data-id="30" data-lucide="sliders-horizontal" class="w-5 h-5 inline mr-2"></i>Studio</button>
+<button data-id="31" class="tab-btn text-left text-base py-3" data-tab="voicelab" data-mobile="1"><i data-id="32" data-lucide="audio-lines" class="w-5 h-5 inline mr-2"></i>Voice Lab</button>
+<button data-id="33" class="tab-btn text-left text-base py-3" data-tab="settings" data-mobile="1"><i data-id="34" data-lucide="settings" class="w-5 h-5 inline mr-2"></i>Settings</button>
+</div>
 </div>
 
-<!-- ===================== STUDIO TAB ===================== -->
-<div data-id="42" id="tab-studio" class="tab-content" style="height:calc(100vh - 64px - 48px);">
-  <div data-id="43" id="studio-empty-ij90" class="flex items-center justify-center h-full">
-    <div data-id="44" class="text-center text-muted">
-      <i data-id="45" data-lucide="mic-off" class="w-12 h-12 mx-auto mb-3 opacity-40"></i>
-      <p data-id="46" class="text-lg font-semibold mb-1">No project loaded</p>
-      <p data-id="47" class="text-sm">Go to Library to import a book first.</p>
-    </div>
-  </div>
-  <div data-id="48" id="studio-main-kl12" class="hidden studio-layout flex h-full">
-    <div data-id="49" class="studio-left border-r border-glassborder flex flex-col" style="width:280px;min-width:220px;">
-      <div data-id="50" class="p-4 border-b border-glassborder">
-        <h3 data-id="51" id="studio-project-title-mn34" class="text-sm font-bold truncate gradient-text"></h3>
-        <p data-id="52" id="studio-project-meta-op56" class="text-xs text-muted mt-1"></p>
-      </div>
-      <div data-id="53" id="chapter-list-qr78" class="flex-1 overflow-y-auto"></div>
-      <div data-id="54" class="p-3 border-t border-glassborder space-y-2">
-        <button data-id="55" id="generate-all-btn-st90" class="btn-gradient w-full py-2.5 rounded-xl text-sm font-semibold flex items-center justify-center gap-2">
-          <i data-id="56" data-lucide="zap" class="w-4 h-4"></i> Generate All
-        </button>
-      </div>
-    </div>
-    <div data-id="57" class="studio-center flex-1 overflow-y-auto p-4 md:p-6">
-      <div data-id="58" id="center-content-uv12"></div>
-    </div>
-    <div data-id="59" class="studio-right border-l border-glassborder flex flex-col" style="width:340px;min-width:260px;">
-      <div data-id="60" class="p-4 border-b border-glassborder flex items-center justify-between">
-        <span data-id="61" class="text-xs font-medium text-muted uppercase tracking-wider">Chapter Text</span>
-        <span data-id="62" id="right-wordcount-wx34" class="text-xs text-muted"></span>
-      </div>
-      <div data-id="63" class="flex-1 overflow-hidden p-3">
-        <textarea data-id="64" id="chapter-text-editor-yz56" class="w-full h-full resize-none text-sm leading-relaxed" style="min-height:300px;" placeholder="Select a chapter to view its text..."></textarea>
-      </div>
-    </div>
-  </div>
+<main data-id="35" class="pt-20 pb-8 px-4 md:px-6 max-w-7xl mx-auto min-h-screen">
+
+<!-- TAB: LIBRARY -->
+<section data-id="36" id="tab-library">
+<div data-id="37" class="mb-8">
+<h2 data-id="38" class="text-2xl md:text-3xl font-bold mb-2">Your <span data-id="39" class="gradient-text">Library</span></h2>
+<p data-id="40" class="text-sf-muted text-sm">Upload books and manuscripts to begin producing audiobooks.</p>
 </div>
-
-<!-- ===================== VOICE LAB TAB ===================== -->
-<div data-id="65" id="tab-voicelab" class="tab-content max-w-6xl mx-auto px-4 md:px-6 py-6 md:py-10">
-  <!-- Header -->
-  <div data-id="66" class="mb-7">
-    <h2 data-id="67" class="text-2xl font-extrabold mb-1.5">🎙 Voice Profiles</h2>
-    <p data-id="68" class="text-sm text-muted">Select your genre — each profile is tuned for perfect narration with real ElevenLabs &amp; OpenAI voices</p>
-  </div>
-
-  <!-- Genre selector row -->
-  <div data-id="69" id="genre-tabs" class="genre-scroll flex gap-3 pb-4 mb-7"></div>
-
-  <!-- Genre description -->
-  <div data-id="70" id="genre-desc" class="glass rounded-2xl p-4 mb-7 text-sm text-muted"></div>
-
-  <!-- Voice cards grid -->
-  <div data-id="71" id="genre-voices" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 mb-12"></div>
-
-  <!-- Divider -->
-  <div data-id="72" class="border-t border-glassborder my-10"></div>
-
-  <!-- Character Voice Mapping -->
-  <div data-id="73" class="mb-6">
-    <h3 data-id="74" class="text-xl font-bold mb-1.5">🎭 Character Voice Mapping</h3>
-    <p data-id="75" class="text-sm text-muted mb-5">Assign different voices to characters found in your book</p>
-    <div data-id="76" id="char-map-rows" class="space-y-2.5 mb-4"></div>
-    <button data-id="77" id="add-char-map-btn" class="text-sm font-medium text-teal-400 hover:text-teal-300 flex items-center gap-2 py-2 px-4 glass rounded-xl glass-hover">
-      <i data-id="78" data-lucide="plus" class="w-4 h-4"></i> Add Character
-    </button>
-  </div>
+<div data-id="41" id="drop-zone" class="drop-zone p-8 md:p-12 text-center cursor-pointer mb-8 transition-all">
+<input data-id="42" type="file" id="file-input" accept=".pdf,.docx,.txt,.md" class="hidden">
+<div data-id="43" class="flex flex-col items-center gap-4">
+<div data-id="44" class="w-16 h-16 rounded-2xl flex items-center justify-center" style="background:linear-gradient(135deg,rgba(0,212,255,0.1),rgba(124,58,237,0.1))">
+<i data-id="45" data-lucide="upload-cloud" class="w-8 h-8 text-sf-accent"></i>
 </div>
-
-<!-- ===================== SETTINGS TAB ===================== -->
-<div data-id="79" id="tab-settings" class="tab-content max-w-3xl mx-auto px-4 md:px-6 py-6 md:py-10">
-  <h2 data-id="80" class="text-2xl font-bold mb-6">
-    <i data-id="81" data-lucide="settings" class="w-6 h-6 inline-block mr-2 align-text-bottom" style="color:#00d4ff"></i>
-    Settings
-  </h2>
-  <div data-id="82" class="glass rounded-2xl p-6 mb-6">
-    <h3 data-id="83" class="text-lg font-semibold mb-4">Active Provider</h3>
-    <div data-id="84" class="flex gap-4 mb-5">
-      <label data-id="85" class="flex items-center gap-2 cursor-pointer">
-        <input data-id="86" type="radio" name="provider" value="openai" checked class="accent-teal-400"/>
-        <span data-id="87" class="text-sm font-medium">OpenAI TTS</span>
-      </label>
-      <label data-id="88" class="flex items-center gap-2 cursor-pointer">
-        <input data-id="89" type="radio" name="provider" value="elevenlabs" class="accent-purp-400"/>
-        <span data-id="90" class="text-sm font-medium">ElevenLabs</span>
-      </label>
-    </div>
-    <div data-id="91">
-      <label data-id="92" class="text-xs text-muted font-medium uppercase tracking-wider block mb-2">Speed: <span data-id="93" id="speed-val-cd56">1.0x</span></label>
-      <input data-id="94" type="range" id="speed-slider-ef78" min="50" max="200" value="100" class="w-full"/>
-    </div>
-  </div>
-  <div data-id="95" class="glass rounded-2xl p-6 mb-6">
-    <div data-id="96" class="flex items-center justify-between mb-4">
-      <h3 data-id="97" class="text-lg font-semibold">OpenAI TTS</h3>
-      <span data-id="98" id="openai-status-gh90" class="status-badge status-draft">Not set</span>
-    </div>
-    <div data-id="99" class="space-y-4">
-      <div data-id="100">
-        <label data-id="101" class="text-xs text-muted font-medium uppercase tracking-wider block mb-2">API Key</label>
-        <div data-id="102" class="flex gap-2">
-          <input data-id="103" type="password" id="openai-key-ij12" placeholder="sk-..." class="flex-1"/>
-          <button data-id="104" id="openai-key-toggle-kl34" class="px-3 py-2 glass rounded-xl text-xs font-medium text-muted hover:text-txt">Show</button>
-        </div>
-      </div>
-      <div data-id="105">
-        <label data-id="106" class="text-xs text-muted font-medium uppercase tracking-wider block mb-2">Default Voice</label>
-        <select data-id="107" id="openai-voice-mn56">
-          <option data-id="108" value="alloy">alloy — Neutral, versatile</option>
-          <option data-id="109" value="echo">echo — Male, crisp</option>
-          <option data-id="110" value="fable">fable — British, warm</option>
-          <option data-id="111" value="onyx">onyx — Male, deep</option>
-          <option data-id="112" value="nova">nova — Female, bright</option>
-          <option data-id="113" value="shimmer">shimmer — Female, soft</option>
-          <option data-id="114" value="ash">ash — Male, balanced</option>
-          <option data-id="115" value="coral">coral — Female, warm</option>
-          <option data-id="116" value="sage">sage — Neutral, calm</option>
-          <option data-id="117" value="verse">verse — Male, expressive</option>
-        </select>
-      </div>
-    </div>
-  </div>
-  <div data-id="118" class="glass rounded-2xl p-6 mb-6">
-    <div data-id="119" class="flex items-center justify-between mb-4">
-      <h3 data-id="120" class="text-lg font-semibold">ElevenLabs TTS</h3>
-      <span data-id="121" id="el-status-op78" class="status-badge status-draft">Not set</span>
-    </div>
-    <div data-id="122" class="space-y-4">
-      <div data-id="123">
-        <label data-id="124" class="text-xs text-muted font-medium uppercase tracking-wider block mb-2">API Key</label>
-        <div data-id="125" class="flex gap-2">
-          <input data-id="126" type="password" id="el-key-qr90" placeholder="xi-..." class="flex-1"/>
-          <button data-id="127" id="el-key-toggle-st12" class="px-3 py-2 glass rounded-xl text-xs font-medium text-muted hover:text-txt">Show</button>
-        </div>
-      </div>
-      <div data-id="128">
-        <label data-id="129" class="text-xs text-muted font-medium uppercase tracking-wider block mb-2">Default Voice</label>
-        <select data-id="130" id="el-voice-uv34"></select>
-      </div>
-      <div data-id="131" class="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div data-id="132">
-          <label data-id="133" class="text-xs text-muted font-medium uppercase tracking-wider block mb-2">Stability: <span data-id="134" id="stab-val-wx56">50</span></label>
-          <input data-id="135" type="range" id="stab-slider-yz78" min="0" max="100" value="50" class="w-full"/>
-        </div>
-        <div data-id="136">
-          <label data-id="137" class="text-xs text-muted font-medium uppercase tracking-wider block mb-2">Similarity: <span data-id="138" id="sim-val-ab90">75</span></label>
-          <input data-id="139" type="range" id="sim-slider-cd12" min="0" max="100" value="75" class="w-full"/>
-        </div>
-        <div data-id="140">
-          <label data-id="141" class="text-xs text-muted font-medium uppercase tracking-wider block mb-2">Style: <span data-id="142" id="style-val-ef34">0</span></label>
-          <input data-id="143" type="range" id="style-slider-gh56" min="0" max="100" value="0" class="w-full"/>
-        </div>
-      </div>
-    </div>
-  </div>
-  <button data-id="144" id="save-settings-btn-ij78" class="btn-gradient px-8 py-3 rounded-xl text-sm font-semibold flex items-center gap-2">
-    <i data-id="145" data-lucide="save" class="w-4 h-4"></i> Save Settings
-  </button>
+<div data-id="46">
+<p data-id="47" class="text-sf-text font-semibold mb-1">Drop your book file here or click to browse</p>
+<p data-id="48" class="text-sf-muted text-sm">Supports PDF, DOCX, TXT, and MD files</p>
 </div>
+<div data-id="49" class="flex flex-wrap justify-center gap-2 mt-2">
+<span data-id="50" class="px-3 py-1 rounded-full text-xs font-semibold" style="background:rgba(0,212,255,0.15);color:#00d4ff">PDF</span>
+<span data-id="51" class="px-3 py-1 rounded-full text-xs font-semibold" style="background:rgba(124,58,237,0.15);color:#7c3aed">DOCX</span>
+<span data-id="52" class="px-3 py-1 rounded-full text-xs font-semibold" style="background:rgba(245,158,11,0.15);color:#f59e0b">TXT</span>
+<span data-id="53" class="px-3 py-1 rounded-full text-xs font-semibold" style="background:rgba(16,185,129,0.15);color:#10b981">MD</span>
+</div>
+</div>
+</div>
+<div data-id="54" id="projects-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+<div data-id="55" id="empty-library" class="text-center py-16">
+<div data-id="56" class="w-20 h-20 mx-auto rounded-2xl flex items-center justify-center mb-4" style="background:rgba(255,255,255,0.04)">
+<i data-id="57" data-lucide="book-open" class="w-10 h-10 text-sf-muteddark"></i>
+</div>
+<p data-id="58" class="text-sf-muted text-lg font-medium mb-1">No projects yet</p>
+<p data-id="59" class="text-sf-muteddark text-sm">Upload a book to get started.</p>
+</div>
+</section>
+
+<!-- TAB: STUDIO -->
+<section data-id="60" id="tab-studio" class="hidden">
+<div data-id="61" id="studio-no-project" class="text-center py-20">
+<div data-id="62" class="w-20 h-20 mx-auto rounded-2xl flex items-center justify-center mb-4" style="background:rgba(255,255,255,0.04)">
+<i data-id="63" data-lucide="folder-open" class="w-10 h-10 text-sf-muteddark"></i>
+</div>
+<p data-id="64" class="text-sf-muted text-lg font-medium mb-1">No project open</p>
+<p data-id="65" class="text-sf-muteddark text-sm">Go to Library and open a project to start producing.</p>
+</div>
+<div data-id="66" id="studio-main" class="hidden studio-layout flex gap-4" style="min-height:calc(100vh - 140px)">
+<!-- Left Panel -->
+<div data-id="67" class="studio-left flex-shrink-0 glass-card p-4 flex flex-col gap-2" style="width:280px;max-height:calc(100vh - 140px);overflow-y:auto">
+<div data-id="68" class="flex items-center justify-between mb-2">
+<h3 data-id="69" class="text-sm font-semibold text-sf-text flex items-center gap-2"><i data-id="70" data-lucide="list" class="w-4 h-4 text-sf-accent"></i>Chapters</h3>
+<span data-id="71" id="chapter-count-badge" class="text-xs text-sf-muted"></span>
+</div>
+<div data-id="72" id="chapter-list" class="flex flex-col gap-1 flex-1 overflow-y-auto"></div>
+<button data-id="73" id="generate-all-btn" class="gradient-btn w-full py-3 rounded-xl font-semibold text-sm flex items-center justify-center gap-2 mt-2">
+<i data-id="74" data-lucide="zap" class="w-4 h-4"></i>Generate All
+</button>
+<button data-id="75" id="stop-gen-btn" class="hidden w-full py-3 rounded-xl font-semibold text-sm flex items-center justify-center gap-2 mt-1" style="background:rgba(239,68,68,0.15);color:#ef4444;border:1px solid rgba(239,68,68,0.3);cursor:pointer">
+<i data-id="76" data-lucide="square" class="w-4 h-4"></i>Stop Generation
+</button>
+<button data-id="77" id="export-project-btn" class="w-full py-2.5 rounded-xl font-medium text-xs flex items-center justify-center gap-2 mt-1" style="background:rgba(255,255,255,0.06);color:#94a3b8;border:1px solid rgba(255,255,255,0.08);cursor:pointer">
+<i data-id="78" data-lucide="download" class="w-3.5 h-3.5"></i>Export Audio Files
+</button>
+</div>
+<!-- Center Panel -->
+<div data-id="79" class="studio-center flex-1 flex flex-col gap-4">
+<div data-id="80" id="center-no-chapter" class="flex-1 flex items-center justify-center">
+<div data-id="81" class="text-center">
+<i data-id="82" data-lucide="file-audio" class="w-12 h-12 text-sf-muteddark mx-auto mb-3"></i>
+<p data-id="83" class="text-sf-muted">Select a chapter to begin</p>
+</div>
+</div>
+<div data-id="84" id="center-panel" class="hidden flex-1 flex flex-col gap-4">
+<div data-id="85" class="flex items-center justify-between">
+<div data-id="86">
+<h3 data-id="87" id="center-chapter-title" class="text-xl font-bold"></h3>
+<div data-id="88" class="flex items-center gap-4 mt-1 text-sm text-sf-muted">
+<span data-id="89" id="center-word-count" class="flex items-center gap-1"><i data-id="90" data-lucide="text" class="w-3.5 h-3.5"></i></span>
+<span data-id="91" id="center-duration" class="flex items-center gap-1"><i data-id="92" data-lucide="clock" class="w-3.5 h-3.5"></i></span>
+<span data-id="93" id="center-voice-indicator" class="flex items-center gap-1"><i data-id="94" data-lucide="mic" class="w-3.5 h-3.5 text-sf-accent"></i></span>
+</div>
+</div>
+<div data-id="95" id="center-status-badge"></div>
+</div>
+<!-- Audio Player Card -->
+<div data-id="96" class="glass-card p-6 md:p-8">
+<div data-id="97" class="flex items-end justify-center gap-[3px] h-16 mb-6" id="waveform-container"></div>
+<div data-id="98" class="flex items-center justify-center gap-6 mb-4">
+<button data-id="99" id="play-pause-btn" class="w-16 h-16 rounded-full flex items-center justify-center gradient-btn shadow-lg" style="box-shadow:0 4px 24px rgba(0,212,255,0.3)">
+<i data-id="100" data-lucide="play" class="w-7 h-7" id="play-icon"></i>
+</button>
+</div>
+<div data-id="101" class="flex items-center gap-3 mb-3">
+<span data-id="102" id="current-time" class="text-xs text-sf-muted tabular-nums w-12 text-right">0:00</span>
+<input data-id="103" type="range" id="audio-scrubber" class="scrubber flex-1" min="0" max="100" value="0">
+<span data-id="104" id="total-time" class="text-xs text-sf-muted tabular-nums w-12">0:00</span>
+</div>
+<div data-id="105" class="flex items-center justify-center gap-3">
+<button data-id="106" id="download-audio-btn" class="hidden px-4 py-2 rounded-lg text-xs font-medium flex items-center gap-2" style="background:rgba(255,255,255,0.06);color:#94a3b8;border:1px solid rgba(255,255,255,0.08);cursor:pointer">
+<i data-id="107" data-lucide="download" class="w-3.5 h-3.5"></i>Download
+</button>
+</div>
+</div>
+<button data-id="108" id="generate-audio-btn" class="gradient-btn w-full py-3.5 rounded-xl font-semibold text-sm flex items-center justify-center gap-2">
+<i data-id="109" data-lucide="mic" class="w-4 h-4"></i>Generate Audio
+</button>
+</div>
+</div>
+<!-- Right Panel -->
+<div data-id="110" class="studio-right flex-shrink-0 glass-card p-4 flex flex-col" style="width:340px;max-height:calc(100vh - 140px)">
+<div data-id="111" class="flex items-center justify-between mb-3">
+<h3 data-id="112" class="text-sm font-semibold text-sf-text flex items-center gap-2"><i data-id="113" data-lucide="file-text" class="w-4 h-4 text-sf-accent"></i>Chapter Text</h3>
+<span data-id="114" id="editor-word-count" class="text-xs text-sf-muted"></span>
+</div>
+<textarea data-id="115" id="chapter-editor" class="flex-1 w-full bg-sf-bg rounded-xl p-4 text-sm text-sf-text resize-none" style="border:1px solid rgba(255,255,255,0.08);min-height:300px" placeholder="Select a chapter to edit its text..."></textarea>
+</div>
+</div>
+</section>
+
+<!-- TAB: VOICE LAB -->
+<section data-id="116" id="tab-voicelab" class="hidden">
+<div data-id="117" class="mb-6">
+<h2 data-id="118" class="text-2xl md:text-3xl font-bold mb-2">Voice <span data-id="119" class="gradient-text">Lab</span></h2>
+<p data-id="120" class="text-sf-muted text-sm">Audition and select the perfect voice for every genre and character.</p>
+</div>
+<div data-id="121" id="genre-tabs" class="flex gap-2 overflow-x-auto pb-3 mb-4" style="scrollbar-width:none;-ms-overflow-style:none"></div>
+<div data-id="122" id="genre-description" class="glass-card p-4 mb-6">
+<p data-id="123" id="genre-desc-text" class="text-sm text-sf-muted italic"></p>
+</div>
+<div data-id="124" id="voice-cards-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-10"></div>
+<div data-id="125" class="border-t border-white/5 pt-8">
+<h3 data-id="126" class="text-lg font-bold mb-4 flex items-center gap-2">🎭 Character Voice Mapping</h3>
+<p data-id="127" class="text-sf-muted text-sm mb-4">Assign distinct voices to characters in your story for multi-voice narration.</p>
+<div data-id="128" id="char-map-rows" class="flex flex-col gap-3 mb-4"></div>
+<button data-id="129" id="add-char-btn" class="px-4 py-2.5 rounded-xl text-sm font-medium flex items-center gap-2" style="background:rgba(255,255,255,0.06);color:#94a3b8;border:1px solid rgba(255,255,255,0.08);cursor:pointer">
+<i data-id="130" data-lucide="plus" class="w-4 h-4"></i>Add Character
+</button>
+</div>
+</section>
+
+<!-- TAB: SETTINGS -->
+<section data-id="131" id="tab-settings" class="hidden">
+<div data-id="132" class="mb-8">
+<h2 data-id="133" class="text-2xl md:text-3xl font-bold mb-2"><span data-id="134" class="gradient-text">Settings</span></h2>
+<p data-id="135" class="text-sf-muted text-sm">Configure your audiobook production environment.</p>
+</div>
+<div data-id="136" class="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-4xl">
+<!-- Provider Card -->
+<div data-id="137" class="glass-card p-6">
+<div data-id="138" class="flex items-center justify-between mb-4">
+<h3 data-id="139" class="font-semibold flex items-center gap-2"><i data-id="140" data-lucide="cpu" class="w-4 h-4 text-sf-accent"></i>AI Voice Engine</h3>
+<span data-id="141" class="px-3 py-1 rounded-full text-xs font-semibold" style="background:rgba(16,185,129,0.15);color:#10b981">ACTIVE</span>
+</div>
+<p data-id="142" class="text-sm text-sf-muted mb-3">Powered by AppSDK Text-to-Speech — cloud-based neural voice synthesis with 8 distinct voice profiles.</p>
+<div data-id="143" class="flex items-center gap-2">
+<div data-id="144" class="w-2 h-2 rounded-full bg-sf-success"></div>
+<span data-id="145" class="text-xs text-sf-success">Connected &amp; Ready</span>
+</div>
+</div>
+<!-- Narrator Voice Card -->
+<div data-id="146" class="glass-card p-6">
+<div data-id="147" class="flex items-center justify-between mb-4">
+<h3 data-id="148" class="font-semibold flex items-center gap-2"><i data-id="149" data-lucide="mic" class="w-4 h-4 text-sf-accent"></i>Narrator Voice</h3>
+</div>
+<select data-id="150" id="settings-voice" class="w-full p-3 rounded-xl text-sm bg-sf-bg text-sf-text" style="border:1px solid rgba(255,255,255,0.08)">
+<option data-id="151" value="dan">Dan — Warm, friendly (default)</option>
+<option data-id="152" value="brook">Brook — Calm, conversational</option>
+<option data-id="153" value="rio">Rio — Clear, neutral</option>
+<option data-id="154" value="jazz">Jazz — Expressive, curated</option>
+<option data-id="155" value="aster">Aster — Neutral, professional</option>
+<option data-id="156" value="marilyn">Marilyn — Natural, warm</option>
+<option data-id="157" value="elan">Elan — Neutral, balanced</option>
+<option data-id="158" value="amuch">Amuch — Versatile, everyday</option>
+</select>
+<p data-id="159" class="text-xs text-sf-muteddark mt-2">This voice will be used for all new audio generation unless overridden by Voice Lab.</p>
+</div>
+<!-- Speed Card -->
+<div data-id="160" class="glass-card p-6">
+<div data-id="161" class="flex items-center justify-between mb-4">
+<h3 data-id="162" class="font-semibold flex items-center gap-2"><i data-id="163" data-lucide="gauge" class="w-4 h-4 text-sf-accent"></i>Playback Speed</h3>
+<span data-id="164" id="speed-val" class="text-sm text-sf-accent font-semibold">1.0x</span>
+</div>
+<input data-id="165" type="range" id="speed-slider" class="speed-slider w-full" min="50" max="200" value="100" step="10">
+<div data-id="166" class="flex justify-between text-xs text-sf-muteddark mt-2">
+<span data-id="167">0.5x</span><span data-id="168">1.0x</span><span data-id="169">2.0x</span>
+</div>
+</div>
+<!-- Export Settings -->
+<div data-id="170" class="glass-card p-6">
+<div data-id="171" class="flex items-center justify-between mb-4">
+<h3 data-id="172" class="font-semibold flex items-center gap-2"><i data-id="173" data-lucide="file-output" class="w-4 h-4 text-sf-accent"></i>Export Settings</h3>
+</div>
+<div data-id="174" class="flex flex-col gap-3">
+<div data-id="175">
+<label data-id="176" class="text-xs text-sf-muted mb-1 block">Project Name</label>
+<input data-id="177" type="text" id="settings-project-name" class="w-full p-3 rounded-xl text-sm bg-sf-bg text-sf-text" style="border:1px solid rgba(255,255,255,0.08)" placeholder="My Audiobook">
+</div>
+<div data-id="178">
+<label data-id="179" class="text-xs text-sf-muted mb-1 block">Author Name</label>
+<input data-id="180" type="text" id="settings-author" class="w-full p-3 rounded-xl text-sm bg-sf-bg text-sf-text" style="border:1px solid rgba(255,255,255,0.08)" value="Aurelio Joseph Dioval">
+</div>
+</div>
+</div>
+</div>
+<div data-id="181" class="mt-6 max-w-4xl">
+<button data-id="182" id="save-settings-btn" class="gradient-btn px-8 py-3 rounded-xl font-semibold text-sm flex items-center gap-2">
+<i data-id="183" data-lucide="save" class="w-4 h-4"></i>Save Settings
+</button>
+</div>
+</section>
 </main>
 
-<!-- FOOTER -->
-<footer data-id="146" id="footer-kl90" class="border-t border-glassborder py-4 text-center mt-auto">
-  <p data-id="147" class="text-xs text-muted">&copy; 2026 StoryForge — Aurelio Dioval Audiobook Studio. All rights reserved.</p>
+<!-- Active Voice Badge -->
+<div data-id="184" id="active-voice-badge" class="active-voice-badge">
+<i data-id="185" data-lucide="mic" class="w-3.5 h-3.5 text-sf-accent"></i>
+<span data-id="186">Active: <strong data-id="187" id="badge-voice-name">Jazz</strong></span>
+</div>
+
+<footer data-id="188" class="text-center py-6 border-t border-white/5">
+<p data-id="189" class="text-xs text-sf-muteddark">&copy; 2026 StoryForge &mdash; Aurelio Dioval Audiobook Studio. All rights reserved.</p>
+<p data-id="190" class="text-xs text-sf-muteddark mt-1">Made by Copilot</p>
 </footer>
 
-<!-- Toast container -->
-<div data-id="148" id="toast-container" class="toast-container"></div>
+<!-- Hidden audio element -->
+<audio data-id="191" id="global-audio" class="hidden"></audio>
 
 <script>
-// ===================== GENRE PROFILES =====================
-const GENRE_PROFILES = {
-  literary: {
-    label:'Literary Fiction', icon:'\uD83D\uDCD6', color:'#7c3aed',
-    description:'Rich, measured narration with emotional depth. Perfect for character-driven stories.',
-    voices:[
-      {id:'daniel',name:'Daniel',role:'Primary Narrator',provider:'elevenlabs',voiceKey:'daniel',voiceId:'onwK4e9ZLuTAKqWW03F9',gender:'Male',accent:'British',tags:['Deep','Emotional','Narrator'],description:'Authoritative British delivery with warmth and gravitas.',sample:'The city had changed, as cities do \u2014 silently, without announcement.',settings:{stability:65,similarity:82,style:22,speed:0.92}},
-      {id:'matilda',name:'Matilda',role:'Female Narrator',provider:'elevenlabs',voiceKey:'matilda',voiceId:'XrExE9yKIg1WjnnlVkGX',gender:'Female',accent:'American',tags:['Warm','Intimate','Narrator'],description:'Warm American voice with natural cadence.',sample:'She had learned long ago that silence was its own kind of answer.',settings:{stability:68,similarity:80,style:20,speed:0.93}},
-      {id:'fable',name:'Fable',role:'OpenAI Alt',provider:'openai',voiceKey:'fable',gender:'Male',accent:'British',tags:['British','Expressive'],description:'British warmth with expressive range.',sample:'In the quiet of the old house, memories moved like dust in light.',settings:{speed:0.92}},
-      {id:'dorothy',name:'Dorothy',role:'Character Voice',provider:'elevenlabs',voiceKey:'dorothy',voiceId:'ThT5KcBeYPX3keUQqHPh',gender:'Female',accent:'British',tags:['Wise','Gentle','Character'],description:'Pleasant British. Ideal for elderly or wise female characters.',sample:'My dear, the things we leave unsaid have a way of saying themselves.',settings:{stability:72,similarity:78,style:15,speed:0.90}}
-    ]
-  },
-  thriller: {
-    label:'Thriller / Mystery', icon:'\uD83D\uDD2A', color:'#ef4444',
-    description:'Tense, urgent delivery that keeps listeners on the edge of their seat.',
-    voices:[
-      {id:'callum',name:'Callum',role:'Primary Narrator',provider:'elevenlabs',voiceKey:'callum',voiceId:'N2lVS1w4EtoT3dr4eOWO',gender:'Male',accent:'American',tags:['Tense','Gripping','Dark'],description:'Intense transatlantic delivery with an edge of danger.',sample:'The door was unlocked. It should not have been. He drew his weapon.',settings:{stability:52,similarity:74,style:38,speed:0.96}},
-      {id:'adam',name:'Adam',role:'Deep Narrator',provider:'elevenlabs',voiceKey:'adam',voiceId:'pNInz6obpgDQGcFmaJgB',gender:'Male',accent:'American',tags:['Noir','Deep','Brooding'],description:'Commanding deep American voice. Perfect for hard-boiled detective noir.',sample:'Three days. That is how long the body had been there.',settings:{stability:58,similarity:76,style:30,speed:0.94}},
-      {id:'onyx',name:'Onyx',role:'OpenAI Alt',provider:'openai',voiceKey:'onyx',gender:'Male',accent:'American',tags:['Authoritative','Dark'],description:'Deep authoritative OpenAI voice. Drives tension through measured delivery.',sample:'She knew too much. And now, so did he.',settings:{speed:0.95}},
-      {id:'harry',name:'Harry',role:'Anxious Character',provider:'elevenlabs',voiceKey:'harry',voiceId:'SOYHLrjzK2X1ezoPC6cr',gender:'Male',accent:'American',tags:['Anxious','Whispery'],description:'Young, whispery, anxious energy. Perfect for unreliable narrators.',sample:'They were watching. He was sure of it now. Every shadow, every sound.',settings:{stability:42,similarity:68,style:45,speed:0.98}},
-      {id:'nicole',name:'Nicole',role:'Female Character',provider:'elevenlabs',voiceKey:'nicole',voiceId:'piTKgcLEGmPE4e6mEKli',gender:'Female',accent:'American',tags:['Mysterious','Soft'],description:'Soft, whispery female voice \u2014 ideal for secretive characters.',sample:'I did not plan for any of this. I want you to know that.',settings:{stability:48,similarity:72,style:40,speed:0.95}}
-    ]
-  },
-  romance: {
-    label:'Romance', icon:'\uD83D\uDC95', color:'#f59e0b',
-    description:'Warm, intimate, emotionally expressive voices that make hearts flutter.',
-    voices:[
-      {id:'sarah',name:'Sarah',role:'Primary Narrator',provider:'elevenlabs',voiceKey:'sarah',voiceId:'EXAVITQu4vr4xnSDxMaL',gender:'Female',accent:'American',tags:['Intimate','Warm','Soft'],description:'Soft, young, intimate American voice.',sample:'When his eyes met hers across the room, everything else stopped.',settings:{stability:60,similarity:85,style:30,speed:0.90}},
-      {id:'emily',name:'Emily',role:'Calm Narrator',provider:'elevenlabs',voiceKey:'emily',voiceId:'LcfcDJNUP1GQjkzn1xUU',gender:'Female',accent:'American',tags:['Meditative','Emotional'],description:'Meditative, calm presence that draws readers into emotional moments.',sample:'Love, she had decided, was not a feeling. It was a choice you made every morning.',settings:{stability:68,similarity:82,style:22,speed:0.88}},
-      {id:'nova',name:'Nova',role:'OpenAI Alt',provider:'openai',voiceKey:'nova',gender:'Female',accent:'American',tags:['Bright','Warm'],description:'Warm, bright female OpenAI voice \u2014 emotionally resonant.',sample:'She had stopped believing in love stories \u2014 until she became one.',settings:{speed:0.90}},
-      {id:'drew',name:'Drew',role:'Male Lead',provider:'elevenlabs',voiceKey:'drew',voiceId:'29vD33N1osed6aR8deSXH',gender:'Male',accent:'American',tags:['Smooth','Charming'],description:'Well-rounded, smooth American voice. The perfect leading man.',sample:'I have been thinking about you. More than I should admit.',settings:{stability:62,similarity:80,style:28,speed:0.92}},
-      {id:'aria',name:'Aria',role:'Expressive Female',provider:'elevenlabs',voiceKey:'aria',voiceId:'9BWtsMINqrJLrRacOk9x',gender:'Female',accent:'American',tags:['Expressive','Passionate'],description:'Highly expressive American voice \u2014 perfect for passionate scenes.',sample:'She pressed her hand to her chest, as if she could hold the feeling there forever.',settings:{stability:55,similarity:80,style:38,speed:0.91}}
-    ]
-  },
-  fantasy: {
-    label:'Fantasy / Sci-Fi', icon:'\uD83D\uDC09', color:'#00d4ff',
-    description:'Epic, world-building voices that transport listeners to other realms.',
-    voices:[
-      {id:'arnold',name:'Arnold',role:'Epic Narrator',provider:'elevenlabs',voiceKey:'arnold',voiceId:'VR6AewLTigWG4xSOukaG',gender:'Male',accent:'American',tags:['Epic','Commanding'],description:'Crisp, commanding American voice. Carries the weight of worlds.',sample:'In the age before memory, when dragons still walked beneath open skies, the first war began.',settings:{stability:55,similarity:72,style:38,speed:0.95}},
-      {id:'george',name:'George',role:'British Narrator',provider:'elevenlabs',voiceKey:'george',voiceId:'JBFqnCBsd6RMkjVDRZzb',gender:'Male',accent:'British',tags:['Grand','British'],description:'Deep British presence that evokes Tolkien-esque grandeur.',sample:'The prophecy spoke of a child born between two moons, marked by fire and shadow.',settings:{stability:60,similarity:75,style:32,speed:0.93}},
-      {id:'echo',name:'Echo',role:'OpenAI Alt',provider:'openai',voiceKey:'echo',gender:'Male',accent:'American',tags:['Sci-Fi','Precise'],description:'Crisp, precise OpenAI voice \u2014 excellent for sci-fi narration.',sample:'The colony ship had been traveling for 847 years when the signal arrived.',settings:{speed:0.97}},
-      {id:'fin',name:'Fin',role:'Rogue / Traveler',provider:'elevenlabs',voiceKey:'fin',voiceId:'D38z5RcWu1voky8WS1ja',gender:'Male',accent:'Irish',tags:['Irish','Witty'],description:'Irish sailor energy \u2014 perfect for wandering adventurers and rogues.',sample:'Aye, I have seen stranger things. This barely qualifies.',settings:{stability:50,similarity:70,style:42,speed:1.0}},
-      {id:'domi',name:'Domi',role:'Warrior / Heroine',provider:'elevenlabs',voiceKey:'domi',voiceId:'AZnzlk1XvdvUeBnXmlld',gender:'Female',accent:'American',tags:['Strong','Fierce'],description:'Strong, confident American female. Embodies warrior queens and fierce heroines.',sample:'I did not come this far to be stopped by a locked door and three guards.',settings:{stability:52,similarity:74,style:40,speed:0.98}},
-      {id:'river',name:'River',role:'Oracle / Sage',provider:'elevenlabs',voiceKey:'river',voiceId:'SAz9YHcvj6GT2YYXdXww',gender:'Neutral',accent:'American',tags:['Mystical','Oracle'],description:'Neutral, ethereal quality \u2014 perfect for oracles and ancient beings.',sample:'The answer you seek is already within you. You simply do not know how to listen yet.',settings:{stability:62,similarity:76,style:35,speed:0.88}}
-    ]
-  },
-  nonfiction: {
-    label:'Non-Fiction', icon:'\uD83D\uDCCA', color:'#10b981',
-    description:'Clear, authoritative, conversational voices that build trust and clarity.',
-    voices:[
-      {id:'liam',name:'Liam',role:'Primary Narrator',provider:'elevenlabs',voiceKey:'liam',voiceId:'TX3LPaxmHKxFdv7VOQHJ',gender:'Male',accent:'American',tags:['Clear','Authoritative'],description:'Articulate, clear American voice. Sounds like a knowledgeable friend.',sample:'The research is clear: small daily habits, compounded over time, produce extraordinary results.',settings:{stability:75,similarity:82,style:10,speed:1.0}},
-      {id:'river2',name:'River',role:'Neutral Narrator',provider:'elevenlabs',voiceKey:'river',voiceId:'SAz9YHcvj6GT2YYXdXww',gender:'Neutral',accent:'American',tags:['Neutral','Clean'],description:'Clean, neutral delivery \u2014 lets the content speak for itself.',sample:'What separates high performers from everyone else is their relationship with discomfort.',settings:{stability:78,similarity:84,style:8,speed:1.0}},
-      {id:'alloy',name:'Alloy',role:'OpenAI Alt',provider:'openai',voiceKey:'alloy',gender:'Neutral',accent:'American',tags:['Balanced','Professional'],description:'Perfectly balanced OpenAI voice \u2014 professional and trustworthy.',sample:'Three principles guide every successful organization. Let us examine each one.',settings:{speed:1.0}},
-      {id:'daniel2',name:'Daniel',role:'Academic / British',provider:'elevenlabs',voiceKey:'daniel',voiceId:'onwK4e9ZLuTAKqWW03F9',gender:'Male',accent:'British',tags:['Academic','Credible'],description:'British authority lends academic credibility \u2014 ideal for history and science.',sample:'The data from fifteen longitudinal studies points to a single inescapable conclusion.',settings:{stability:72,similarity:80,style:12,speed:0.98}}
-    ]
-  },
-  childrens: {
-    label:"Children's", icon:'\uD83C\uDF1F', color:'#f59e0b',
-    description:'Bright, playful, energetic voices that spark imagination in young listeners.',
-    voices:[
-      {id:'matilda2',name:'Matilda',role:'Primary Narrator',provider:'elevenlabs',voiceKey:'matilda',voiceId:'XrExE9yKIg1WjnnlVkGX',gender:'Female',accent:'American',tags:['Warm','Playful'],description:'Warm, inviting voice that makes children feel safe and engaged.',sample:'And that is how the very small bear made the very big discovery that changed everything.',settings:{stability:70,similarity:85,style:45,speed:0.95}},
-      {id:'coral',name:'Coral',role:'OpenAI Alt',provider:'openai',voiceKey:'coral',gender:'Female',accent:'American',tags:['Vibrant','Fun'],description:'Vibrant, friendly OpenAI voice \u2014 naturally fun and engaging for kids.',sample:'The dragon sneezed. And when a dragon sneezes \u2014 well, things tend to catch fire.',settings:{speed:0.95}},
-      {id:'sarah2',name:'Sarah',role:'Young Narrator',provider:'elevenlabs',voiceKey:'sarah',voiceId:'EXAVITQu4vr4xnSDxMaL',gender:'Female',accent:'American',tags:['Young','Bright'],description:'Young, bright energy \u2014 feels like an older sibling telling a bedtime story.',sample:'Pip the penguin had one problem: he could not stop dancing. Not even a little bit.',settings:{stability:68,similarity:84,style:48,speed:0.96}},
-      {id:'charlie',name:'Charlie',role:'Male Storyteller',provider:'elevenlabs',voiceKey:'charlie',voiceId:'IKne3meq5aSn9XLyUdCD',gender:'Male',accent:'Australian',tags:['Australian','Fun'],description:'Casual Australian warmth \u2014 the fun uncle who tells the best adventure stories.',sample:'Now, I know what you are thinking. How does a turtle win a race against a rabbit?',settings:{stability:65,similarity:80,style:50,speed:0.97}}
-    ]
-  },
-  biography: {
-    label:'Biography / Memoir', icon:'\uD83D\uDC64', color:'#94a3b8',
-    description:'Personal, reflective, authentic voices that honour real human stories.',
-    voices:[
-      {id:'josh',name:'Josh',role:'Primary Narrator',provider:'elevenlabs',voiceKey:'josh',voiceId:'TxGEqnHWrfWFTfGW9XjX',gender:'Male',accent:'American',tags:['Personal','Authentic'],description:'Deep, young American voice with grounded authenticity.',sample:'I did not choose this life. But looking back now, I would not change a single moment of it.',settings:{stability:70,similarity:82,style:15,speed:0.90}},
-      {id:'paul',name:'Paul',role:'Journalistic Narrator',provider:'elevenlabs',voiceKey:'paul',voiceId:'5Q0t7uMcjvnagumLfvZi',gender:'Male',accent:'American',tags:['Journalistic','Trustworthy'],description:'Grounded, journalistic American voice \u2014 ideal for political biographies.',sample:'By 1987, the senator had made three promises to three different people. He would keep none of them.',settings:{stability:73,similarity:80,style:12,speed:0.92}},
-      {id:'ash',name:'Ash',role:'OpenAI Alt',provider:'openai',voiceKey:'ash',gender:'Male',accent:'American',tags:['Smooth','Respectful'],description:'Smooth, clear OpenAI voice \u2014 respectful and measured.',sample:'She was born into a world that had no place for her. So she built her own.',settings:{speed:0.91}},
-      {id:'sage',name:'Sage',role:'Female Memoir',provider:'openai',voiceKey:'sage',gender:'Neutral',accent:'American',tags:['Wise','Reflective'],description:'Calm, wise OpenAI voice \u2014 perfect for reflective first-person narratives.',sample:'Looking back, I understand now what I could not then: that silence was its own kind of survival.',settings:{speed:0.89}}
-    ]
-  },
-  horror: {
-    label:'Horror', icon:'\uD83D\uDC7B', color:'#6b21a8',
-    description:'Dark, slow, unsettling voices that build dread and keep listeners awake at night.',
-    voices:[
-      {id:'harry2',name:'Harry',role:'Primary Narrator',provider:'elevenlabs',voiceKey:'harry',voiceId:'SOYHLrjzK2X1ezoPC6cr',gender:'Male',accent:'American',tags:['Anxious','Dread'],description:'Anxious, whispery energy that makes every sentence feel like a warning.',sample:'I should not have gone back. Everyone told me not to go back. I went back.',settings:{stability:38,similarity:65,style:48,speed:0.85}},
-      {id:'clyde',name:'Clyde',role:'Deep Dread',provider:'elevenlabs',voiceKey:'clyde',voiceId:'2EiwWnXFnvU5JabPnv8n',gender:'Male',accent:'American',tags:['Deep','Sinister'],description:'Middle-aged warmth turned sinister \u2014 the monster that sounds like your neighbour.',sample:'The thing in the basement had been there for years. We had just learned not to ask about it.',settings:{stability:42,similarity:68,style:45,speed:0.82}},
-      {id:'callum2',name:'Callum',role:'Psychological Horror',provider:'elevenlabs',voiceKey:'callum',voiceId:'N2lVS1w4EtoT3dr4eOWO',gender:'Male',accent:'American',tags:['Psychological','Intense'],description:'Intense transatlantic delivery \u2014 perfect for psychological horror.',sample:'She saw it again last night. Standing at the foot of the bed. Smiling.',settings:{stability:35,similarity:62,style:52,speed:0.88}},
-      {id:'verse',name:'Verse',role:'OpenAI Alt',provider:'openai',voiceKey:'verse',gender:'Male',accent:'American',tags:['Expressive','Dark'],description:'Expressive OpenAI voice \u2014 unpredictable enough to feel genuinely unsettling.',sample:'The phone rang at 3am. The caller ID showed my own number.',settings:{speed:0.85}},
-      {id:'nicole2',name:'Nicole',role:'Female Horror',provider:'elevenlabs',voiceKey:'nicole',voiceId:'piTKgcLEGmPE4e6mEKli',gender:'Female',accent:'American',tags:['Whisper','Eerie'],description:'Soft, whispery female voice \u2014 barely able to bring herself to say the words.',sample:'Do not open the door. Whatever you hear \u2014 do not open that door.',settings:{stability:36,similarity:64,style:50,speed:0.83}}
-    ]
-  }
+if(typeof lucide!=="undefined"&&typeof lucide.createIcons==="function"){lucide.createIcons()}
+
+/* ── VOICE MAP ── */
+const SDK_VOICE_MAP={
+  alloy:'dan',echo:'brook',fable:'rio',onyx:'jazz',
+  nova:'marilyn',shimmer:'aster',ash:'elan',coral:'amuch',
+  sage:'brook',verse:'rio'
+};
+function toSdkVoice(v){return SDK_VOICE_MAP[v]||v}
+
+/* ── GENRE DATA ── */
+const GENRE_PROFILES={
+literary:{label:'Literary Fiction',icon:'📖',color:'#7c3aed',description:'Rich, measured narration with emotional depth. Perfect for character-driven stories like The Soul Collector.',voices:[
+{id:'daniel',name:'Daniel',role:'Primary Narrator',appsdkVoice:'onyx',gender:'Male',accent:'British',tags:['Deep','Emotional','Narrator'],description:'Authoritative British delivery with warmth and gravitas.',sample:'The city had changed, as cities do — silently, without announcement.',settings:{stability:65,similarity:82,style:22}},
+{id:'matilda',name:'Matilda',role:'Female Narrator',appsdkVoice:'nova',gender:'Female',accent:'American',tags:['Warm','Intimate','Narrator'],description:'Warm American voice with natural cadence.',sample:'She had learned long ago that silence was its own kind of answer.',settings:{stability:68,similarity:80,style:20}},
+{id:'fable_v',name:'Fable',role:'Expressive Alt',appsdkVoice:'fable',gender:'Male',accent:'British',tags:['British','Expressive'],description:'British warmth with expressive range.',sample:'In the quiet of the old house, memories moved like dust in light.',settings:{stability:70,similarity:82,style:18}},
+{id:'dorothy',name:'Dorothy',role:'Character Voice',appsdkVoice:'shimmer',gender:'Female',accent:'British',tags:['Wise','Gentle','Character'],description:'Pleasant British. Ideal for elderly or wise female characters.',sample:'My dear, the things we leave unsaid have a way of saying themselves.',settings:{stability:72,similarity:78,style:15}}
+]},
+thriller:{label:'Thriller / Mystery',icon:'🔪',color:'#ef4444',description:'Tense, urgent delivery that keeps listeners on the edge of their seat.',voices:[
+{id:'callum',name:'Callum',role:'Primary Narrator',appsdkVoice:'echo',gender:'Male',accent:'Transatlantic',tags:['Tense','Gripping','Dark'],description:'Intense transatlantic delivery with an edge of danger.',sample:'The door was unlocked. It should not have been. He drew his weapon.',settings:{stability:52,similarity:74,style:38}},
+{id:'adam',name:'Adam',role:'Deep Narrator',appsdkVoice:'onyx',gender:'Male',accent:'American',tags:['Noir','Deep','Brooding'],description:'Commanding deep American voice. Perfect for hard-boiled detective noir.',sample:'Three days. That is how long the body had been there.',settings:{stability:58,similarity:76,style:30}},
+{id:'harry',name:'Harry',role:'Anxious Character',appsdkVoice:'ash',gender:'Male',accent:'American',tags:['Anxious','Whispery'],description:'Young, whispery, anxious energy. Perfect for unreliable narrators.',sample:'They were watching. He was sure of it now. Every shadow, every sound.',settings:{stability:42,similarity:68,style:45}},
+{id:'nicole',name:'Nicole',role:'Female Character',appsdkVoice:'shimmer',gender:'Female',accent:'American',tags:['Mysterious','Soft'],description:'Soft, whispery female voice — ideal for secretive characters.',sample:'I did not plan for any of this. I want you to know that.',settings:{stability:48,similarity:72,style:40}}
+]},
+romance:{label:'Romance',icon:'💕',color:'#f59e0b',description:'Warm, intimate, emotionally expressive voices that make hearts flutter.',voices:[
+{id:'sarah',name:'Sarah',role:'Primary Narrator',appsdkVoice:'nova',gender:'Female',accent:'American',tags:['Intimate','Warm','Soft'],description:'Soft, young, intimate American voice.',sample:'When his eyes met hers across the room, everything else stopped.',settings:{stability:60,similarity:85,style:30}},
+{id:'emily',name:'Emily',role:'Calm Narrator',appsdkVoice:'shimmer',gender:'Female',accent:'American',tags:['Meditative','Emotional'],description:'Meditative, calm presence that draws readers into emotional moments.',sample:'Love, she had decided, was not a feeling. It was a choice you made every morning.',settings:{stability:68,similarity:82,style:22}},
+{id:'drew',name:'Drew',role:'Male Lead',appsdkVoice:'alloy',gender:'Male',accent:'American',tags:['Smooth','Charming'],description:'Well-rounded, smooth American voice. The perfect leading man.',sample:'I have been thinking about you. More than I should admit.',settings:{stability:62,similarity:80,style:28}},
+{id:'aria',name:'Aria',role:'Expressive Female',appsdkVoice:'coral',gender:'Female',accent:'American',tags:['Expressive','Passionate'],description:'Highly expressive American voice — perfect for passionate scenes.',sample:'She pressed her hand to her chest, as if she could hold the feeling there forever.',settings:{stability:55,similarity:80,style:38}}
+]},
+fantasy:{label:'Fantasy / Sci-Fi',icon:'🐉',color:'#00d4ff',description:'Epic, world-building voices that transport listeners to other realms.',voices:[
+{id:'arnold',name:'Arnold',role:'Epic Narrator',appsdkVoice:'onyx',gender:'Male',accent:'American',tags:['Epic','Commanding'],description:'Crisp, commanding American voice. Carries the weight of worlds.',sample:'In the age before memory, when dragons still walked beneath open skies, the first war began.',settings:{stability:55,similarity:72,style:38}},
+{id:'george',name:'George',role:'British Narrator',appsdkVoice:'echo',gender:'Male',accent:'British',tags:['Grand','British'],description:'Deep British presence that evokes Tolkien-esque grandeur.',sample:'The prophecy spoke of a child born between two moons, marked by fire and shadow.',settings:{stability:60,similarity:75,style:32}},
+{id:'fin',name:'Fin',role:'Rogue / Traveler',appsdkVoice:'fable',gender:'Male',accent:'Irish',tags:['Irish','Witty'],description:'Irish sailor energy — perfect for wandering adventurers and rogues.',sample:'Aye, I have seen stranger things. This barely qualifies.',settings:{stability:50,similarity:70,style:42}},
+{id:'domi',name:'Domi',role:'Warrior / Heroine',appsdkVoice:'sage',gender:'Female',accent:'American',tags:['Strong','Fierce'],description:'Strong, confident American female. Embodies warrior queens and fierce heroines.',sample:'I did not come this far to be stopped by a locked door and three guards.',settings:{stability:52,similarity:74,style:40}},
+{id:'river',name:'River',role:'Oracle / Sage',appsdkVoice:'verse',gender:'Neutral',accent:'American',tags:['Mystical','Oracle'],description:'Neutral, ethereal quality — perfect for oracles and ancient beings.',sample:'The answer you seek is already within you. You simply do not know how to listen yet.',settings:{stability:62,similarity:76,style:35}}
+]},
+nonfiction:{label:'Non-Fiction',icon:'📊',color:'#10b981',description:'Clear, authoritative, conversational voices that build trust and clarity.',voices:[
+{id:'liam',name:'Liam',role:'Primary Narrator',appsdkVoice:'alloy',gender:'Male',accent:'American',tags:['Clear','Authoritative'],description:'Articulate, clear American voice. Sounds like a knowledgeable friend.',sample:'The research is clear: small daily habits, compounded over time, produce extraordinary results.',settings:{stability:75,similarity:82,style:10}},
+{id:'daniel_nf',name:'Daniel',role:'Academic / British',appsdkVoice:'echo',gender:'Male',accent:'British',tags:['Academic','Credible'],description:'British authority lends academic credibility — ideal for history and science.',sample:'The data from fifteen longitudinal studies points to a single inescapable conclusion.',settings:{stability:72,similarity:80,style:12}},
+{id:'sage_nf',name:'Sage',role:'Calm Authority',appsdkVoice:'sage',gender:'Neutral',accent:'American',tags:['Balanced','Professional'],description:'Perfectly balanced voice — professional and trustworthy.',sample:'Three principles guide every successful organization. Let us examine each one.',settings:{stability:78,similarity:84,style:8}}
+]},
+childrens:{label:"Children's",icon:'🌟',color:'#f59e0b',description:'Bright, playful, energetic voices that spark imagination in young listeners.',voices:[
+{id:'matilda_c',name:'Matilda',role:'Primary Narrator',appsdkVoice:'nova',gender:'Female',accent:'American',tags:['Warm','Playful'],description:'Warm, inviting voice that makes children feel safe and engaged.',sample:'And that is how the very small bear made the very big discovery that changed everything.',settings:{stability:70,similarity:85,style:45}},
+{id:'coral_c',name:'Coral',role:'Vibrant Narrator',appsdkVoice:'coral',gender:'Female',accent:'American',tags:['Vibrant','Fun'],description:'Vibrant, friendly voice — naturally fun and engaging for kids.',sample:'The dragon sneezed. And when a dragon sneezes — well, things tend to catch fire.',settings:{stability:68,similarity:84,style:48}},
+{id:'charlie_c',name:'Charlie',role:'Male Storyteller',appsdkVoice:'fable',gender:'Male',accent:'Australian',tags:['Fun','Adventure'],description:'Casual warmth — the fun uncle who tells the best adventure stories.',sample:'Now, I know what you are thinking. How does a turtle win a race against a rabbit?',settings:{stability:65,similarity:80,style:50}}
+]},
+biography:{label:'Biography / Memoir',icon:'👤',color:'#94a3b8',description:'Personal, reflective, authentic voices that honour real human stories.',voices:[
+{id:'josh',name:'Josh',role:'Primary Narrator',appsdkVoice:'ash',gender:'Male',accent:'American',tags:['Personal','Authentic'],description:'Deep, young American voice with grounded authenticity.',sample:'I did not choose this life. But looking back now, I would not change a single moment of it.',settings:{stability:70,similarity:82,style:15}},
+{id:'paul',name:'Paul',role:'Journalistic Narrator',appsdkVoice:'alloy',gender:'Male',accent:'American',tags:['Journalistic','Trustworthy'],description:'Grounded, journalistic American voice — ideal for political biographies.',sample:'By 1987, the senator had made three promises to three different people. He would keep none of them.',settings:{stability:73,similarity:80,style:12}},
+{id:'sage_b',name:'Sage',role:'Memoir Voice',appsdkVoice:'sage',gender:'Neutral',accent:'American',tags:['Wise','Reflective'],description:'Calm, wise voice — perfect for reflective first-person narratives.',sample:'Looking back, I understand now what I could not then: that silence was its own kind of survival.',settings:{stability:75,similarity:82,style:10}}
+]},
+horror:{label:'Horror',icon:'👻',color:'#6b21a8',description:'Dark, slow, unsettling voices that build dread and keep listeners awake at night.',voices:[
+{id:'harry_h',name:'Harry',role:'Primary Narrator',appsdkVoice:'ash',gender:'Male',accent:'American',tags:['Anxious','Dread'],description:'Anxious, whispery energy that makes every sentence feel like a warning.',sample:'I should not have gone back. Everyone told me not to go back. I went back.',settings:{stability:38,similarity:65,style:48}},
+{id:'clyde',name:'Clyde',role:'Deep Dread',appsdkVoice:'onyx',gender:'Male',accent:'American',tags:['Deep','Sinister'],description:'Middle-aged warmth turned sinister — the monster that sounds like your neighbour.',sample:'The thing in the basement had been there for years. We had just learned not to ask about it.',settings:{stability:42,similarity:68,style:45}},
+{id:'verse_h',name:'Verse',role:'Psychological',appsdkVoice:'verse',gender:'Male',accent:'American',tags:['Expressive','Dark'],description:'Expressive voice — unpredictable enough to feel genuinely unsettling.',sample:'The phone rang at 3am. The caller ID showed my own number.',settings:{stability:35,similarity:62,style:52}},
+{id:'nicole_h',name:'Nicole',role:'Female Horror',appsdkVoice:'shimmer',gender:'Female',accent:'American',tags:['Whisper','Eerie'],description:'Soft, whispery female voice — barely able to bring herself to say the words.',sample:'Do not open the door. Whatever you hear — do not open that door.',settings:{stability:36,similarity:64,style:50}}
+]}
 };
 
-// ===================== UTILITY / STORAGE =====================
-function getApiKeys() { try { return JSON.parse(localStorage.getItem('sf_keys')||'{}'); } catch { return {}; } }
-function saveApiKeys(k) { localStorage.setItem('sf_keys', JSON.stringify(k)); }
-function getConfig() { try { return JSON.parse(localStorage.getItem('sf_config')||'{}'); } catch { return {}; } }
-function saveConfig(c) { localStorage.setItem('sf_config', JSON.stringify(c)); }
-function getProjects() { try { return JSON.parse(localStorage.getItem('sf_projects')||'[]'); } catch { return []; } }
-function saveProjects(p) { localStorage.setItem('sf_projects', JSON.stringify(p)); }
-function getActiveProjectId() { return localStorage.getItem('sf_active_project') || null; }
-function setActiveProjectId(id) { localStorage.setItem('sf_active_project', id); }
-function uid() { return Date.now().toString(36) + Math.random().toString(36).slice(2); }
-function fmtTime(s) { if(!s||isNaN(s)) return '0:00'; const m=Math.floor(s/60); return m+':'+(Math.floor(s%60)+'').padStart(2,'0'); }
-function fmtDuration(words) { const m=Math.round(words/150); return m<1?'<1 min':m+' min'; }
+/* ── UTILS ── */
+function uid(){return Math.random().toString(36).substring(2,10)}
+function formatTime(s){if(!s||isNaN(s))return '0:00';const m=Math.floor(s/60);const sec=Math.floor(s%60);return m+':'+(sec<10?'0':'')+sec}
+function cleanText(t){return t.replace(/#{1,6}\s*/g,'').replace(/\*{1,3}/g,'').replace(/_/g,'').replace(/\[([^\]]+)\]\([^)]+\)/g,'$1').replace(/```[\s\S]*?```/g,'').replace(/`([^`]+)`/g,'$1').replace(/\n{3,}/g,'\n\n').replace(/\s+/g,' ').trim()}
+function reIcon(){if(typeof lucide!=="undefined"&&typeof lucide.createIcons==="function"){lucide.createIcons()}}
 
-let activeChapterId = null;
-let currentAudioEl = null;
-let generatingCancel = false;
-let activeGenre = 'literary';
-
-// ===================== TOAST =====================
-function showToast(msg, type) {
-  const t = document.createElement('div');
-  t.className = 'toast toast-' + (type||'info');
-  t.textContent = msg;
-  document.getElementById('toast-container').appendChild(t);
-  setTimeout(() => t.classList.add('show'), 10);
-  setTimeout(() => { t.classList.remove('show'); setTimeout(() => t.remove(), 300); }, 4000);
-}
-
-// ===================== TABS =====================
-function showTab(tabName) {
-  document.querySelectorAll('.tab-content').forEach(tc => tc.classList.remove('active'));
-  document.querySelectorAll('.tab-btn-main').forEach(tb => tb.classList.remove('active'));
-  const target = document.getElementById('tab-' + tabName);
-  if (target) target.classList.add('active');
-  document.querySelectorAll('.tab-btn-main[data-tab="'+tabName+'"]').forEach(b => b.classList.add('active'));
-  document.getElementById('mobile-menu-qr82').classList.add('hidden');
-  if (tabName === 'studio') renderStudio();
-  if (tabName === 'library') renderLibrary();
-  if (tabName === 'voicelab') { renderGenreTabs(); renderGenreVoices(); }
-  if (tabName === 'settings') loadSettings();
-}
-
-document.querySelectorAll('.tab-btn-main').forEach(btn => {
-  btn.addEventListener('click', () => showTab(btn.dataset.tab));
-});
-document.getElementById('mobile-menu-btn-xz41').addEventListener('click', () => {
-  document.getElementById('mobile-menu-qr82').classList.toggle('hidden');
-});
-
-// ===================== TEXT CLEANER & CHUNKER =====================
-function cleanTextForTTS(text) {
-  return text
-    .replace(/\r\n/g, '\n')
-    .replace(/[^\S\n]+/g, ' ')
-    .replace(/\*{1,3}(.*?)\*{1,3}/g, '$1')
-    .replace(/_{1,3}(.*?)_{1,3}/g, '$1')
-    .replace(/#{1,6}\s+/g, '')
-    .replace(/\[([^\]]+)\]\([^)]+\)/g, '$1')
-    .replace(/`{1,3}[^`]*`{1,3}/g, '')
-    .replace(/&amp;/g, 'and').replace(/&lt;/g, 'less than').replace(/&gt;/g, 'greater than')
-    .replace(/\.\.\./g, ', ')
-    .replace(/\u2014/g, ', ').replace(/\u2013/g, ', ')
-    .replace(/[\u201C\u201D]/g, '"').replace(/[\u2018\u2019]/g, "'")
-    .replace(/\n{3,}/g, '\n\n')
-    .trim();
-}
-
-function chunkTextForTTS(text, maxChars) {
-  const cleaned = cleanTextForTTS(text);
-  if (cleaned.length <= maxChars) return [cleaned];
-  const chunks = [];
-  const paragraphs = cleaned.split(/\n\n+/);
-  let current = '';
-  for (const para of paragraphs) {
-    if ((current + '\n\n' + para).trim().length <= maxChars) {
-      current = current ? current + '\n\n' + para : para;
-    } else {
-      if (current) { chunks.push(current.trim()); current = ''; }
-      const sentences = para.match(/[^.!?]+[.!?]+/g) || [para];
-      for (const sent of sentences) {
-        if ((current + ' ' + sent).trim().length <= maxChars) {
-          current = current ? current + ' ' + sent : sent;
-        } else {
-          if (current) chunks.push(current.trim());
-          if (sent.length > maxChars) {
-            const words = sent.split(' ');
-            current = '';
-            for (const w of words) {
-              if ((current + ' ' + w).length > maxChars) { chunks.push(current.trim()); current = w; }
-              else current = current ? current + ' ' + w : w;
-            }
-          } else current = sent;
-        }
-      }
-    }
-  }
-  if (current.trim()) chunks.push(current.trim());
-  return chunks.filter(c => c.length > 0);
-}
-
-// ===================== OPENAI VOICES =====================
-const OPENAI_VOICES = [
-  { id:'alloy', name:'Alloy', gender:'Neutral', desc:'Neutral, versatile', best:'General narration' },
-  { id:'echo', name:'Echo', gender:'Male', desc:'Crisp & precise', best:'Non-fiction' },
-  { id:'fable', name:'Fable', gender:'Neutral', desc:'British, warm', best:'Literary fiction' },
-  { id:'onyx', name:'Onyx', gender:'Male', desc:'Deep & authoritative', best:'Thrillers' },
-  { id:'nova', name:'Nova', gender:'Female', desc:'Bright & warm', best:'Romance' },
-  { id:'shimmer', name:'Shimmer', gender:'Female', desc:'Soft & soothing', best:'Meditation' },
-  { id:'ash', name:'Ash', gender:'Male', desc:'Smooth, balanced', best:'Business' },
-  { id:'coral', name:'Coral', gender:'Female', desc:'Warm & friendly', best:'Children' },
-  { id:'sage', name:'Sage', gender:'Neutral', desc:'Wise, calm', best:'Self-help' },
-  { id:'verse', name:'Verse', gender:'Male', desc:'Expressive', best:'Drama' }
-];
-
-// ===================== ELEVENLABS VOICES =====================
-const EL_VOICE_IDS = {
-  'rachel':'21m00Tcm4TlvDq8ikWAM','drew':'29vD33N1osed6aR8deSXH','clyde':'2EiwWnXFnvU5JabPnv8n',
-  'paul':'5Q0t7uMcjvnagumLfvZi','domi':'AZnzlk1XvdvUeBnXmlld','dave':'CYw3kZ2uS9gHt5JFe7F8',
-  'fin':'D38z5RcWu1voky8WS1ja','sarah':'EXAVITQu4vr4xnSDxMaL','emily':'LcfcDJNUP1GQjkzn1xUU',
-  'callum':'N2lVS1w4EtoT3dr4eOWO','harry':'SOYHLrjzK2X1ezoPC6cr','liam':'TX3LPaxmHKxFdv7VOQHJ',
-  'dorothy':'ThT5KcBeYPX3keUQqHPh','josh':'TxGEqnHWrfWFTfGW9XjX','arnold':'VR6AewLTigWG4xSOukaG',
-  'adam':'pNInz6obpgDQGcFmaJgB','sam':'yoZ06aMxZJJ28mfd3POQ','nicole':'piTKgcLEGmPE4e6mEKli',
-  'brian':'nPczCjzI2devNBz1zQrb','matilda':'XrExE9yKIg1WjnnlVkGX','aria':'9BWtsMINqrJLrRacOk9x',
-  'jessica':'cgSgspJ2msm6clMCkdW9','daniel':'onwK4e9ZLuTAKqWW03F9','lily':'pFZP5JQG7iQjIQuC4Bku',
-  'charlie':'IKne3meq5aSn9XLyUdCD','george':'JBFqnCBsd6RMkjVDRZzb','river':'SAz9YHcvj6GT2YYXdXww',
-  'bill':'pqHfZKP75CvOlQylNhV4','will':'bVMeCyTHy58xNoL34h3p','eric':'cjVigY5qzO86Huf0OWal',
-  'chris':'iP95p4xoKVk53GoZ742B'
+/* ── STATE ── */
+let state={
+  activeTab:'library',
+  projects:JSON.parse(localStorage.getItem('sf_projects')||'[]'),
+  activeProjectId:null,
+  activeChapterId:null,
+  activeGenre:'literary',
+  activeVoice:null,
+  currentAudio:null,
+  isPlaying:false,
+  isGenerating:false,
+  generatingCancel:false,
+  characterMap:JSON.parse(localStorage.getItem('sf_charmap')||'[]'),
+  config:JSON.parse(localStorage.getItem('sf_config')||'{}')
 };
+if(!state.config.voice)state.config.voice='jazz';
+if(!state.config.speed)state.config.speed=1.0;
+if(!state.config.author)state.config.author='Aurelio Joseph Dioval';
+state.activeVoice=state.config.voice;
 
-const EL_VOICES = [
-  { id:'rachel', name:'Rachel', gender:'Female', desc:'Calm, young', accent:'American', best:'Narration' },
-  { id:'drew', name:'Drew', gender:'Male', desc:'Well-rounded', accent:'American', best:'News' },
-  { id:'clyde', name:'Clyde', gender:'Male', desc:'War veteran', accent:'American', best:'Characters' },
-  { id:'paul', name:'Paul', gender:'Male', desc:'Ground reporter', accent:'American', best:'News' },
-  { id:'domi', name:'Domi', gender:'Female', desc:'Strong, assertive', accent:'American', best:'Motivation' },
-  { id:'dave', name:'Dave', gender:'Male', desc:'British Essex', accent:'British', best:'Conversational' },
-  { id:'fin', name:'Fin', gender:'Male', desc:'Older Irish', accent:'Irish', best:'Storytelling' },
-  { id:'sarah', name:'Sarah', gender:'Female', desc:'Soft, news-like', accent:'American', best:'News' },
-  { id:'emily', name:'Emily', gender:'Female', desc:'Calm, gentle', accent:'American', best:'Meditation' },
-  { id:'callum', name:'Callum', gender:'Male', desc:'Transatlantic', accent:'Transatlantic', best:'Video games' },
-  { id:'harry', name:'Harry', gender:'Male', desc:'Anxious, young', accent:'American', best:'Characters' },
-  { id:'liam', name:'Liam', gender:'Male', desc:'Articulate, deep', accent:'American', best:'Narration' },
-  { id:'dorothy', name:'Dorothy', gender:'Female', desc:'British pleasant', accent:'British', best:'Children' },
-  { id:'josh', name:'Josh', gender:'Male', desc:'Deep, young', accent:'American', best:'Narration' },
-  { id:'arnold', name:'Arnold', gender:'Male', desc:'Crisp, posh', accent:'American', best:'Narration' },
-  { id:'adam', name:'Adam', gender:'Male', desc:'Deep, middle-aged', accent:'American', best:'Narration' },
-  { id:'sam', name:'Sam', gender:'Male', desc:'Raspy, young', accent:'American', best:'Characters' },
-  { id:'nicole', name:'Nicole', gender:'Female', desc:'Whispery, gentle', accent:'American', best:'Audiobooks' },
-  { id:'brian', name:'Brian', gender:'Male', desc:'Deep, narrating', accent:'American', best:'Narration' },
-  { id:'matilda', name:'Matilda', gender:'Female', desc:'Warm, young', accent:'American', best:'Audiobooks' },
-  { id:'aria', name:'Aria', gender:'Female', desc:'Expressive, young', accent:'American', best:'Social media' },
-  { id:'jessica', name:'Jessica', gender:'Female', desc:'Expressive, upbeat', accent:'American', best:'Conversational' },
-  { id:'daniel', name:'Daniel', gender:'Male', desc:'Deep, authoritative', accent:'British', best:'News' },
-  { id:'lily', name:'Lily', gender:'Female', desc:'Warm, narrator', accent:'British', best:'Narration' },
-  { id:'charlie', name:'Charlie', gender:'Male', desc:'Natural, casual', accent:'Australian', best:'Conversational' },
-  { id:'george', name:'George', gender:'Male', desc:'Warm, raspy', accent:'British', best:'Narration' },
-  { id:'river', name:'River', gender:'Non-binary', desc:'Confident, outgoing', accent:'American', best:'Podcasts' },
-  { id:'bill', name:'Bill', gender:'Male', desc:'Trustworthy, authoritative', accent:'American', best:'Documentaries' },
-  { id:'will', name:'Will', gender:'Male', desc:'Friendly, young', accent:'American', best:'Social media' },
-  { id:'eric', name:'Eric', gender:'Male', desc:'Friendly, middle-aged', accent:'American', best:'Conversational' },
-  { id:'chris', name:'Chris', gender:'Male', desc:'Casual, relaxed', accent:'American', best:'Conversational' }
-];
+function saveProjects(){localStorage.setItem('sf_projects',JSON.stringify(state.projects))}
+function saveConfig(){localStorage.setItem('sf_config',JSON.stringify(state.config))}
+function saveCharMap(){localStorage.setItem('sf_charmap',JSON.stringify(state.characterMap))}
 
-// Populate ElevenLabs dropdown in settings
-(function() {
-  const sel = document.getElementById('el-voice-uv34');
-  EL_VOICES.forEach(v => {
-    const opt = document.createElement('option');
-    opt.value = v.id;
-    opt.textContent = v.id + ' \u2014 ' + v.desc;
-    sel.appendChild(opt);
+function getProject(){return state.projects.find(p=>p.id===state.activeProjectId)}
+function getChapter(){const p=getProject();if(!p)return null;return p.chapters.find(c=>c.id===state.activeChapterId)}
+
+/* ── TOASTS ── */
+let toastTimer=null;
+function showToast(msg,type='info'){
+  const old=document.querySelector('.toast');if(old)old.remove();
+  const t=document.createElement('div');
+  t.className='toast '+type;
+  const icons={success:'✓',error:'✗',info:'ℹ'};
+  t.innerHTML=`<span style="font-weight:700">${icons[type]||'ℹ'}</span><span>${msg}</span>`;
+  document.body.appendChild(t);
+  if(toastTimer)clearTimeout(toastTimer);
+  toastTimer=setTimeout(()=>{t.style.animation='slide-out .3s ease forwards';setTimeout(()=>t.remove(),300)},3500);
+}
+
+/* ── TAB SWITCHING ── */
+function switchTab(tab){
+  state.activeTab=tab;
+  document.querySelectorAll('main>section').forEach(s=>s.classList.add('hidden'));
+  const el=document.getElementById('tab-'+tab);if(el)el.classList.remove('hidden');
+  document.querySelectorAll('.tab-btn').forEach(b=>{
+    b.classList.toggle('active',b.dataset.tab===tab);
   });
-})();
-
-// ===================== TTS SYNTHESIS =====================
-async function synthesizeOpenAI(text, voice, apiKey, speedVal, onChunkDone) {
-  const safeVoice = OPENAI_VOICES.find(v=>v.id===voice) ? voice : 'alloy';
-  const chunks = chunkTextForTTS(text, 4000);
-  const buffers = [];
-  for (let i = 0; i < chunks.length; i++) {
-    if (generatingCancel) throw new Error('Cancelled');
-    if (onChunkDone) onChunkDone(i, chunks.length);
-    const res = await fetch('https://api.openai.com/v1/audio/speech', {
-      method: 'POST',
-      headers: { 'Authorization': 'Bearer ' + apiKey, 'Content-Type': 'application/json' },
-      body: JSON.stringify({ model: 'tts-1-hd', input: chunks[i], voice: safeVoice, response_format: 'mp3', speed: speedVal || 1.0 })
-    });
-    if (!res.ok) {
-      const errData = await res.json().catch(() => ({}));
-      throw new Error('OpenAI ' + res.status + ': ' + (errData.error && errData.error.message ? errData.error.message : res.statusText));
-    }
-    buffers.push(await res.arrayBuffer());
-  }
-  const totalLen = buffers.reduce((s,b) => s + b.byteLength, 0);
-  const merged = new Uint8Array(totalLen);
-  let off = 0;
-  for (const b of buffers) { merged.set(new Uint8Array(b), off); off += b.byteLength; }
-  return new Blob([merged], {type:'audio/mpeg'});
+  if(tab==='library')renderLibrary();
+  if(tab==='studio')renderStudio();
+  if(tab==='voicelab'){renderGenreTabs();renderGenreVoices();renderCharMap();}
+  if(tab==='settings')loadSettings();
+  reIcon();
 }
 
-async function synthesizeElevenLabs(text, voiceName, apiKey, stability, similarity, style, onChunkDone) {
-  const voiceId = EL_VOICE_IDS[voiceName.toLowerCase()] || EL_VOICE_IDS['rachel'];
-  const chunks = chunkTextForTTS(text, 4800);
-  const buffers = [];
-  for (let i = 0; i < chunks.length; i++) {
-    if (generatingCancel) throw new Error('Cancelled');
-    if (onChunkDone) onChunkDone(i, chunks.length);
-    const res = await fetch('https://api.elevenlabs.io/v1/text-to-speech/' + voiceId + '/stream', {
-      method: 'POST',
-      headers: { 'xi-api-key': apiKey, 'Content-Type': 'application/json', 'Accept': 'audio/mpeg' },
-      body: JSON.stringify({
-        text: chunks[i], model_id: 'eleven_multilingual_v2',
-        voice_settings: { stability: stability/100, similarity_boost: similarity/100, style: style/100, use_speaker_boost: true }
-      })
-    });
-    if (!res.ok) {
-      const errData = await res.json().catch(() => ({}));
-      throw new Error('ElevenLabs ' + res.status + ': ' + (errData.detail && errData.detail.message ? errData.detail.message : errData.message || res.statusText));
-    }
-    buffers.push(await res.arrayBuffer());
-  }
-  const totalLen = buffers.reduce((s,b) => s + b.byteLength, 0);
-  const merged = new Uint8Array(totalLen);
-  let off = 0;
-  for (const b of buffers) { merged.set(new Uint8Array(b), off); off += b.byteLength; }
-  return new Blob([merged], {type:'audio/mpeg'});
-}
-
-// ===================== GENERATE AUDIO =====================
-async function generateAudio(chapterId) {
-  const keys = getApiKeys();
-  const cfg = getConfig();
-  const projects = getProjects();
-  const projId = getActiveProjectId();
-  const proj = projects.find(p => p.id === projId);
-  if (!proj) return;
-  const chapter = proj.chapters.find(c => c.id === chapterId);
-  if (!chapter || !chapter.content || !chapter.content.trim()) {
-    showToast('Chapter has no text to synthesize', 'error'); return;
-  }
-  const provider = chapter.provider || cfg.provider || 'openai';
-  if (provider === 'openai' && !keys.openai) {
-    showToast('Add your OpenAI API key in Settings first', 'error'); return;
-  }
-  if (provider === 'elevenlabs' && !keys.elevenlabs) {
-    showToast('Add your ElevenLabs API key in Settings first', 'error'); return;
-  }
-  chapter.status = 'generating';
-  chapter.error = null;
-  saveProjects(projects);
-  generatingCancel = false;
-  renderChapterList();
-  renderCenterPanel(chapter);
-
-  try {
-    let blob;
-    const voice = chapter.voice || cfg.defaultVoice || (provider === 'openai' ? 'alloy' : 'rachel');
-    const speed = chapter.speed || cfg.speed || 1.0;
-    const onProgress = (i, total) => {
-      const pct = Math.round(((i+1) / total) * 90);
-      updateGeneratingUI(pct, 'Chunk ' + (i+1) + ' of ' + total + '...');
-    };
-    if (provider === 'openai') {
-      blob = await synthesizeOpenAI(chapter.content, voice, keys.openai, speed, onProgress);
-    } else {
-      const stab = chapter.stability != null ? chapter.stability : (cfg.stability != null ? cfg.stability : 50);
-      const sim = chapter.similarity != null ? chapter.similarity : (cfg.similarity != null ? cfg.similarity : 75);
-      const sty = chapter.style != null ? chapter.style : (cfg.style != null ? cfg.style : 0);
-      blob = await synthesizeElevenLabs(chapter.content, voice, keys.elevenlabs, stab, sim, sty, onProgress);
-    }
-    updateGeneratingUI(100, 'Done!');
-    const url = URL.createObjectURL(blob);
-    chapter.audioUrl = url;
-    chapter.audioBlobUrl = url;
-    chapter.status = 'done';
-    chapter.generatedAt = new Date().toISOString();
-    saveProjects(projects);
-    renderChapterList();
-    renderCenterPanel(chapter);
-    showToast('Audio generated for "' + chapter.title + '"!', 'success');
-  } catch(err) {
-    if (err.message === 'Cancelled') {
-      chapter.status = 'draft';
-      showToast('Generation cancelled', 'info');
-    } else {
-      chapter.status = 'error';
-      chapter.error = err.message;
-      showToast(err.message, 'error');
-    }
-    saveProjects(projects);
-    renderChapterList();
-    renderCenterPanel(chapter);
-  }
-}
-
-function updateGeneratingUI(pct, msg) {
-  const bar = document.getElementById('gen-progress-bar-xq12');
-  const label = document.getElementById('gen-progress-label-xq34');
-  const pctEl = document.getElementById('gen-progress-pct-xq56');
-  if (bar) bar.style.width = pct + '%';
-  if (label) label.textContent = msg;
-  if (pctEl) pctEl.textContent = pct + '%';
-}
-
-async function generateAll() {
-  const projects = getProjects();
-  const proj = projects.find(p => p.id === getActiveProjectId());
-  if (!proj) return;
-  const drafts = proj.chapters.filter(c => c.status !== 'done');
-  if (drafts.length === 0) { showToast('All chapters already generated', 'info'); return; }
-  for (const ch of drafts) {
-    if (generatingCancel) break;
-    await generateAudio(ch.id);
-  }
-  if (!generatingCancel) showToast('Generated ' + drafts.length + ' chapters!', 'success');
-}
-
-// ===================== CHAPTER DETECTION =====================
-function detectChapters(text) {
-  const lines = text.split('\n');
-  const chapterPattern = /^(chapter\s+\d+|chapter\s+[ivxlcdmIVXLCDM]+|part\s+\d+|\d+\.\s|prologue|epilogue|introduction|foreword|preface|conclusion|afterword)/i;
-  const allCapsPattern = /^[A-Z\s\d\-\u2014\u2013]{4,60}$/;
-  const chapters = [];
-  let curr = null;
-  for (const line of lines) {
-    const t = line.trim();
-    if (!t) { if (curr) curr.content += '\n'; continue; }
-    if (chapterPattern.test(t) || (allCapsPattern.test(t) && t.length < 60 && t.length > 3)) {
-      if (curr && curr.content.trim().length > 50) chapters.push(curr);
-      curr = { id: uid(), title: t.length > 60 ? t.slice(0,57)+'...' : t, content: '', status: 'draft' };
-    } else if (curr) {
-      curr.content += t + '\n';
-    } else {
-      curr = { id: uid(), title: 'Introduction', content: t + '\n', status: 'draft' };
-    }
-  }
-  if (curr && curr.content.trim().length > 50) chapters.push(curr);
-  return chapters.length > 0 ? chapters : [{ id: uid(), title: 'Full Book', content: text, status: 'draft' }];
-}
-
-// ===================== FILE IMPORT =====================
-async function handleFileImport(file) {
-  const ext = file.name.split('.').pop().toLowerCase();
-  let text = '';
-  showToast('Reading ' + file.name + '...', 'info');
-  try {
-    if (ext === 'pdf') {
-      if (!window.pdfjsLib) throw new Error('PDF.js not loaded yet, try again in a moment');
-      const ab = await file.arrayBuffer();
-      const pdf = await pdfjsLib.getDocument({data: ab}).promise;
-      const parts = [];
-      for (let i = 1; i <= pdf.numPages; i++) {
-        const page = await pdf.getPage(i);
-        const tc = await page.getTextContent();
-        parts.push(tc.items.map(item => item.str).join(' '));
-      }
-      text = parts.join('\n\n');
-    } else if (ext === 'docx') {
-      if (!window.mammoth) throw new Error('Mammoth not loaded yet, try again in a moment');
-      const ab = await file.arrayBuffer();
-      const result = await mammoth.extractRawText({arrayBuffer: ab});
-      text = result.value;
-    } else {
-      text = await file.text();
-    }
-    if (!text.trim()) throw new Error('No text found in file');
-    const cfg = getConfig();
-    const chapters = detectChapters(text);
-    const project = {
-      id: uid(),
-      title: file.name.replace(/\.[^.]+$/, ''),
-      chapters: chapters.map(c => ({
-        ...c,
-        wordCount: c.content.trim().split(/\s+/).filter(w=>w).length,
-        voice: cfg.defaultVoice || 'alloy',
-        provider: cfg.provider || 'openai',
-        speed: cfg.speed || 1.0,
-        stability: cfg.stability != null ? cfg.stability : 50,
-        similarity: cfg.similarity != null ? cfg.similarity : 75,
-        style: cfg.style != null ? cfg.style : 0
-      })),
-      characterVoices: [],
-      createdAt: new Date().toISOString()
-    };
-    const projects = getProjects();
-    projects.unshift(project);
-    saveProjects(projects);
-    setActiveProjectId(project.id);
-    showTab('studio');
-    showToast('Imported ' + chapters.length + ' chapter' + (chapters.length>1?'s':'') + ' from ' + file.name, 'success');
-  } catch(err) {
-    showToast('Import failed: ' + err.message, 'error');
-  }
-}
-
-// ===================== LIBRARY RENDER =====================
-function renderLibrary() {
-  const projects = getProjects();
-  const list = document.getElementById('projects-list-ef56');
-  const empty = document.getElementById('no-projects-gh78');
-  list.innerHTML = '';
-  if (projects.length === 0) { empty.classList.remove('hidden'); return; }
+/* ── LIBRARY ── */
+function renderLibrary(){
+  const grid=document.getElementById('projects-grid');
+  const empty=document.getElementById('empty-library');
+  if(state.projects.length===0){grid.innerHTML='';empty.classList.remove('hidden');reIcon();return}
   empty.classList.add('hidden');
-  projects.forEach(proj => {
-    const totalWords = proj.chapters.reduce((s,c) => s + (c.wordCount||0), 0);
-    const doneCount = proj.chapters.filter(c => c.status === 'done').length;
-    const div = document.createElement('div');
-    div.className = 'glass glass-hover rounded-2xl p-5 flex flex-col md:flex-row md:items-center justify-between gap-4';
-    div.innerHTML = `
-      <div class="flex-1 min-w-0">
-        <h3 class="text-base font-bold text-txt truncate">${esc(proj.title)}</h3>
-        <div class="flex flex-wrap gap-3 mt-2 text-xs text-muted">
-          <span><i data-lucide="layers" class="w-3 h-3 inline mr-1"></i>${proj.chapters.length} chapter${proj.chapters.length>1?'s':''}</span>
-          <span><i data-lucide="type" class="w-3 h-3 inline mr-1"></i>${totalWords.toLocaleString()} words</span>
-          <span><i data-lucide="clock" class="w-3 h-3 inline mr-1"></i>~${fmtDuration(totalWords)}</span>
-          <span><i data-lucide="check-circle" class="w-3 h-3 inline mr-1"></i>${doneCount}/${proj.chapters.length} done</span>
+  grid.innerHTML=state.projects.map(p=>{
+    const totalWords=p.chapters.reduce((s,c)=>s+c.wordCount,0);
+    const est=Math.max(1,Math.round(totalWords/150));
+    const done=p.chapters.filter(c=>c.status==='done').length;
+    const dt=new Date(p.uploadedAt);
+    const dateStr=dt.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
+    return `<div class="glass-card glass-card-hover p-5">
+      <div class="flex items-start justify-between mb-3">
+        <div class="flex-1 min-w-0">
+          <h3 class="font-semibold text-sf-text truncate">${esc(p.title)}</h3>
+          <p class="text-xs text-sf-muteddark mt-0.5">${esc(p.file)}</p>
+        </div>
+        <button class="proj-del p-1.5 rounded-lg hover:bg-white/5" data-pid="${p.id}" style="border:none;background:none;color:#94a3b8;cursor:pointer"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+      </div>
+      <div class="flex flex-wrap gap-3 text-xs text-sf-muted mb-4">
+        <span class="flex items-center gap-1"><i data-lucide="book-open" class="w-3 h-3"></i>${p.chapters.length} chapters</span>
+        <span class="flex items-center gap-1"><i data-lucide="text" class="w-3 h-3"></i>${totalWords.toLocaleString()} words</span>
+        <span class="flex items-center gap-1"><i data-lucide="clock" class="w-3 h-3"></i>~${est} min</span>
+      </div>
+      <div class="flex items-center justify-between">
+        <span class="text-xs text-sf-muteddark">${dateStr}</span>
+        <div class="flex items-center gap-2">
+          <span class="text-xs text-sf-muted">${done}/${p.chapters.length} done</span>
+          <button class="proj-open gradient-btn px-4 py-2 rounded-lg text-xs font-semibold" data-pid="${p.id}">Open in Studio</button>
         </div>
       </div>
-      <div class="flex gap-2 shrink-0">
-        <button class="open-proj-btn btn-gradient px-4 py-2 rounded-xl text-xs font-semibold" data-id="${proj.id}">Open in Studio</button>
-        <button class="del-proj-btn px-3 py-2 rounded-xl text-xs font-medium glass glass-hover text-re-400" data-id="${proj.id}">
-          <i data-lucide="trash-2" class="w-4 h-4"></i>
-        </button>
-      </div>`;
-    list.appendChild(div);
-  });
-  if (typeof lucide !== 'undefined' && typeof lucide.createIcons === 'function') lucide.createIcons();
-  list.querySelectorAll('.open-proj-btn').forEach(btn => {
-    btn.addEventListener('click', () => { setActiveProjectId(btn.dataset.id); activeChapterId = null; showTab('studio'); });
-  });
-  list.querySelectorAll('.del-proj-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      if (!confirm('Delete this project?')) return;
-      const ps = getProjects().filter(p => p.id !== btn.dataset.id);
-      saveProjects(ps);
-      if (getActiveProjectId() === btn.dataset.id) { setActiveProjectId(null); activeChapterId = null; }
-      renderLibrary();
-      showToast('Project deleted', 'info');
-    });
-  });
+    </div>`
+  }).join('');
+  grid.querySelectorAll('.proj-open').forEach(b=>b.addEventListener('click',()=>{
+    state.activeProjectId=b.dataset.pid;state.activeChapterId=null;switchTab('studio');
+  }));
+  grid.querySelectorAll('.proj-del').forEach(b=>b.addEventListener('click',()=>{
+    state.projects=state.projects.filter(p=>p.id!==b.dataset.pid);
+    if(state.activeProjectId===b.dataset.pid){state.activeProjectId=null;state.activeChapterId=null}
+    saveProjects();renderLibrary();showToast('Project deleted','info');
+  }));
+  reIcon();
+}
+function esc(s){const d=document.createElement('div');d.textContent=s;return d.innerHTML}
+
+/* ── FILE PARSING ── */
+function splitIntoChapters(text,filename){
+  if(text.length>100000)text=text.substring(0,100000);
+  const chapterRegex=/^(chapter\s+\w+|part\s+\w+|prologue|epilogue)/im;
+  const lines=text.split('\n');const chapters=[];let cur={title:'Introduction',text:''};
+  for(const line of lines){
+    if(chapterRegex.test(line.trim())&&line.trim().length<100){
+      if(cur.text.trim().length>100)chapters.push(cur);
+      cur={title:line.trim().replace(/^#+\s*/,'').substring(0,60),text:''};
+    } else {cur.text+=line+'\n'}
+  }
+  if(cur.text.trim())chapters.push(cur);
+  if(chapters.length<=1){
+    const words=text.split(/\s+/);const sz=3000;const res=[];
+    for(let i=0;i<words.length;i+=sz)res.push({title:`Part ${res.length+1}`,text:words.slice(i,i+sz).join(' ')});
+    return res.map((ch,i)=>({id:uid(),title:ch.title,text:ch.text.trim(),wordCount:ch.text.trim().split(/\s+/).filter(Boolean).length,audioUrl:null,audioData:null,status:'draft'}));
+  }
+  return chapters.map((ch,i)=>({id:uid(),title:ch.title||`Chapter ${i+1}`,text:ch.text.trim(),wordCount:ch.text.trim().split(/\s+/).filter(Boolean).length,audioUrl:null,audioData:null,status:'draft'}));
 }
 
-function esc(s) { const d = document.createElement('div'); d.textContent = s; return d.innerHTML; }
+async function handleFile(file){
+  const ext=file.name.split('.').pop().toLowerCase();
+  let text='';
+  try{
+    if(ext==='txt'||ext==='md'){text=await file.text()}
+    else if(ext==='pdf'){
+      const ab=await file.arrayBuffer();
+      if(typeof pdfjsLib!=='undefined'){
+        pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.worker.min.js';
+        const pdf=await pdfjsLib.getDocument({data:ab}).promise;
+        const pages=[];for(let i=1;i<=pdf.numPages;i++){const pg=await pdf.getPage(i);const tc=await pg.getTextContent();pages.push(tc.items.map(it=>it.str).join(' '))}
+        text=pages.join('\n\n');
+      } else {showToast('PDF parser not loaded','error');return}
+    }
+    else if(ext==='docx'){
+      const ab=await file.arrayBuffer();
+      if(typeof mammoth!=='undefined'){const r=await mammoth.extractRawText({arrayBuffer:ab});text=r.value}
+      else {showToast('DOCX parser not loaded','error');return}
+    }
+    else {showToast('Unsupported file type','error');return}
+  }catch(e){showToast('Error parsing file: '+e.message,'error');return}
+  if(!text.trim()){showToast('No text found in file','error');return}
+  const fname=file.name.replace(/\.[^/.]+$/,'');
+  const chapters=splitIntoChapters(text,fname);
+  const project={id:uid(),title:fname,file:file.name,uploadedAt:Date.now(),wordCount:text.split(/\s+/).filter(Boolean).length,chapters};
+  state.projects.unshift(project);saveProjects();renderLibrary();
+  showToast(`"${fname}" imported — ${chapters.length} chapters found`,'success');
+}
 
-// ===================== STUDIO RENDER =====================
-function renderStudio() {
-  const projId = getActiveProjectId();
-  const projects = getProjects();
-  const proj = projects.find(p => p.id === projId);
-  if (!proj) {
-    document.getElementById('studio-empty-ij90').classList.remove('hidden');
-    document.getElementById('studio-main-kl12').classList.add('hidden');
-    return;
-  }
-  document.getElementById('studio-empty-ij90').classList.add('hidden');
-  document.getElementById('studio-main-kl12').classList.remove('hidden');
-  const totalWords = proj.chapters.reduce((s,c) => s + (c.wordCount||0), 0);
-  document.getElementById('studio-project-title-mn34').textContent = proj.title;
-  document.getElementById('studio-project-meta-op56').textContent = proj.chapters.length + ' chapters \u00B7 ' + totalWords.toLocaleString() + ' words';
+/* ── STUDIO ── */
+function renderStudio(){
+  const noProj=document.getElementById('studio-no-project');
+  const main=document.getElementById('studio-main');
+  const p=getProject();
+  if(!p){noProj.classList.remove('hidden');main.classList.add('hidden');reIcon();return}
+  noProj.classList.add('hidden');main.classList.remove('hidden');
   renderChapterList();
-  if (!activeChapterId && proj.chapters.length > 0) {
-    activeChapterId = proj.chapters[0].id;
-  }
-  const ch = proj.chapters.find(c => c.id === activeChapterId);
-  if (ch) renderCenterPanel(ch);
-  else document.getElementById('center-content-uv12').innerHTML = '<div class="flex items-center justify-center h-full text-muted text-sm">Select a chapter</div>';
-  renderRightPanel(ch);
+  if(state.activeChapterId){renderCenterPanel()}
+  else{document.getElementById('center-no-chapter').classList.remove('hidden');document.getElementById('center-panel').classList.add('hidden')}
+  reIcon();
 }
 
-function renderChapterList() {
-  const projects = getProjects();
-  const proj = projects.find(p => p.id === getActiveProjectId());
-  if (!proj) return;
-  const list = document.getElementById('chapter-list-qr78');
-  list.innerHTML = '';
-  proj.chapters.forEach((ch, idx) => {
-    const div = document.createElement('div');
-    div.className = 'chapter-item px-4 py-3' + (ch.id === activeChapterId ? ' active' : '');
-    const statusCls = ch.status === 'done' ? 'status-done' : ch.status === 'generating' ? 'status-generating' : ch.status === 'error' ? 'status-error' : 'status-draft';
-    const statusTxt = ch.status === 'done' ? '\u2713 Ready' : ch.status === 'generating' ? 'Generating...' : ch.status === 'error' ? '\u2717 Error' : 'Draft';
-    div.innerHTML = `
-      <div class="flex items-start justify-between gap-2">
-        <div class="min-w-0">
-          <p class="text-xs text-muted font-medium">Chapter ${idx+1}</p>
-          <p class="text-sm font-semibold text-txt truncate mt-0.5">${esc(ch.title)}</p>
-          <p class="text-xs text-muted mt-1">${(ch.wordCount||0).toLocaleString()} words \u00B7 ~${fmtDuration(ch.wordCount||0)}</p>
+function renderChapterList(){
+  const p=getProject();if(!p)return;
+  document.getElementById('chapter-count-badge').textContent=p.chapters.length+' ch';
+  const list=document.getElementById('chapter-list');
+  list.innerHTML=p.chapters.map((c,i)=>{
+    const statusClass={'draft':'status-draft','generating':'status-generating','done':'status-done','error':'status-error'}[c.status]||'status-draft';
+    const statusLabel={'draft':'Draft','generating':'Generating...','done':'Done','error':'Error'}[c.status]||'Draft';
+    return `<div class="chapter-row ${c.id===state.activeChapterId?'active':''}" data-cid="${c.id}">
+      <div class="flex items-center justify-between">
+        <div class="flex-1 min-w-0">
+          <div class="flex items-center gap-2">
+            <span class="text-xs text-sf-muteddark font-mono">${String(i+1).padStart(2,'0')}</span>
+            <span class="text-sm font-medium text-sf-text truncate">${esc(c.title)}</span>
+            ${c.audioData?'<i data-lucide="audio-lines" class="w-3 h-3 text-sf-accent flex-shrink-0"></i>':''}
+          </div>
         </div>
-        <span class="status-badge ${statusCls} shrink-0 mt-1 ${ch.status==='generating'?'pulse-amber':''}">${statusTxt}</span>
-      </div>`;
-    div.addEventListener('click', () => {
-      activeChapterId = ch.id;
-      renderChapterList();
-      const freshProj = getProjects().find(p => p.id === getActiveProjectId());
-      const freshCh = freshProj ? freshProj.chapters.find(c => c.id === ch.id) : ch;
-      renderCenterPanel(freshCh || ch);
-      renderRightPanel(freshCh || ch);
-    });
-    list.appendChild(div);
+        <span class="status-badge ${statusClass} ml-2 flex-shrink-0">${statusLabel}</span>
+      </div>
+    </div>`
+  }).join('');
+  list.querySelectorAll('.chapter-row').forEach(r=>r.addEventListener('click',()=>{
+    state.activeChapterId=r.dataset.cid;stopAudio();renderChapterList();renderCenterPanel();reIcon();
+  }));
+  reIcon();
+}
+
+function renderCenterPanel(){
+  const ch=getChapter();
+  if(!ch){document.getElementById('center-no-chapter').classList.remove('hidden');document.getElementById('center-panel').classList.add('hidden');return}
+  document.getElementById('center-no-chapter').classList.add('hidden');
+  document.getElementById('center-panel').classList.remove('hidden');
+  document.getElementById('center-chapter-title').textContent=ch.title;
+  document.getElementById('center-word-count').innerHTML=`<i data-lucide="text" class="w-3.5 h-3.5"></i>${ch.wordCount.toLocaleString()} words`;
+  const est=Math.max(1,Math.round(ch.wordCount/150));
+  document.getElementById('center-duration').innerHTML=`<i data-lucide="clock" class="w-3.5 h-3.5"></i>~${est} min`;
+  const vName=getVoiceDisplayName(state.activeVoice);
+  document.getElementById('center-voice-indicator').innerHTML=`<i data-lucide="mic" class="w-3.5 h-3.5 text-sf-accent"></i>${vName}`;
+  const statusClass={'draft':'status-draft','generating':'status-generating','done':'status-done','error':'status-error'}[ch.status]||'status-draft';
+  const statusLabel={'draft':'Draft','generating':'Generating...','done':'Done','error':'Error'}[ch.status]||'Draft';
+  document.getElementById('center-status-badge').innerHTML=`<span class="status-badge ${statusClass}">${statusLabel}</span>`;
+  buildWaveform();
+  if(ch.audioData){document.getElementById('download-audio-btn').classList.remove('hidden')}
+  else{document.getElementById('download-audio-btn').classList.add('hidden')}
+  document.getElementById('chapter-editor').value=ch.text;
+  document.getElementById('editor-word-count').textContent=ch.wordCount+' words';
+  updatePlayButton();
+  reIcon();
+}
+
+function getVoiceDisplayName(v){
+  const map={dan:'Dan',brook:'Brook',rio:'Rio',jazz:'Jazz',aster:'Aster',marilyn:'Marilyn',elan:'Elan',amuch:'Amuch'};
+  return map[v]||v;
+}
+
+function buildWaveform(){
+  const container=document.getElementById('waveform-container');
+  container.innerHTML='';
+  for(let i=0;i<20;i++){
+    const bar=document.createElement('div');
+    bar.className='wave-bar';
+    const maxH=12+Math.random()*24;
+    bar.style.setProperty('--max-h',maxH+'px');
+    bar.style.setProperty('--dur',(0.5+Math.random()*0.8)+'s');
+    bar.style.setProperty('--delay',(i*0.05)+'s');
+    bar.style.height='8px';
+    container.appendChild(bar);
+  }
+}
+
+function setWaveformAnimating(on){
+  document.querySelectorAll('.wave-bar').forEach(b=>{
+    if(on)b.classList.add('animating');else{b.classList.remove('animating');b.style.height='8px'}
   });
 }
 
-// ===================== CENTER PANEL =====================
-function renderCenterPanel(chapter) {
-  const container = document.getElementById('center-content-uv12');
-  if (!chapter) { container.innerHTML = ''; return; }
-  const cfg = getConfig();
-  const provider = chapter.provider || cfg.provider || 'openai';
-  const voice = chapter.voice || cfg.defaultVoice || (provider === 'openai' ? 'alloy' : 'rachel');
-  const speed = chapter.speed || cfg.speed || 1.0;
+/* ── AUDIO PLAYBACK ── */
+function updatePlayButton(){
+  const icon=document.getElementById('play-icon');
+  if(icon)icon.setAttribute('data-lucide',state.isPlaying?'pause':'play');
+  reIcon();
+}
 
-  if (chapter.status === 'generating') {
-    container.innerHTML = `
-      <div class="glass rounded-2xl p-6 md:p-8">
-        <h3 class="text-lg font-bold text-txt mb-1">${esc(chapter.title)}</h3>
-        <p class="text-xs text-muted mb-6">${(chapter.wordCount||0).toLocaleString()} words \u00B7 ~${fmtDuration(chapter.wordCount||0)}</p>
-        <div class="mb-4">
-          <div class="flex justify-between text-xs text-muted mb-2">
-            <span id="gen-progress-label-xq34">Preparing...</span>
-            <span id="gen-progress-pct-xq56">0%</span>
-          </div>
-          <div class="w-full h-3 rounded-full overflow-hidden" style="background:rgba(255,255,255,0.06);">
-            <div id="gen-progress-bar-xq12" class="h-full rounded-full shimmer transition-all duration-500" style="width:5%"></div>
-          </div>
-        </div>
-        <div class="flex justify-center gap-1 my-6">
-          ${Array.from({length:32},(_,i)=>`<div class="waveform-bar generating" style="height:${12+Math.random()*28}px;animation-delay:${i*0.05}s"></div>`).join('')}
-        </div>
-        <p class="text-center text-sm text-muted mb-4">Synthesizing voice...</p>
-        <div class="text-center">
-          <button id="cancel-gen-btn-aa12" class="px-6 py-2 rounded-xl text-sm font-medium glass glass-hover text-re-400">Cancel</button>
-        </div>
-      </div>`;
-    document.getElementById('cancel-gen-btn-aa12').addEventListener('click', () => { generatingCancel = true; });
-    return;
+function stopAudio(){
+  if(state.currentAudio){state.currentAudio.pause();state.currentAudio=null}
+  state.isPlaying=false;setWaveformAnimating(false);updatePlayButton();
+  document.getElementById('current-time').textContent='0:00';
+  document.getElementById('audio-scrubber').value=0;
+}
+
+function playChapterAudio(){
+  const ch=getChapter();if(!ch||!ch.audioData)return;
+  stopAudio();
+  const audio=new Audio(`data:audio/${ch.audioFormat||'mp3'};base64,${ch.audioData}`);
+  audio.playbackRate=state.config.speed||1.0;
+  state.currentAudio=audio;
+  audio.addEventListener('loadedmetadata',()=>{
+    document.getElementById('total-time').textContent=formatTime(audio.duration);
+    document.getElementById('audio-scrubber').max=Math.floor(audio.duration);
+  });
+  audio.addEventListener('timeupdate',()=>{
+    document.getElementById('current-time').textContent=formatTime(audio.currentTime);
+    document.getElementById('audio-scrubber').value=Math.floor(audio.currentTime);
+  });
+  audio.addEventListener('ended',()=>{state.isPlaying=false;setWaveformAnimating(false);updatePlayButton()});
+  audio.play().then(()=>{state.isPlaying=true;setWaveformAnimating(true);updatePlayButton()}).catch(()=>{});
+}
+
+/* ── GENERATE AUDIO ── */
+async function generateChapterAudio(chapterId,showToasts=true){
+  const p=getProject();if(!p)return;
+  const ch=p.chapters.find(c=>c.id===chapterId);if(!ch)return;
+  ch.status='generating';saveProjects();
+  if(ch.id===state.activeChapterId){renderCenterPanel()}
+  renderChapterList();reIcon();
+  const txt=cleanText(ch.text).substring(0,4000);
+  if(!txt){ch.status='error';saveProjects();if(showToasts)showToast('No text to generate','error');renderChapterList();if(ch.id===state.activeChapterId)renderCenterPanel();reIcon();return}
+  const sdkVoice=toSdkVoice(state.activeVoice);
+  try{
+    if(!window.AppSDK||!window.AppSDK.ai||!window.AppSDK.ai.speak)throw new Error('AppSDK not available');
+    const result=await AppSDK.ai.speak({text:txt,voice:sdkVoice,audioFormat:'mp3'});
+    ch.audioData=result.audio;
+    ch.audioFormat=result.format||'mp3';
+    ch.status='done';
+    saveProjects();
+    if(showToasts)showToast(`Audio generated for "${ch.title}"`,'success');
+  }catch(e){
+    ch.status='error';saveProjects();
+    if(showToasts)showToast('Generation failed — '+e.message,'error');
   }
+  renderChapterList();
+  if(ch.id===state.activeChapterId)renderCenterPanel();
+  reIcon();
+}
 
-  if (chapter.status === 'done' && chapter.audioUrl) {
-    container.innerHTML = `
-      <div class="glass rounded-2xl p-6 md:p-8">
-        <div class="flex items-center gap-3 mb-6">
-          <h3 class="text-lg font-bold text-txt flex-1">${esc(chapter.title)}</h3>
-          <span class="status-badge status-done">\u2713 Ready</span>
-        </div>
-        <canvas id="player-waveform-bb12" width="600" height="80" class="w-full rounded-xl mb-4" style="max-height:80px;"></canvas>
-        <div class="flex items-center gap-3 mb-4">
-          <button id="rwd-btn-cc12" class="p-2 glass rounded-full hover:bg-white/10 min-w-[40px] min-h-[40px] flex items-center justify-center"><i data-lucide="rewind" class="w-4 h-4"></i></button>
-          <button id="play-btn-dd12" class="p-3 btn-gradient rounded-full min-w-[48px] min-h-[48px] flex items-center justify-center"><i data-lucide="play" class="w-5 h-5"></i></button>
-          <button id="fwd-btn-ee12" class="p-2 glass rounded-full hover:bg-white/10 min-w-[40px] min-h-[40px] flex items-center justify-center"><i data-lucide="fast-forward" class="w-4 h-4"></i></button>
-          <span id="time-current-ff12" class="text-xs text-muted tabular-nums min-w-[36px]">0:00</span>
-          <input type="range" id="seek-bar-gg12" min="0" max="1000" value="0" class="flex-1"/>
-          <span id="time-total-hh12" class="text-xs text-muted tabular-nums min-w-[36px]">0:00</span>
-        </div>
-        <div class="flex flex-wrap items-center gap-2 mb-4">
-          <span class="text-xs text-muted font-medium mr-1">Speed:</span>
-          ${[0.75,1,1.25,1.5,2].map(s=>`<button class="speed-btn-ii12 px-3 py-1 rounded-lg text-xs font-medium ${s===1?'btn-gradient':'glass glass-hover text-muted'}" data-speed="${s}">${s}x</button>`).join('')}
-          <span class="text-xs text-muted font-medium ml-3 mr-1">Vol:</span>
-          <input type="range" id="vol-bar-jj12" min="0" max="100" value="100" class="w-20"/>
-        </div>
-        <div class="flex gap-3">
-          <button id="dl-btn-kk12" class="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium glass glass-hover text-teal-400">
-            <i data-lucide="download" class="w-4 h-4"></i> Download MP3
-          </button>
-          <button id="regen-btn-ll12" class="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium glass glass-hover text-amber-400">
-            <i data-lucide="refresh-cw" class="w-4 h-4"></i> Regenerate
-          </button>
-        </div>
-      </div>`;
-    if (typeof lucide !== 'undefined' && typeof lucide.createIcons === 'function') lucide.createIcons();
-    buildPlayer(chapter);
-    return;
+async function generateAll(){
+  const p=getProject();if(!p||state.isGenerating)return;
+  state.isGenerating=true;state.generatingCancel=false;
+  document.getElementById('generate-all-btn').classList.add('hidden');
+  document.getElementById('stop-gen-btn').classList.remove('hidden');
+  const total=p.chapters.length;
+  for(let i=0;i<total;i++){
+    if(state.generatingCancel)break;
+    const ch=p.chapters[i];
+    if(ch.status==='done')continue;
+    showToast(`Generating chapter ${i+1} of ${total}...`,'info');
+    await generateChapterAudio(ch.id,false);
+    if(i<total-1&&!state.generatingCancel)await new Promise(r=>setTimeout(r,500));
   }
+  state.isGenerating=false;
+  document.getElementById('generate-all-btn').classList.remove('hidden');
+  document.getElementById('stop-gen-btn').classList.add('hidden');
+  if(state.generatingCancel){showToast('Generation stopped','info')}
+  else{showToast('All chapters generated!','success')}
+  reIcon();
+}
 
-  const voiceOptions = provider === 'openai'
-    ? OPENAI_VOICES.map(v => `<option value="${v.id}" ${v.id===voice?'selected':''}>${v.id} \u2014 ${v.desc}</option>`).join('')
-    : EL_VOICES.map(v => `<option value="${v.id}" ${v.id===voice?'selected':''}>${v.id} \u2014 ${v.desc}</option>`).join('');
+/* ── VOICE LAB ── */
+function renderGenreTabs(){
+  const container=document.getElementById('genre-tabs');
+  container.innerHTML=Object.entries(GENRE_PROFILES).map(([key,g])=>{
+    return `<button class="genre-btn ${key===state.activeGenre?'active':''}" data-genre="${key}" style="${key===state.activeGenre?'background:'+g.color+'20;border-color:'+g.color+';color:'+g.color+';--gc:'+g.color:'--gc:'+g.color}">${g.icon} ${g.label}</button>`
+  }).join('');
+  container.querySelectorAll('.genre-btn').forEach(b=>b.addEventListener('click',()=>{
+    state.activeGenre=b.dataset.genre;renderGenreTabs();renderGenreVoices();reIcon();
+  }));
+}
 
-  container.innerHTML = `
-    <div class="glass rounded-2xl p-6 md:p-8">
-      <h3 class="text-lg font-bold text-txt mb-1">${esc(chapter.title)}</h3>
-      <p class="text-xs text-muted mb-6">${(chapter.wordCount||0).toLocaleString()} words \u00B7 ~${fmtDuration(chapter.wordCount||0)} \u00B7 ${provider === 'openai' ? 'OpenAI' : 'ElevenLabs'} \u00B7 ${voice}</p>
-      ${chapter.status === 'error' ? `<div class="mb-4 p-3 rounded-xl text-xs" style="background:rgba(239,68,68,0.1);color:#ef4444;border:1px solid rgba(239,68,68,0.2);"><strong>Error:</strong> ${esc(chapter.error||'Unknown error')}</div>` : ''}
-      <div class="glass rounded-xl p-4 mb-6 space-y-4">
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div>
-            <label class="text-xs text-muted font-medium uppercase tracking-wider block mb-2">Voice</label>
-            <select id="ch-voice-sel-mm12">${voiceOptions}</select>
-          </div>
-          <div>
-            <label class="text-xs text-muted font-medium uppercase tracking-wider block mb-2">Provider</label>
-            <select id="ch-provider-sel-nn12">
-              <option value="openai" ${provider==='openai'?'selected':''}>OpenAI TTS</option>
-              <option value="elevenlabs" ${provider==='elevenlabs'?'selected':''}>ElevenLabs</option>
-            </select>
-          </div>
-        </div>
+function renderGenreVoices(){
+  const genre=GENRE_PROFILES[state.activeGenre];if(!genre)return;
+  document.getElementById('genre-desc-text').textContent=genre.description;
+  const grid=document.getElementById('voice-cards-grid');
+  const appliedVoice=state.activeVoice;
+  grid.innerHTML=genre.voices.map(v=>{
+    const sdkV=toSdkVoice(v.appsdkVoice);
+    const isApplied=sdkV===appliedVoice;
+    return `<div class="voice-card ${isApplied?'applied':''}" data-vid="${v.id}">
+      <div class="flex items-start justify-between mb-3">
         <div>
-          <label class="text-xs text-muted font-medium uppercase tracking-wider block mb-2">Speed: <span id="ch-speed-val-oo12">${speed.toFixed(2)}x</span></label>
-          <input type="range" id="ch-speed-sl-pp12" min="50" max="200" value="${Math.round(speed*100)}" class="w-full"/>
+          <h4 class="text-lg font-bold text-sf-text">${v.name}</h4>
+          <span class="text-xs font-medium px-2 py-0.5 rounded-full" style="background:${genre.color}20;color:${genre.color}">${v.role}</span>
         </div>
-        <div id="ch-el-settings-qq12" class="${provider==='elevenlabs'?'':'hidden'} grid grid-cols-3 gap-4">
-          <div>
-            <label class="text-xs text-muted font-medium block mb-1">Stability: <span id="ch-stab-v-rr12">${chapter.stability!=null?chapter.stability:50}</span></label>
-            <input type="range" id="ch-stab-sl-ss12" min="0" max="100" value="${chapter.stability!=null?chapter.stability:50}" class="w-full"/>
-          </div>
-          <div>
-            <label class="text-xs text-muted font-medium block mb-1">Similarity: <span id="ch-sim-v-tt12">${chapter.similarity!=null?chapter.similarity:75}</span></label>
-            <input type="range" id="ch-sim-sl-uu12" min="0" max="100" value="${chapter.similarity!=null?chapter.similarity:75}" class="w-full"/>
-          </div>
-          <div>
-            <label class="text-xs text-muted font-medium block mb-1">Style: <span id="ch-sty-v-vv12">${chapter.style!=null?chapter.style:0}</span></label>
-            <input type="range" id="ch-sty-sl-ww12" min="0" max="100" value="${chapter.style!=null?chapter.style:0}" class="w-full"/>
-          </div>
-        </div>
+        <span class="text-[10px] font-semibold px-2 py-0.5 rounded-full" style="background:rgba(0,212,255,0.12);color:#00d4ff">AppSDK</span>
       </div>
-      <div class="text-center">
-        <button id="gen-ch-btn-xx12" class="btn-gradient px-8 py-3 rounded-xl text-sm font-semibold inline-flex items-center gap-2">
-          <i data-lucide="mic" class="w-4 h-4"></i> Generate Chapter Audio
+      <div class="flex flex-wrap gap-1.5 mb-3">
+        <span class="text-[11px] px-2 py-0.5 rounded-full" style="background:rgba(255,255,255,0.06);color:#94a3b8">${v.gender}</span>
+        <span class="text-[11px] px-2 py-0.5 rounded-full" style="background:rgba(255,255,255,0.06);color:#94a3b8">${v.accent}</span>
+        ${v.tags.map(t=>`<span class="text-[11px] px-2 py-0.5 rounded-full" style="background:rgba(255,255,255,0.06);color:#94a3b8">${t}</span>`).join('')}
+      </div>
+      <p class="text-sm text-sf-muted mb-2">${v.description}</p>
+      <p class="text-xs text-sf-muteddark italic mb-4">"${v.sample}"</p>
+      <div class="flex items-center gap-2 text-[11px] text-sf-muteddark mb-4">
+        <span>Stability ${v.settings.stability}%</span>
+        <span>·</span>
+        <span>Similarity ${v.settings.similarity}%</span>
+        <span>·</span>
+        <span>Style ${v.settings.style}%</span>
+      </div>
+      <div class="flex gap-2">
+        <button class="voice-preview flex-1 py-2.5 rounded-lg text-sm font-medium flex items-center justify-center gap-2" style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);color:#f1f5f9;cursor:pointer" data-voice="${v.appsdkVoice}" data-sample="${esc(v.sample)}">
+          <i data-lucide="play" class="w-3.5 h-3.5"></i>Preview
+        </button>
+        <button class="voice-apply flex-1 py-2.5 rounded-lg text-sm font-medium flex items-center justify-center gap-2 ${isApplied?'gradient-btn':''}" style="${isApplied?'':'background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);color:#f1f5f9;cursor:pointer'}" data-voice="${v.appsdkVoice}" data-vname="${v.name}">
+          <i data-lucide="check" class="w-3.5 h-3.5"></i>${isApplied?'Applied!':'Apply'}
         </button>
       </div>
-    </div>`;
-  if (typeof lucide !== 'undefined' && typeof lucide.createIcons === 'function') lucide.createIcons();
-
-  const voiceSel = document.getElementById('ch-voice-sel-mm12');
-  const provSel = document.getElementById('ch-provider-sel-nn12');
-  const speedSl = document.getElementById('ch-speed-sl-pp12');
-  const speedVal = document.getElementById('ch-speed-val-oo12');
-  const elSettings = document.getElementById('ch-el-settings-qq12');
-
-  function updateChapter(key, val) {
-    const ps = getProjects();
-    const p = ps.find(x => x.id === getActiveProjectId());
-    if (!p) return;
-    const c = p.chapters.find(x => x.id === chapter.id);
-    if (c) { c[key] = val; saveProjects(ps); }
-  }
-
-  voiceSel.addEventListener('change', () => updateChapter('voice', voiceSel.value));
-  provSel.addEventListener('change', () => {
-    const pv = provSel.value;
-    updateChapter('provider', pv);
-    elSettings.classList.toggle('hidden', pv !== 'elevenlabs');
-    const newOpts = pv === 'openai'
-      ? OPENAI_VOICES.map(v => `<option value="${v.id}">${v.id} \u2014 ${v.desc}</option>`).join('')
-      : EL_VOICES.map(v => `<option value="${v.id}">${v.id} \u2014 ${v.desc}</option>`).join('');
-    voiceSel.innerHTML = newOpts;
-    updateChapter('voice', voiceSel.value);
-  });
-  speedSl.addEventListener('input', () => {
-    const v = parseInt(speedSl.value) / 100;
-    speedVal.textContent = v.toFixed(2) + 'x';
-    updateChapter('speed', v);
-  });
-
-  ['stab','sim','sty'].forEach(k => {
-    const map = {stab:'stability',sim:'similarity',sty:'style'};
-    const sl = document.getElementById('ch-'+k+'-sl-'+(k==='stab'?'ss12':k==='sim'?'uu12':'ww12'));
-    const vl = document.getElementById('ch-'+k+'-v-'+(k==='stab'?'rr12':k==='sim'?'tt12':'vv12'));
-    if (sl) sl.addEventListener('input', () => { vl.textContent = sl.value; updateChapter(map[k], parseInt(sl.value)); });
-  });
-
-  document.getElementById('gen-ch-btn-xx12').addEventListener('click', () => generateAudio(chapter.id));
+    </div>`
+  }).join('');
+  grid.querySelectorAll('.voice-preview').forEach(b=>b.addEventListener('click',async()=>{
+    const origHTML=b.innerHTML;
+    b.innerHTML='<span class="loading-spinner"></span>Generating...';b.disabled=true;
+    try{
+      const sdkV=toSdkVoice(b.dataset.voice);
+      const result=await AppSDK.ai.speak({text:b.dataset.sample,voice:sdkV,audioFormat:'mp3'});
+      const audio=new Audio(`data:audio/${result.format};base64,${result.audio}`);
+      audio.play();
+      b.innerHTML='<i data-lucide="volume-2" class="w-3.5 h-3.5"></i>Playing...';reIcon();
+      audio.addEventListener('ended',()=>{b.innerHTML=origHTML;b.disabled=false;reIcon()});
+    }catch(e){
+      showToast('Preview failed — '+e.message,'error');
+      b.innerHTML=origHTML;b.disabled=false;reIcon();
+    }
+  }));
+  grid.querySelectorAll('.voice-apply').forEach(b=>b.addEventListener('click',()=>{
+    const sdkV=toSdkVoice(b.dataset.voice);
+    state.activeVoice=sdkV;state.config.voice=sdkV;saveConfig();
+    updateVoiceBadge();
+    showToast(`Voice "${b.dataset.vname}" applied as narrator`,'success');
+    renderGenreVoices();reIcon();
+  }));
+  reIcon();
 }
 
-// ===================== AUDIO PLAYER =====================
-function buildPlayer(chapter) {
-  const audio = new Audio(chapter.audioUrl);
-  audio.preload = 'metadata';
-  if (currentAudioEl) { currentAudioEl.pause(); currentAudioEl = null; }
-  currentAudioEl = audio;
-  const canvas = document.getElementById('player-waveform-bb12');
-  const ctx2d = canvas.getContext('2d');
-  let animId = null;
-  const bars = Array.from({length:64}, () => Math.random()*0.6+0.1);
-  const playBtn = document.getElementById('play-btn-dd12');
+function renderCharMap(){
+  const container=document.getElementById('char-map-rows');
+  const allVoices=['dan','brook','rio','jazz','aster','marilyn','elan','amuch'];
+  container.innerHTML=state.characterMap.map((c,i)=>{
+    return `<div class="flex items-center gap-3 glass-card p-3">
+      <input type="text" class="char-name flex-1 p-2.5 rounded-lg text-sm bg-sf-bg text-sf-text" style="border:1px solid rgba(255,255,255,0.08)" value="${esc(c.name)}" placeholder="Character name" data-idx="${i}">
+      <select class="char-voice p-2.5 rounded-lg text-sm bg-sf-bg text-sf-text" style="border:1px solid rgba(255,255,255,0.08)" data-idx="${i}">
+        ${allVoices.map(v=>`<option value="${v}" ${v===c.voice?'selected':''}>${getVoiceDisplayName(v)}</option>`).join('')}
+      </select>
+      <button class="char-del p-2 rounded-lg" style="background:rgba(239,68,68,0.1);color:#ef4444;border:none;cursor:pointer" data-idx="${i}"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+    </div>`
+  }).join('');
+  container.querySelectorAll('.char-name').forEach(inp=>inp.addEventListener('input',()=>{
+    state.characterMap[parseInt(inp.dataset.idx)].name=inp.value;saveCharMap();
+  }));
+  container.querySelectorAll('.char-voice').forEach(sel=>sel.addEventListener('change',()=>{
+    state.characterMap[parseInt(sel.dataset.idx)].voice=sel.value;saveCharMap();
+  }));
+  container.querySelectorAll('.char-del').forEach(b=>b.addEventListener('click',()=>{
+    state.characterMap.splice(parseInt(b.dataset.idx),1);saveCharMap();renderCharMap();reIcon();
+  }));
+  reIcon();
+}
 
-  function drawWave(playing) {
-    const w = canvas.width = canvas.clientWidth * (window.devicePixelRatio || 1);
-    const h = canvas.height = 80 * (window.devicePixelRatio || 1);
-    ctx2d.clearRect(0,0,w,h);
-    const bw = w / bars.length;
-    bars.forEach((bh,i) => {
-      if (playing) bars[i] = Math.max(0.05, Math.min(1, bh + (Math.random()-0.5)*0.12));
-      const barH = bars[i] * h * 0.85;
-      const prog = audio.duration ? audio.currentTime / audio.duration : 0;
-      ctx2d.fillStyle = (i/bars.length) < prog ? '#00d4ff' : 'rgba(255,255,255,0.12)';
-      const y = (h - barH) / 2;
-      ctx2d.beginPath();
-      ctx2d.roundRect(i*bw+1, y, bw-2, barH, 2);
-      ctx2d.fill();
-    });
-    if (playing) animId = requestAnimationFrame(() => drawWave(true));
-  }
+/* ── SETTINGS ── */
+function loadSettings(){
+  document.getElementById('settings-voice').value=state.config.voice||'jazz';
+  document.getElementById('speed-slider').value=(state.config.speed||1)*100;
+  document.getElementById('speed-val').textContent=(state.config.speed||1).toFixed(1)+'x';
+  document.getElementById('settings-project-name').value=state.config.projectName||'';
+  document.getElementById('settings-author').value=state.config.author||'Aurelio Joseph Dioval';
+}
 
-  function updatePlayIcon() {
-    playBtn.innerHTML = audio.paused ? '<i data-lucide="play" class="w-5 h-5"></i>' : '<i data-lucide="pause" class="w-5 h-5"></i>';
-    if (typeof lucide !== 'undefined' && typeof lucide.createIcons === 'function') lucide.createIcons();
-  }
+function updateVoiceBadge(){
+  document.getElementById('badge-voice-name').textContent=getVoiceDisplayName(state.activeVoice);
+}
 
-  audio.addEventListener('timeupdate', () => {
-    const pct = audio.duration ? (audio.currentTime / audio.duration) * 1000 : 0;
-    document.getElementById('seek-bar-gg12').value = pct;
-    document.getElementById('time-current-ff12').textContent = fmtTime(audio.currentTime);
-  });
-  audio.addEventListener('loadedmetadata', () => {
-    document.getElementById('time-total-hh12').textContent = fmtTime(audio.duration);
-    drawWave(false);
-  });
-  audio.addEventListener('ended', () => {
-    cancelAnimationFrame(animId);
-    drawWave(false);
-    updatePlayIcon();
-    playNextChapter();
-  });
-
-  playBtn.addEventListener('click', () => {
-    if (audio.paused) { audio.play(); cancelAnimationFrame(animId); animId = requestAnimationFrame(() => drawWave(true)); }
-    else { audio.pause(); cancelAnimationFrame(animId); drawWave(false); }
-    updatePlayIcon();
-  });
-  document.getElementById('seek-bar-gg12').addEventListener('input', (e) => {
-    if (audio.duration) audio.currentTime = (e.target.value / 1000) * audio.duration;
-  });
-  document.getElementById('vol-bar-jj12').addEventListener('input', (e) => {
-    audio.volume = e.target.value / 100;
-  });
-  document.getElementById('rwd-btn-cc12').addEventListener('click', () => { audio.currentTime = Math.max(0, audio.currentTime - 10); });
-  document.getElementById('fwd-btn-ee12').addEventListener('click', () => { if(audio.duration) audio.currentTime = Math.min(audio.duration, audio.currentTime + 10); });
-
-  document.querySelectorAll('.speed-btn-ii12').forEach(b => {
-    b.addEventListener('click', () => {
-      audio.playbackRate = parseFloat(b.dataset.speed);
-      document.querySelectorAll('.speed-btn-ii12').forEach(x => { x.className = x.className.replace('btn-gradient','glass glass-hover text-muted'); });
-      b.className = b.className.replace('glass glass-hover text-muted','btn-gradient');
-    });
-  });
-  document.getElementById('dl-btn-kk12').addEventListener('click', () => {
-    const a = document.createElement('a');
-    a.href = chapter.audioUrl;
-    a.download = (chapter.title || 'chapter').replace(/[^a-zA-Z0-9]/g,'_') + '.mp3';
+/* ── EXPORT ── */
+function exportAudioFiles(){
+  const p=getProject();if(!p){showToast('No project open','error');return}
+  const done=p.chapters.filter(c=>c.audioData);
+  if(done.length===0){showToast('No audio generated yet','info');return}
+  done.forEach(ch=>{
+    const a=document.createElement('a');
+    a.href=`data:audio/${ch.audioFormat||'mp3'};base64,${ch.audioData}`;
+    a.download=`${p.title} - ${ch.title}.${ch.audioFormat||'mp3'}`;
     a.click();
   });
-  document.getElementById('regen-btn-ll12').addEventListener('click', () => {
-    const ps = getProjects();
-    const p = ps.find(x => x.id === getActiveProjectId());
-    if (p) { const c = p.chapters.find(x => x.id === chapter.id); if(c) { c.status='draft'; c.audioUrl=null; saveProjects(ps); renderCenterPanel(c); renderChapterList(); } }
-  });
-  drawWave(false);
+  showToast(`${done.length} audio file(s) downloading`,'success');
 }
 
-function playNextChapter() {
-  const ps = getProjects();
-  const p = ps.find(x => x.id === getActiveProjectId());
-  if (!p) return;
-  const idx = p.chapters.findIndex(c => c.id === activeChapterId);
-  if (idx >= 0 && idx < p.chapters.length - 1) {
-    const next = p.chapters[idx + 1];
-    if (next.status === 'done' && next.audioUrl) {
-      activeChapterId = next.id;
-      renderChapterList();
-      renderCenterPanel(next);
-      renderRightPanel(next);
-      setTimeout(() => {
-        const playBtn = document.getElementById('play-btn-dd12');
-        if (playBtn) playBtn.click();
-      }, 300);
-    }
-  }
-}
+/* ── INIT ── */
+function init(){
+  /* Tab buttons */
+  document.querySelectorAll('.tab-btn').forEach(b=>b.addEventListener('click',()=>{
+    switchTab(b.dataset.tab);
+    if(b.dataset.mobile){document.getElementById('mobile-menu').classList.remove('open')}
+  }));
+  /* Hamburger */
+  document.getElementById('hamburger-open').addEventListener('click',()=>document.getElementById('mobile-menu').classList.add('open'));
+  document.getElementById('hamburger-close').addEventListener('click',()=>document.getElementById('mobile-menu').classList.remove('open'));
 
-// ===================== RIGHT PANEL =====================
-function renderRightPanel(chapter) {
-  const ta = document.getElementById('chapter-text-editor-yz56');
-  const wc = document.getElementById('right-wordcount-wx34');
-  if (!chapter) { ta.value = ''; wc.textContent = ''; return; }
-  ta.value = chapter.content || '';
-  wc.textContent = (chapter.wordCount||0).toLocaleString() + ' words';
-}
+  /* Drop zone */
+  const dz=document.getElementById('drop-zone');
+  const fi=document.getElementById('file-input');
+  dz.addEventListener('click',()=>fi.click());
+  dz.addEventListener('dragover',e=>{e.preventDefault();dz.classList.add('drag-over')});
+  dz.addEventListener('dragleave',()=>dz.classList.remove('drag-over'));
+  dz.addEventListener('drop',e=>{e.preventDefault();dz.classList.remove('drag-over');if(e.dataTransfer.files.length)handleFile(e.dataTransfer.files[0])});
+  fi.addEventListener('change',()=>{if(fi.files.length)handleFile(fi.files[0]);fi.value=''});
 
-let textSaveTimer = null;
-document.getElementById('chapter-text-editor-yz56').addEventListener('input', (e) => {
-  clearTimeout(textSaveTimer);
-  textSaveTimer = setTimeout(() => {
-    if (!activeChapterId) return;
-    const ps = getProjects();
-    const p = ps.find(x => x.id === getActiveProjectId());
-    if (!p) return;
-    const c = p.chapters.find(x => x.id === activeChapterId);
-    if (!c) return;
-    c.content = e.target.value;
-    c.wordCount = c.content.trim().split(/\s+/).filter(w=>w).length;
-    saveProjects(ps);
-    document.getElementById('right-wordcount-wx34').textContent = c.wordCount.toLocaleString() + ' words';
-    renderChapterList();
-  }, 600);
-});
-
-// ===================== VOICE LAB — GENRE TABS =====================
-function renderGenreTabs() {
-  const container = document.getElementById('genre-tabs');
-  if (!container) return;
-  container.innerHTML = '';
-  Object.entries(GENRE_PROFILES).forEach(([key, genre]) => {
-    const btn = document.createElement('button');
-    btn.textContent = genre.icon + ' ' + genre.label;
-    btn.className = 'genre-btn px-5 py-2.5 rounded-full text-sm font-semibold whitespace-nowrap';
-    if (key === activeGenre) {
-      btn.classList.add('active');
-      btn.style.background = 'linear-gradient(135deg,#00d4ff,#7c3aed)';
-      btn.style.color = '#fff';
-      btn.style.border = 'none';
-    } else {
-      btn.style.background = 'rgba(255,255,255,0.04)';
-      btn.style.color = '#94a3b8';
-      btn.style.border = '1px solid rgba(255,255,255,0.15)';
-    }
-    btn.addEventListener('click', () => {
-      activeGenre = key;
-      renderGenreTabs();
-      renderGenreVoices();
-    });
-    container.appendChild(btn);
-  });
-}
-
-function renderGenreVoices() {
-  const genre = GENRE_PROFILES[activeGenre];
-  if (!genre) return;
-
-  // Description
-  const descEl = document.getElementById('genre-desc');
-  if (descEl) {
-    descEl.innerHTML = `
-      <div class="flex items-start gap-4">
-        <span class="text-3xl shrink-0">${genre.icon}</span>
-        <div>
-          <h3 class="text-lg font-bold text-txt mb-1">${genre.label}</h3>
-          <p class="text-sm text-muted">${genre.description}</p>
-        </div>
-      </div>
-    `;
-    descEl.style.borderLeft = '4px solid ' + genre.color;
-  }
-
-  // Voice cards
-  const grid = document.getElementById('genre-voices');
-  if (!grid) return;
-  grid.innerHTML = '';
-
-  genre.voices.forEach(v => {
-    const providerColor = v.provider === 'elevenlabs' ? '#7c3aed' : '#10b981';
-    const providerLabel = v.provider === 'elevenlabs' ? 'ElevenLabs' : 'OpenAI';
-    const initial = v.name[0].toUpperCase();
-
-    const card = document.createElement('div');
-    card.className = 'profile-card glass rounded-2xl p-5 flex flex-col';
-    card.innerHTML = `
-      <div class="flex items-center gap-3 mb-3">
-        <div class="w-11 h-11 rounded-full flex items-center justify-center text-white font-bold text-base shrink-0" style="background:${genre.color}">${initial}</div>
-        <div class="min-w-0 flex-1">
-          <h4 class="text-base font-bold text-txt">${v.name}</h4>
-          <div class="flex flex-wrap gap-1.5 mt-1">
-            <span class="text-[10px] px-2 py-0.5 rounded-full font-semibold" style="background:${providerColor}22;color:${providerColor};border:1px solid ${providerColor}44;">${providerLabel}</span>
-            <span class="text-[10px] px-2 py-0.5 rounded-full font-semibold glass text-txt">${v.role}</span>
-          </div>
-        </div>
-      </div>
-      <p class="text-xs text-muted mb-2 leading-relaxed">${v.description}</p>
-      <div class="flex flex-wrap gap-1 mb-2">
-        <span class="text-[10px] px-2 py-0.5 rounded-full glass text-muted">${v.gender}</span>
-        ${v.accent ? `<span class="text-[10px] px-2 py-0.5 rounded-full glass text-muted">${v.accent}</span>` : ''}
-      </div>
-      <p class="text-xs italic mb-3 leading-relaxed border-l-2 pl-3" style="border-color:${genre.color}40;color:#64748b;">"${v.sample}"</p>
-      <div class="flex flex-wrap gap-1 mb-3">
-        ${v.tags.map(t => `<span class="text-[10px] px-2 py-0.5 rounded-full font-medium" style="background:${genre.color}20;color:${genre.color}">${t}</span>`).join('')}
-      </div>
-      <p class="text-[10px] text-muted/60 mb-4 font-mono">${v.provider === 'elevenlabs' ? `Stability ${v.settings.stability} \u00B7 Similarity ${v.settings.similarity} \u00B7 Style ${v.settings.style} \u00B7 ${v.settings.speed}x` : `Speed ${v.settings.speed}x`}</p>
-      <div class="flex gap-2 mt-auto">
-        <button class="vl-preview-btn flex-1 px-3 py-2.5 rounded-xl text-xs font-medium glass glass-hover text-teal-400 flex items-center justify-center gap-1.5" data-voice-id="${v.id}">
-          <i data-lucide="play" class="w-3.5 h-3.5"></i> Preview
-        </button>
-        <button class="vl-apply-btn flex-1 btn-gradient px-3 py-2.5 rounded-xl text-xs font-semibold flex items-center justify-center gap-1.5" data-voice-id="${v.id}">
-          <i data-lucide="zap" class="w-3.5 h-3.5"></i> Apply
-        </button>
-      </div>
-    `;
-    grid.appendChild(card);
+  /* Studio controls */
+  document.getElementById('play-pause-btn').addEventListener('click',()=>{
+    const ch=getChapter();if(!ch)return;
+    if(!ch.audioData){generateChapterAudio(ch.id);return}
+    if(state.isPlaying&&state.currentAudio){state.currentAudio.pause();state.isPlaying=false;setWaveformAnimating(false);updatePlayButton()}
+    else{playChapterAudio()}
   });
 
-  // Bind events
-  grid.querySelectorAll('.vl-preview-btn').forEach(btn => {
-    btn.addEventListener('click', () => previewVoiceProfile(btn.dataset.voiceId, btn));
-  });
-  grid.querySelectorAll('.vl-apply-btn').forEach(btn => {
-    btn.addEventListener('click', () => applyVoiceProfile(btn.dataset.voiceId));
+  document.getElementById('audio-scrubber').addEventListener('input',(e)=>{
+    if(state.currentAudio){state.currentAudio.currentTime=parseInt(e.target.value)}
   });
 
-  if (typeof lucide !== 'undefined' && typeof lucide.createIcons === 'function') lucide.createIcons();
-}
-
-function findVoiceProfile(id) {
-  for (const g of Object.values(GENRE_PROFILES)) {
-    const v = g.voices.find(x => x.id === id);
-    if (v) return v;
-  }
-  return null;
-}
-
-async function previewVoiceProfile(id, btn) {
-  const v = findVoiceProfile(id);
-  if (!v || !btn) return;
-  const keys = getApiKeys();
-  btn.disabled = true;
-  const origHTML = btn.innerHTML;
-  btn.innerHTML = '<i data-lucide="loader" class="w-3.5 h-3.5 animate-spin"></i> Generating...';
-  if (typeof lucide !== 'undefined' && typeof lucide.createIcons === 'function') lucide.createIcons();
-
-  try {
-    let blob;
-    if (v.provider === 'elevenlabs') {
-      if (!keys.elevenlabs) { showToast('Add ElevenLabs API key in Settings first', 'error'); btn.innerHTML = origHTML; btn.disabled = false; if (typeof lucide !== 'undefined' && typeof lucide.createIcons === 'function') lucide.createIcons(); return; }
-      blob = await synthesizeElevenLabs(v.sample, v.voiceKey, keys.elevenlabs, v.settings.stability || 50, v.settings.similarity || 75, v.settings.style || 0, null);
-    } else {
-      if (!keys.openai) { showToast('Add OpenAI API key in Settings first', 'error'); btn.innerHTML = origHTML; btn.disabled = false; if (typeof lucide !== 'undefined' && typeof lucide.createIcons === 'function') lucide.createIcons(); return; }
-      blob = await synthesizeOpenAI(v.sample, v.voiceKey, keys.openai, v.settings.speed || 1.0, null);
-    }
-    const url = URL.createObjectURL(blob);
-    if (currentAudioEl) { currentAudioEl.pause(); currentAudioEl = null; }
-    const audio = new Audio(url);
-    currentAudioEl = audio;
-    audio.play();
-    btn.innerHTML = '<i data-lucide="volume-2" class="w-3.5 h-3.5"></i> Playing...';
-    if (typeof lucide !== 'undefined' && typeof lucide.createIcons === 'function') lucide.createIcons();
-    audio.addEventListener('ended', () => { btn.innerHTML = origHTML; btn.disabled = false; if (typeof lucide !== 'undefined' && typeof lucide.createIcons === 'function') lucide.createIcons(); URL.revokeObjectURL(url); });
-  } catch(err) {
-    showToast('Preview failed: ' + err.message, 'error');
-    btn.innerHTML = origHTML;
-    btn.disabled = false;
-    if (typeof lucide !== 'undefined' && typeof lucide.createIcons === 'function') lucide.createIcons();
-  }
-}
-
-function applyVoiceProfile(id) {
-  const v = findVoiceProfile(id);
-  if (!v) return;
-  const cfg = getConfig();
-  cfg.defaultVoice = v.voiceKey;
-  cfg.provider = v.provider;
-  cfg.speed = v.settings.speed || 1.0;
-  if (v.settings.stability !== undefined) cfg.stability = v.settings.stability;
-  if (v.settings.similarity !== undefined) cfg.similarity = v.settings.similarity;
-  if (v.settings.style !== undefined) cfg.style = v.settings.style;
-  saveConfig(cfg);
-
-  const projects = getProjects();
-  const pid = getActiveProjectId();
-  const proj = projects.find(p => p.id === pid);
-  if (proj) {
-    proj.chapters.forEach(ch => {
-      if (ch.status !== 'done') {
-        ch.voice = v.voiceKey;
-        ch.provider = v.provider;
-        ch.speed = v.settings.speed || 1.0;
-        if (v.settings.stability !== undefined) ch.stability = v.settings.stability;
-        if (v.settings.similarity !== undefined) ch.similarity = v.settings.similarity;
-        if (v.settings.style !== undefined) ch.style = v.settings.style;
-      }
-    });
-    saveProjects(projects);
-    showToast('\u2705 "' + v.name + '" applied to all pending chapters!', 'success');
-  } else {
-    showToast('"' + v.name + '" set as default voice', 'success');
-  }
-}
-
-// ===================== CHARACTER VOICE MAPPING =====================
-function addCharMapRow() {
-  const container = document.getElementById('char-map-rows');
-  if (!container) return;
-  const row = document.createElement('div');
-  row.className = 'flex flex-col sm:flex-row gap-2.5 items-stretch sm:items-center glass rounded-xl p-3';
-  row.innerHTML = `
-    <input type="text" placeholder="Character name..." class="char-map-name flex-1" style="font-size:13px;padding:8px 12px;"/>
-    <select class="char-map-voice flex-1" style="font-size:13px;padding:8px 12px;">
-      <option value="rachel">Rachel (ElevenLabs)</option>
-      <option value="daniel">Daniel (ElevenLabs)</option>
-      <option value="sarah">Sarah (ElevenLabs)</option>
-      <option value="callum">Callum (ElevenLabs)</option>
-      <option value="matilda">Matilda (ElevenLabs)</option>
-      <option value="josh">Josh (ElevenLabs)</option>
-      <option value="emily">Emily (ElevenLabs)</option>
-      <option value="adam">Adam (ElevenLabs)</option>
-      <option value="nicole">Nicole (ElevenLabs)</option>
-      <option value="alloy">Alloy (OpenAI)</option>
-      <option value="nova">Nova (OpenAI)</option>
-      <option value="onyx">Onyx (OpenAI)</option>
-      <option value="fable">Fable (OpenAI)</option>
-      <option value="echo">Echo (OpenAI)</option>
-      <option value="shimmer">Shimmer (OpenAI)</option>
-    </select>
-    <button class="char-map-del-btn px-3 py-2 rounded-lg text-xs font-medium glass glass-hover text-re-400 shrink-0 flex items-center justify-center gap-1">
-      <i data-lucide="trash-2" class="w-3.5 h-3.5"></i> Remove
-    </button>
-  `;
-  container.appendChild(row);
-  row.querySelector('.char-map-del-btn').addEventListener('click', () => row.remove());
-  if (typeof lucide !== 'undefined' && typeof lucide.createIcons === 'function') lucide.createIcons();
-}
-
-document.getElementById('add-char-map-btn').addEventListener('click', () => addCharMapRow());
-
-// ===================== SETTINGS =====================
-function loadSettings() {
-  const keys = getApiKeys();
-  const cfg = getConfig();
-  document.getElementById('openai-key-ij12').value = keys.openai || '';
-  document.getElementById('el-key-qr90').value = keys.elevenlabs || '';
-  document.getElementById('openai-voice-mn56').value = cfg.defaultVoice || 'alloy';
-  document.getElementById('el-voice-uv34').value = cfg.elDefaultVoice || 'rachel';
-
-  const speedSl = document.getElementById('speed-slider-ef78');
-  speedSl.value = Math.round((cfg.speed || 1.0) * 100);
-  document.getElementById('speed-val-cd56').textContent = (cfg.speed || 1.0).toFixed(1) + 'x';
-
-  document.getElementById('stab-slider-yz78').value = cfg.stability != null ? cfg.stability : 50;
-  document.getElementById('stab-val-wx56').textContent = cfg.stability != null ? cfg.stability : 50;
-  document.getElementById('sim-slider-cd12').value = cfg.similarity != null ? cfg.similarity : 75;
-  document.getElementById('sim-val-ab90').textContent = cfg.similarity != null ? cfg.similarity : 75;
-  document.getElementById('style-slider-gh56').value = cfg.style != null ? cfg.style : 0;
-  document.getElementById('style-val-ef34').textContent = cfg.style != null ? cfg.style : 0;
-
-  document.querySelectorAll('input[name="provider"]').forEach(r => {
-    r.checked = r.value === (cfg.provider || 'openai');
+  document.getElementById('generate-audio-btn').addEventListener('click',()=>{
+    const ch=getChapter();if(!ch)return;generateChapterAudio(ch.id);
   });
 
-  updateKeyStatus();
+  document.getElementById('generate-all-btn').addEventListener('click',generateAll);
+  document.getElementById('stop-gen-btn').addEventListener('click',()=>{state.generatingCancel=true});
+  document.getElementById('export-project-btn').addEventListener('click',exportAudioFiles);
+
+  document.getElementById('download-audio-btn').addEventListener('click',()=>{
+    const ch=getChapter();if(!ch||!ch.audioData)return;
+    const p=getProject();
+    const a=document.createElement('a');
+    a.href=`data:audio/${ch.audioFormat||'mp3'};base64,${ch.audioData}`;
+    a.download=`${p?p.title:'Audio'} - ${ch.title}.${ch.audioFormat||'mp3'}`;
+    a.click();
+  });
+
+  /* Chapter editor auto-save */
+  document.getElementById('chapter-editor').addEventListener('input',()=>{
+    const ch=getChapter();if(!ch)return;
+    const val=document.getElementById('chapter-editor').value;
+    ch.text=val;ch.wordCount=val.split(/\s+/).filter(Boolean).length;
+    document.getElementById('editor-word-count').textContent=ch.wordCount+' words';
+    saveProjects();
+  });
+
+  /* Settings */
+  document.getElementById('speed-slider').addEventListener('input',(e)=>{
+    const v=parseInt(e.target.value)/100;
+    document.getElementById('speed-val').textContent=v.toFixed(1)+'x';
+  });
+
+  document.getElementById('save-settings-btn').addEventListener('click',()=>{
+    state.config.voice=document.getElementById('settings-voice').value;
+    state.config.speed=parseInt(document.getElementById('speed-slider').value)/100;
+    state.config.projectName=document.getElementById('settings-project-name').value;
+    state.config.author=document.getElementById('settings-author').value;
+    state.activeVoice=state.config.voice;
+    if(state.currentAudio)state.currentAudio.playbackRate=state.config.speed;
+    saveConfig();updateVoiceBadge();
+    showToast('Settings saved!','success');
+  });
+
+  /* Add character */
+  document.getElementById('add-char-btn').addEventListener('click',()=>{
+    state.characterMap.push({name:'',voice:'dan'});saveCharMap();renderCharMap();reIcon();
+  });
+
+  /* Initial render */
+  updateVoiceBadge();
+  renderLibrary();
+  reIcon();
 }
 
-function updateKeyStatus() {
-  const keys = getApiKeys();
-  const oStatus = document.getElementById('openai-status-gh90');
-  const eStatus = document.getElementById('el-status-op78');
-  if (keys.openai) { oStatus.className = 'status-badge status-done'; oStatus.textContent = '\u2713 Saved'; }
-  else { oStatus.className = 'status-badge status-draft'; oStatus.textContent = 'Not set'; }
-  if (keys.elevenlabs) { eStatus.className = 'status-badge status-done'; eStatus.textContent = '\u2713 Saved'; }
-  else { eStatus.className = 'status-badge status-draft'; eStatus.textContent = 'Not set'; }
-}
-
-document.getElementById('speed-slider-ef78').addEventListener('input', (e) => {
-  document.getElementById('speed-val-cd56').textContent = (parseInt(e.target.value)/100).toFixed(1) + 'x';
-});
-document.getElementById('stab-slider-yz78').addEventListener('input', (e) => {
-  document.getElementById('stab-val-wx56').textContent = e.target.value;
-});
-document.getElementById('sim-slider-cd12').addEventListener('input', (e) => {
-  document.getElementById('sim-val-ab90').textContent = e.target.value;
-});
-document.getElementById('style-slider-gh56').addEventListener('input', (e) => {
-  document.getElementById('style-val-ef34').textContent = e.target.value;
-});
-
-document.getElementById('openai-key-toggle-kl34').addEventListener('click', () => {
-  const inp = document.getElementById('openai-key-ij12');
-  const btn = document.getElementById('openai-key-toggle-kl34');
-  inp.type = inp.type === 'password' ? 'text' : 'password';
-  btn.textContent = inp.type === 'password' ? 'Show' : 'Hide';
-});
-document.getElementById('el-key-toggle-st12').addEventListener('click', () => {
-  const inp = document.getElementById('el-key-qr90');
-  const btn = document.getElementById('el-key-toggle-st12');
-  inp.type = inp.type === 'password' ? 'text' : 'password';
-  btn.textContent = inp.type === 'password' ? 'Show' : 'Hide';
-});
-
-document.getElementById('save-settings-btn-ij78').addEventListener('click', () => {
-  const keys = {
-    openai: document.getElementById('openai-key-ij12').value.trim(),
-    elevenlabs: document.getElementById('el-key-qr90').value.trim()
-  };
-  saveApiKeys(keys);
-
-  let provider = 'openai';
-  document.querySelectorAll('input[name="provider"]').forEach(r => { if (r.checked) provider = r.value; });
-
-  const cfg = {
-    provider: provider,
-    defaultVoice: document.getElementById('openai-voice-mn56').value,
-    elDefaultVoice: document.getElementById('el-voice-uv34').value,
-    speed: parseInt(document.getElementById('speed-slider-ef78').value) / 100,
-    stability: parseInt(document.getElementById('stab-slider-yz78').value),
-    similarity: parseInt(document.getElementById('sim-slider-cd12').value),
-    style: parseInt(document.getElementById('style-slider-gh56').value)
-  };
-  saveConfig(cfg);
-  updateKeyStatus();
-  showToast('Settings saved successfully!', 'success');
-});
-
-// ===================== FILE DROP/UPLOAD =====================
-const dropZone = document.getElementById('drop-zone-ab12');
-const fileInput = document.getElementById('file-input-cd34');
-
-dropZone.addEventListener('click', () => fileInput.click());
-dropZone.addEventListener('dragover', (e) => { e.preventDefault(); dropZone.classList.add('drag-over'); });
-dropZone.addEventListener('dragleave', () => dropZone.classList.remove('drag-over'));
-dropZone.addEventListener('drop', (e) => {
-  e.preventDefault();
-  dropZone.classList.remove('drag-over');
-  const file = e.dataTransfer.files[0];
-  if (file) handleFileImport(file);
-});
-fileInput.addEventListener('change', () => {
-  const file = fileInput.files[0];
-  if (file) handleFileImport(file);
-  fileInput.value = '';
-});
-
-document.getElementById('generate-all-btn-st90').addEventListener('click', () => generateAll());
-
-// ===================== INIT =====================
-if (typeof lucide !== 'undefined' && typeof lucide.createIcons === 'function') {
-  lucide.createIcons();
-}
-
-renderLibrary();
-loadSettings();
-renderGenreTabs();
-renderGenreVoices();
+init();
 </script>
 </body>
 </html>
